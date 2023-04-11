@@ -1,0 +1,30 @@
+name: API changed check
+on:
+  pull_request_target:
+    branches:
+      - develop
+
+env:
+  API_DOC_HTML_ROOT_RELATIVE_PATH: autoapi
+
+jobs:
+  call-build-api-doc:
+    uses: ./.github/workflows/build_html_doc.yml
+  compare-api-doc-with-develop:
+    concurrency: ci-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest doc_pages branch tip
+        uses: actions/checkout@v3
+        with:
+          ref: doc_pages
+          path: previous_doc_state
+      - name: Get changed file names in API doc path
+        id: diff
+        run: |
+          cd $API_DOC_HTML_ROOT_RELATIVE_PATH
+          find . -name "*.html" -exec diff -qrBZ {} $GITHUB_WORKSPACE/previous_doc_state/$API_DOC_HTML_ROOT_RELATIVE_PATH/{} \;
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ diff.outputs != "" }}
+        with:
+          labels: API
