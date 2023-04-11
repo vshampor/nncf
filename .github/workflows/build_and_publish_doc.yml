@@ -1,0 +1,25 @@
+name: Complete documentation build
+on:
+  push:
+    branches:
+      - develop
+
+env:
+  GH_PAGES_BRANCH = doc_pages
+
+
+permissions:
+  contents: write
+jobs:
+  call-build-html-doc:
+    uses: ./.github/workflows/build_html_doc.yml
+  call-build-schema-page:
+    uses: ./.github/workflows/build_schema_page.yml
+  publish:
+    steps:
+      - name: Publish built docs on Github Pages branch ($GH_PAGES_BRANCH)
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: schema_html_build
+          token: ${{ secrets.PUSH_TO_GH_PAGES_BRANCH }}
+          branch: $GH_PAGES_BRANCH
