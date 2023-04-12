@@ -15,6 +15,7 @@ jobs:
   call-build-api-doc:
     uses: ./.github/workflows/build_html_doc.yml
   compare-api-doc-with-develop:
+    needs: call-build-api-doc
     runs-on: ubuntu-latest
     steps:
       - name: Checkout latest doc_pages branch tip

@@ -15,8 +15,8 @@ jobs:
       - name: Build API docs
         run: |
           sphinx-build -M html "docs/api/source" "html_build"
-      - name: Upload built HTMLs as job artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: html_doc_artifact
-          path: html_build
+#      - name: Upload built HTMLs as job artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: html_doc_artifact
+#          path: html_build
