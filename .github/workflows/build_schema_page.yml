@@ -23,3 +23,9 @@ jobs:
           python -c 'import jstyleson; from nncf.config import NNCFConfig; jstyleson.dump(NNCFConfig.schema(), open("./schema.json", "w"), indent=2)'
           mkdir schema
           generate-schema-doc --deprecated-from-description schema.json schema/index.html
+
+      - name: Upload result as artifact
+        uses: alehechka/upload-tartifact@v2
+        with:
+          name: schema_doc_artifact
+          path: schema

@@ -16,10 +16,21 @@ jobs:
   call-build-schema-page:
     uses: ./.github/workflows/build_schema_page.yml
   publish:
+    needs: [call-build-html-doc, call-build-schema-page]
     steps:
+      - name: Download HTML doc build artifact
+        uses: alehechka/download-tartifact@v2
+        with:
+          name: html_doc_artifact
+          path: html_build
+      - name: Download schema doc build artifact
+        uses: alehechka/download-tartifact@v2
+        with:
+          name: schema_doc_artifact
+          path: html_build
       - name: Publish built docs on Github Pages branch ($GH_PAGES_BRANCH)
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: schema_html_build
+          folder: html_build
           token: ${{ secrets.PUSH_TO_GH_PAGES_BRANCH }}
           branch: $GH_PAGES_BRANCH
