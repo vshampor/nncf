@@ -32,7 +32,6 @@ from nncf.config.structures import NNCFExtraConfigStruct
 
 @api()
 class NNCFConfig(dict):
-    """A regular dictionary object extended with some utility functions."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
