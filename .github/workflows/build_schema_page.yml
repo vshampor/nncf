@@ -8,7 +8,9 @@ on:
 
 jobs:
   build-config-schema-html:
-    concurrency: ci-${{ github.ref }}
+    concurrency:
+      group: ci-${{ github.ref }}-${{ github.workflow }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

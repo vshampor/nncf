@@ -3,7 +3,6 @@ on:
   workflow_call:
 jobs:
   build-html:
-    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
