@@ -25,6 +25,6 @@ jobs:
           cd $API_DOC_HTML_ROOT_RELATIVE_PATH
           find . -name "*.html" -exec diff -qrBZ {} $GITHUB_WORKSPACE/previous_doc_state/$API_DOC_HTML_ROOT_RELATIVE_PATH/{} \;
       - uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ steps.diff.outputs != "" }}
+        if: ${{ steps.diff.outputs }} != ""
         with:
           labels: API
