@@ -19,5 +19,5 @@ jobs:
           pip install json-schema-for-humans
           pip install -e .
           python -c 'import jstyleson; from nncf.config import NNCFConfig; jstyleson.dump(NNCFConfig.schema(), open("./schema.json", "w"), indent=2)'
-          mkdir schema_html_build
+          mkdir schema
           generate-schema-doc --deprecated-from-description schema.json schema/index.html

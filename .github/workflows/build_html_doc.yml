@@ -1,8 +1,5 @@
 name: HTML documentation build
 on:
-  pull_request_target:
-    branches:
-      - develop
   workflow_call:
 jobs:
   build-html:
@@ -15,7 +12,7 @@ jobs:
       - name: Install NNCF and doc requirements
         run: |
           pip install -e .
-          pip install requirements.txt
+          pip install -r requirements.txt
       - name: Build API docs
         run: |
           sphinx-build -M html "docs/api/source" "html_build"
