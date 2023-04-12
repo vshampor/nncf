@@ -7,7 +7,7 @@ on:
       - nncf/config/**
 
 jobs:
-  build-and-deploy:
+  build-config-schema-html:
     concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
