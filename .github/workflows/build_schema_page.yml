@@ -5,7 +5,7 @@ on:
       - develop
     paths:
       - nncf/config/**
-
+  workflow_call:
 jobs:
   build-config-schema-html:
     concurrency:
