@@ -22,7 +22,6 @@ jobs:
         uses: alehechka/download-tartifact@v2
         with:
           name: html_doc_artifact
-          path: current_doc_state
       - name: Checkout latest doc_pages branch tip
         uses: actions/checkout@v3
         with:
@@ -31,7 +30,7 @@ jobs:
       - name: Get changed file names in API doc path
         id: diff
         run: |
-          cd current_doc_state/$API_DOC_HTML_ROOT_RELATIVE_PATH
+          cd html_build/html/$API_DOC_HTML_ROOT_RELATIVE_PATH
           find . -name "*.html" -exec diff -qrBZ {} $GITHUB_WORKSPACE/previous_doc_state/$API_DOC_HTML_ROOT_RELATIVE_PATH/{} \;
       - uses: actions-ecosystem/action-add-labels@v1
         if: ${{ steps.diff.outputs }} != ""

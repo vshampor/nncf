@@ -14,7 +14,7 @@ jobs:
           pip install -r docs/api/requirements.txt
       - name: Build API docs
         run: |
-          sphinx-build -M html "docs/api/source" "html_build"
+          sphinx-build -M html docs/api/source html_build
       - name: Upload built HTMLs as job artifact
         uses: alehechka/upload-tartifact@v2
         with:
