@@ -1,4 +1,4 @@
-NNCF doc testing!
+NNCF documentation
 ================================
 
 .. toctree::
