@@ -1,5 +1,3 @@
-:orphan:
-
 :py:mod:`nncf.torch.pruning`
 ============================
 
@@ -18,5 +16,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   filter_pruning/index.rst
 
 

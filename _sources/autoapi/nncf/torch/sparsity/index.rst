@@ -1,5 +1,3 @@
-:orphan:
-
 :py:mod:`nncf.torch.sparsity`
 =============================
 
@@ -18,5 +16,25 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   const/index.rst
+   magnitude/index.rst
+   rb/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   base_algo/index.rst
 
 

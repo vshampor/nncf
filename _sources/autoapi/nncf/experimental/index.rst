@@ -25,5 +25,6 @@ Subpackages
    :maxdepth: 3
 
    tensorflow/index.rst
+   torch/index.rst
 
 

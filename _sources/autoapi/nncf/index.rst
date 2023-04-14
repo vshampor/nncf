@@ -29,5 +29,6 @@ Subpackages
    experimental/index.rst
    quantization/index.rst
    tensorflow/index.rst
+   torch/index.rst
 
 

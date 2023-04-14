@@ -1,5 +1,3 @@
-:orphan:
-
 :py:mod:`nncf.experimental.torch.sparsity.movement.algo`
 ========================================================
 
@@ -17,6 +15,74 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+
+
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nncf.experimental.torch.sparsity.movement.algo.MovementSparsityController
+
+
+
+
+.. py:class:: MovementSparsityController(target_model: nncf.torch.nncf_network.NNCFNetwork, sparsified_module_info: List[nncf.torch.sparsity.base_algo.SparseModuleInfo], config: nncf.NNCFConfig)
+
+   Bases: :py:obj:`nncf.torch.sparsity.base_algo.BaseSparsityAlgoController`
+
+   Serves as a handle to the additional modules, parameters and hooks inserted
+   into the original uncompressed model in order to enable algorithm-specific compression.
+   Hosts entities that are to be used during the training process, such as compression scheduler and
+   compression loss.
+
+   .. py:method:: reset_independent_structured_mask()
+
+      Asks the structured mask handler to gather independent masks in the model.
+
+
+   .. py:method:: resolve_structured_mask()
+
+      Asks the structured mask handler to resolve dependent masks in the model.
+
+
+   .. py:method:: populate_structured_mask()
+
+      Asks the structured mask handler to update structured binary masks in model operands.
+
+
+   .. py:method:: compression_stage() -> nncf.api.compression.CompressionStage
+
+      Returns the compression stage. Should be used on saving best checkpoints
+      to distinguish between uncompressed, partially compressed, and fully
+      compressed models.
+
+      :return: The compression stage of the target model.
+
+
+   .. py:method:: distributed()
+
+      Should be called when distributed training with multiple training processes
+      is going to be used (i.e. after the model is wrapped with DistributedDataParallel).
+      Any special preparations for the algorithm to properly support distributed training
+      should be made inside this function.
+
+
+   .. py:method:: freeze()
+
+      Freezes all sparsity masks. Sparsity masks will not be trained after calling this method.
+
+
+   .. py:method:: statistics(quickly_collected_only=False) -> nncf.common.statistics.NNCFStatistics
+
+      Returns a `Statistics` class instance that contains compression algorithm statistics.
+
+      :param quickly_collected_only: Enables collection of the statistics that
+          don't take too much time to compute. Can be helpful for the case when
+          need to keep track of statistics on each training batch/step/iteration.
+      :return: A `Statistics` class instance that contains compression algorithm statistics.
 
 
 

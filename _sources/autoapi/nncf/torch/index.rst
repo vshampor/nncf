@@ -1,5 +1,3 @@
-:orphan:
-
 :py:mod:`nncf.torch`
 ====================
 
@@ -18,5 +16,27 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   knowledge_distillation/index.rst
+   pruning/index.rst
+   quantization/index.rst
+   sparsity/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   model_creation/index.rst
+   structures/index.rst
 
 
