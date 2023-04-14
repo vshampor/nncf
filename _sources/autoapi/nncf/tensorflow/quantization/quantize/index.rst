@@ -1,3 +1,5 @@
+:orphan:
+
 :py:mod:`nncf.tensorflow.quantization.quantize`
 ===============================================
 
@@ -15,34 +17,6 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
-
-
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   nncf.tensorflow.quantization.quantize.CalibrarionDataLoader
-
-
-
-
-.. py:class:: CalibrarionDataLoader(dataset: nncf.data.Dataset)
-
-   Bases: :py:obj:`nncf.common.initialization.dataloader.NNCFDataLoader`
-
-   This class wraps the nncf.Dataset.
-
-   This is required for proper initialization of certain compression algorithms.
-
-   .. py:method:: __iter__()
-
-      Creates an iterator for the elements of a custom data source.
-      The returned iterator implements the Python Iterator protocol.
-
-      :return: An iterator for the elements of a custom data source.
 
 
 

@@ -1,3 +1,5 @@
+:orphan:
+
 :py:mod:`nncf.experimental.torch`
 =================================
 
@@ -16,14 +18,5 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-
-
-Subpackages
------------
-.. toctree::
-   :titlesonly:
-   :maxdepth: 3
-
-   sparsity/index.rst
 
 

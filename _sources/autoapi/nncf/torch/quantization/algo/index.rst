@@ -25,7 +25,6 @@ Classes
 .. autoapisummary::
 
    nncf.torch.quantization.algo.QuantizationController
-   nncf.torch.quantization.algo.ExperimentalQuantizationController
 
 
 
@@ -95,15 +94,5 @@ Classes
       :param do_copy: Modify copy of the model, defaults to False.
       :return: The stripped model.
 
-
-
-.. py:class:: ExperimentalQuantizationController(target_model: nncf.torch.nncf_network.NNCFNetwork, weight_quantizers: Dict[nncf.common.quantization.structs.WeightQuantizerId, nncf.torch.quantization.structs.WeightQuantizerInfo], non_weight_quantizers: Dict[nncf.common.quantization.structs.NonWeightQuantizerId, nncf.torch.quantization.structs.NonWeightQuantizerInfo], groups_of_adjacent_quantizers: nncf.torch.quantization.precision_init.adjacent_quantizers.GroupsOfAdjacentQuantizers, quantizers_input_shapes: Dict[nncf.common.quantization.structs.QuantizerId, Tuple[int]], quantizer_setup: nncf.common.quantization.quantizer_setup.MultiConfigQuantizerSetup, initial_quantizer_setup: nncf.common.quantization.quantizer_setup.SingleConfigQuantizerSetup, setup_to_module_id_translation_dict: Dict[nncf.common.quantization.quantizer_setup.QuantizationPointId, nncf.common.quantization.structs.QuantizerId], tensor_stats: Dict[nncf.torch.graph.transformations.commands.PTTargetPoint, Dict[nncf.torch.tensor_statistics.collectors.ReductionShape, nncf.torch.tensor_statistics.statistics.TensorStatistic]], build_time_metric_info: nncf.torch.quantization.metrics.QuantizationShareBuildTimeInfo, should_setup_adjust_pad_ops=False, hw_config: nncf.common.hardware.config.HWConfig = None)
-
-   Bases: :py:obj:`QuantizationController`
-
-   Serves as a handle to the additional modules, parameters and hooks inserted
-   into the original uncompressed model in order to enable algorithm-specific compression.
-   Hosts entities that are to be used during the training process, such as compression scheduler and
-   compression loss.
 
 

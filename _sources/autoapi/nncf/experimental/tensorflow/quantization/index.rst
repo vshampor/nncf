@@ -1,3 +1,5 @@
+:orphan:
+
 :py:mod:`nncf.experimental.tensorflow.quantization`
 ===================================================
 
@@ -16,14 +18,5 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-
-
-Submodules
-----------
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
-
-   algorithm/index.rst
 
 

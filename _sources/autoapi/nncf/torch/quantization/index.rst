@@ -25,6 +25,5 @@ Submodules
    :maxdepth: 1
 
    algo/index.rst
-   quantize/index.rst
 
 

@@ -19,14 +19,6 @@
 
 
 
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   nncf.tensorflow.initialization.TFInitializingDataLoader
-
-
 
 Functions
 ~~~~~~~~~
@@ -34,23 +26,6 @@ Functions
 .. autoapisummary::
 
    nncf.tensorflow.initialization.register_default_init_args
-
-
-
-.. py:class:: TFInitializingDataLoader(data_loader: tensorflow.data.Dataset, batch_size: int)
-
-   Bases: :py:obj:`nncf.common.initialization.dataloader.NNCFDataLoader`
-
-   This class wraps the tf.data.Dataset class.
-
-   This is required for proper initialization of certain compression algorithms.
-
-   .. py:method:: __iter__()
-
-      Creates an iterator for the elements of a custom data source.
-      The returned iterator implements the Python Iterator protocol.
-
-      :return: An iterator for the elements of a custom data source.
 
 
 
