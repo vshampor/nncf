@@ -26,8 +26,19 @@ Subpackages
 
    common/index.rst
    config/index.rst
+   data/index.rst
    quantization/index.rst
    tensorflow/index.rst
    torch/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   parameters/index.rst
+   scopes/index.rst
 
 

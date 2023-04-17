@@ -1,5 +1,3 @@
-:orphan:
-
 :py:mod:`nncf.parameters`
 =========================
 
@@ -18,5 +16,42 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+
+
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nncf.parameters.TargetDevice
+   nncf.parameters.ModelType
+
+
+
+
+.. py:class:: TargetDevice
+
+   Bases: :py:obj:`enum.Enum`
+
+   Describes the target device the specificity of which will be taken
+   into account while compressing in order to obtain the best performance
+   for this type of device.
+
+   :param ANY:
+   :param CPU:
+   :param GPU:
+   :param VPU:
+
+
+.. py:class:: ModelType
+
+   Bases: :py:obj:`enum.Enum`
+
+   Describes the model type the specificity of which will be taken into
+   account during compression.
+
+   :param TRANSFORMER: Transformer-based models
+       (https://arxiv.org/pdf/1706.03762.pdf)
 
 

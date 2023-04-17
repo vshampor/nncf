@@ -1,5 +1,3 @@
-:orphan:
-
 :py:mod:`nncf.data`
 ===================
 
@@ -18,5 +16,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   dataset/index.rst
 
 
