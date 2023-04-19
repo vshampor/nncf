@@ -1,3 +1,5 @@
+:orphan:
+
 :py:mod:`nncf.scopes`
 =====================
 
@@ -16,53 +18,5 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-
-
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   nncf.scopes.IgnoredScope
-
-
-
-
-.. py:class:: IgnoredScope(names: Optional[List[str]] = None, patterns: Optional[List[str]] = None, types: Optional[List[str]] = None)
-
-   Dataclass that contains description of the ignored scope.
-
-   The ignored scope defines model sub-graphs that should be excluded from
-   the compression process such as quantization, pruning and etc.
-
-   Examples:
-
-   ```
-   import nncf
-
-   # Exclude by node name:
-   node_names = ['node_1', 'node_2', 'node_3']
-   ignored_scope = nncf.IgnoredScope(names=node_names)
-
-   # Exclude using regular expressions:
-   patterns = ['node_\d']
-   ignored_scope = nncf.IgnoredScope(patterns=patterns)
-
-   # Exclude by operation type:
-
-   # OpenVINO opset https://docs.openvino.ai/latest/openvino_docs_ops_opset.html
-   operation_types = ['Multiply', 'GroupConvolution', 'Interpolate']
-   ignored_scope = nncf.IgnoredScope(types=operation_types)
-
-   # ONNX opset https://github.com/onnx/onnx/blob/main/docs/Operators.md
-   operation_types = ['Mul', 'Conv', 'Resize']
-   ignored_scope = nncf.IgnoredScope(types=operation_types)
-
-   ...
-
-   ```
-
-   **Note** Operation types must be specified according to the model framework.
 
 

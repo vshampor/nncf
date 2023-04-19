@@ -1,3 +1,5 @@
+:orphan:
+
 :py:mod:`nncf.tensorflow.initialization`
 ========================================
 
@@ -16,29 +18,5 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-
-
-
-
-Functions
-~~~~~~~~~
-
-.. autoapisummary::
-
-   nncf.tensorflow.initialization.register_default_init_args
-
-
-
-.. py:function:: register_default_init_args(nncf_config: nncf.config.NNCFConfig, data_loader: tensorflow.data.Dataset, batch_size: int, device: str = None) -> nncf.config.NNCFConfig
-
-   Register extra structures in the NNCFConfig. Initialization of some
-   compression algorithms requires certain extra structures.
-
-   :param nncf_config: An instance of the NNCFConfig class without extra structures.
-   :param data_loader: Dataset used for initialization.
-   :param batch_size: Batch size used for initialization.
-   :param device: Device to perform initialization. If `device` is `None` then the device
-       of the model parameters will be used.
-   :return: An instance of the NNCFConfig class with extra structures.
 
 

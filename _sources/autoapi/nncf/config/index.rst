@@ -24,7 +24,6 @@ Submodules
    :titlesonly:
    :maxdepth: 1
 
-   config/index.rst
    structures/index.rst
 
 

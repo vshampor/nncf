@@ -1,9 +1,9 @@
 :orphan:
 
-:py:mod:`nncf.torch.quantization.prepare_for_inference`
-=======================================================
+:py:mod:`nncf.torch.quantization.strip`
+=======================================
 
-.. py:module:: nncf.torch.quantization.prepare_for_inference
+.. py:module:: nncf.torch.quantization.strip
 
 .. autoapi-nested-parse::
 
