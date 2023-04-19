@@ -21,6 +21,7 @@ import numpy as np
 import torch
 from torch import distributed
 from torch import nn
+from torch.fx._symbolic_trace import is_fx_tracing
 
 from nncf.common.graph import NNCFNodeName
 from nncf.common.logging import nncf_logger
@@ -377,6 +378,8 @@ class BaseQuantizer(nn.Module, ABC):
         # TODO: refactor to get rid of extra if's and calls on each forward
         if not self.is_enabled_quantization():
             return x
+        if is_fx_tracing():
+            return x * x
         is_exporting = is_tracing_state()
         if is_exporting:
             with no_nncf_trace():

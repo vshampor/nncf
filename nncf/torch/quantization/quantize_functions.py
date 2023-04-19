@@ -193,7 +193,6 @@ def get_scale_zp_from_input_low_input_high(level_low, level_high, input_low, inp
     y_zero_point = torch.squeeze(y_zero_point)
     return y_scale, y_zero_point
 
-
 @register_operator()
 def symmetric_quantize(input_, levels, level_low, level_high, scale, eps, skip: bool = False):
     if skip:
