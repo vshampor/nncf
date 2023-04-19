@@ -199,7 +199,7 @@ def symmetric_quantize(input_, levels, level_low, level_high, scale, eps, skip: 
     if skip:
         return input_
     scale = scale.to(dtype=input_.dtype)
-    scale_safe = abs(scale) + eps
+    scale_safe = scale.abs() + eps
     return QuantizeSymmetric.apply(input_, scale_safe, level_low, level_high, levels)
 
 
@@ -207,7 +207,7 @@ def symmetric_quantize(input_, levels, level_low, level_high, scale, eps, skip: 
 def asymmetric_quantize(input_, levels, level_low, level_high, input_low, input_range, eps, skip: bool = False):
     if skip:
         return input_
-    input_range_safe = abs(input_range) + eps
+    input_range_safe = input_range.abs() + eps
     input_low_tuned, input_range_tuned = TuneRange.apply(input_low, input_range_safe, levels)
     return QuantizeAsymmetric.apply(input_, input_low_tuned, input_range_tuned, level_low, level_high, levels)
 

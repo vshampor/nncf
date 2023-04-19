@@ -895,6 +895,7 @@ def _get_nncf_forward_function_with_signature(signature: inspect.Signature):
     new_forward = types.FunctionType(fn.__code__, fn.__globals__, fn.__name__, fn.__defaults__, fn.__closure__)
     new_forward.__dict__.update(fn.__dict__)
     new_forward.__signature__ = signature
+    new_forward.__wrapped__ = original_class.forward
     if is_debug():
         new_forward = debuggable_forward(new_forward)
     return new_forward
