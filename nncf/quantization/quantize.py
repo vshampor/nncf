@@ -27,7 +27,7 @@ from nncf.parameters import ModelType
 from nncf.parameters import TargetDevice
 
 
-@api()
+@api(canonical_alias="nncf.quantize")
 def quantize(model: TModel,
              calibration_dataset: Dataset,
              preset: QuantizationPreset = QuantizationPreset.PERFORMANCE,
@@ -85,6 +85,7 @@ def quantize(model: TModel,
     raise RuntimeError(f'Unsupported type of backend: {backend}')
 
 
+@api(canonical_alias="nncf.quantize_with_accuracy_control")
 def quantize_with_accuracy_control(model: TModel,
                                    calibration_dataset: Dataset,
                                    validation_dataset: Dataset,

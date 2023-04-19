@@ -60,3 +60,5 @@ if not any(_LOADED_FRAMEWORKS.values()):
 else:
     nncf_logger.info(f"NNCF initialized successfully. Supported frameworks detected: "
                      f"{', '.join([name for name, loaded in _LOADED_FRAMEWORKS.items() if loaded])}")
+
+
