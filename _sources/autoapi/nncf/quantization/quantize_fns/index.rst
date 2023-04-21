@@ -1,9 +1,9 @@
 :orphan:
 
-:py:mod:`nncf.quantization.quantize`
-====================================
+:py:mod:`nncf.quantization.quantize_fns`
+========================================
 
-.. py:module:: nncf.quantization.quantize
+.. py:module:: nncf.quantization.quantize_fns
 
 .. autoapi-nested-parse::
 

@@ -46,6 +46,7 @@ Functions
 .. autoapisummary::
 
    nncf.tensorflow.create_compressed_model
+   nncf.tensorflow.create_compression_callbacks
    nncf.tensorflow.register_default_init_args
 
 
@@ -66,6 +67,9 @@ Functions
        - compression_ctrl: The controller of the compression algorithm.
        - compressed_model: The model with additional modifications
            necessary to enable algorithm-specific compression during fine-tuning.
+
+
+.. py:function:: create_compression_callbacks(compression_ctrl, log_tensorboard=True, log_text=True, log_dir=None)
 
 
 .. py:function:: register_default_init_args(nncf_config: nncf.config.NNCFConfig, data_loader: tensorflow.data.Dataset, batch_size: int, device: str = None) -> nncf.config.NNCFConfig

@@ -48,7 +48,16 @@ Functions
 
    nncf.torch.create_compressed_model
    nncf.torch.load_state
+   nncf.torch.register_default_init_args
+   nncf.torch.register_module
+   nncf.torch.register_operator
+   nncf.torch.nncf_model_input
+   nncf.torch.nncf_model_output
    nncf.torch.disable_tracing
+   nncf.torch.no_nncf_trace
+   nncf.torch.forward_nncf_trace
+   nncf.torch.force_build_cpu_extensions
+   nncf.torch.force_build_cuda_extensions
 
 
 
@@ -110,9 +119,36 @@ Functions
    :return: The number of state_dict_to_load entries successfully matched and loaded into model.
 
 
+.. py:function:: register_default_init_args(nncf_config: NNCFConfig, train_loader: torch.utils.data.DataLoader, criterion: torch.nn.modules.loss._Loss = None, criterion_fn: Callable[[Any, Any, torch.nn.modules.loss._Loss], torch.Tensor] = None, train_steps_fn: Callable[[torch.utils.data.DataLoader, torch.nn.Module, torch.optim.Optimizer, CompressionAlgorithmController, Optional[int]], type(None)] = None, validate_fn: Callable[[torch.nn.Module, torch.utils.data.DataLoader], Tuple[float, float]] = None, val_loader: torch.utils.data.DataLoader = None, autoq_eval_fn: Callable[[torch.nn.Module, torch.utils.data.DataLoader], float] = None, model_eval_fn: Callable[[torch.nn.Module, torch.utils.data.DataLoader], float] = None, distributed_callbacks: Tuple[Callable, Callable] = None, execution_parameters: ExecutionParameters = None, legr_train_optimizer: torch.optim.Optimizer = None, device: str = None) -> NNCFConfig
+
+
+.. py:function:: register_module(*quantizable_field_names: str, ignored_algorithms: list = None)
+
+
+.. py:function:: register_operator(name=None)
+
+
+.. py:function:: nncf_model_input(tensor: torch.Tensor)
+
+
+.. py:function:: nncf_model_output(tensor: torch.Tensor)
+
+
 .. py:function:: disable_tracing(method)
 
    Patch a method so that it will be executed within no_nncf_trace context
    :param method: A method to patch.
+
+
+.. py:function:: no_nncf_trace()
+
+
+.. py:function:: forward_nncf_trace()
+
+
+.. py:function:: force_build_cpu_extensions()
+
+
+.. py:function:: force_build_cuda_extensions()
 
 

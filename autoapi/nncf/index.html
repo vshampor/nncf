@@ -341,6 +341,7 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.ModelType"><code class="docutils literal notranslate"><span class="pre">ModelType</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.TargetDevice"><code class="docutils literal notranslate"><span class="pre">TargetDevice</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.QuantizationPreset"><code class="docutils literal notranslate"><span class="pre">QuantizationPreset</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantize"><code class="docutils literal notranslate"><span class="pre">quantize()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantize_with_accuracy_control"><code class="docutils literal notranslate"><span class="pre">quantize_with_accuracy_control()</span></code></a></li>
 </ul>
 </li>
@@ -456,7 +457,10 @@ limitations under the License.</p>
 <h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">#</a></h3>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nncf.quantize_with_accuracy_control" title="nncf.quantize_with_accuracy_control"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quantize_with_accuracy_control</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nncf.quantize" title="nncf.quantize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quantize</span></code></a>(→ nncf.api.compression.TModel)</p></td>
+<td><p>Applies post-training quantization algorithm to provided model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nncf.quantize_with_accuracy_control" title="nncf.quantize_with_accuracy_control"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quantize_with_accuracy_control</span></code></a>(...)</p></td>
 <td><p>Applies post-training quantization algorithm with accuracy control to provided model.</p></td>
 </tr>
 </tbody>
@@ -627,6 +631,44 @@ for this type of device.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="nncf.quantize">
+<span class="sig-prename descclassname"><span class="pre">nncf.</span></span><span class="sig-name descname"><span class="pre">quantize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.api.compression.TModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.data.Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.common.quantization.structs.QuantizationPreset</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QuantizationPreset.PERFORMANCE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.parameters.TargetDevice</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">TargetDevice.ANY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast_bias_correction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.parameters.ModelType</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignored_scope</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.scopes.IgnoredScope</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.api.compression.TModel</span></span></span><a class="headerlink" href="#nncf.quantize" title="Permalink to this definition">#</a></dt>
+<dd><p>Applies post-training quantization algorithm to provided model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – A model to be quantized.</p></li>
+<li><p><strong>calibration_dataset</strong> – A representative dataset for the
+calibration process.</p></li>
+<li><p><strong>preset</strong> – <p>A preset that controls the quantization mode
+(symmetric and asymmetric). It can take the following values:
+- <cite>performance</cite>: Symmetric quantization of weights and activations.
+- <cite>mixed</cite>: Symmetric quantization of weights and asymmetric</p>
+<blockquote>
+<div><p>quantization of activations.</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>target_device</strong> – A target device the specificity of which will be taken
+into account while compressing in order to obtain the best performance
+for this type of device.</p></li>
+<li><p><strong>subset_size</strong> – Size of a subset to calculate activations
+statistics used for quantization.</p></li>
+<li><p><strong>fast_bias_correction</strong> – Setting this option to <cite>False</cite> enables a different
+bias correction method which is more accurate, in general, and takes
+more time but requires less memory.</p></li>
+<li><p><strong>model_type</strong> – Model type is needed to specify additional patterns
+in the model. Supported only <cite>transformer</cite> now.</p></li>
+<li><p><strong>ignored_scope</strong> – An ignored scope that defined the list of model control
+flow graph nodes to be ignored during quantization.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The quantized model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="nncf.quantize_with_accuracy_control">
 <span class="sig-prename descclassname"><span class="pre">nncf.</span></span><span class="sig-name descname"><span class="pre">quantize_with_accuracy_control</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.api.compression.TModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibration_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.data.Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.data.Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_drop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.common.quantization.structs.QuantizationPreset</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QuantizationPreset.PERFORMANCE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.parameters.TargetDevice</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">TargetDevice.ANY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subset_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast_bias_correction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.parameters.ModelType</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignored_scope</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.scopes.IgnoredScope</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.api.compression.TModel</span></span></span><a class="headerlink" href="#nncf.quantize_with_accuracy_control" title="Permalink to this definition">#</a></dt>
 <dd><p>Applies post-training quantization algorithm with accuracy control to provided model.</p>
@@ -737,6 +779,7 @@ flow graph nodes to be ignored during quantization.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.ModelType"><code class="docutils literal notranslate"><span class="pre">ModelType</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.TargetDevice"><code class="docutils literal notranslate"><span class="pre">TargetDevice</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.QuantizationPreset"><code class="docutils literal notranslate"><span class="pre">QuantizationPreset</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantize"><code class="docutils literal notranslate"><span class="pre">quantize()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantize_with_accuracy_control"><code class="docutils literal notranslate"><span class="pre">quantize_with_accuracy_control()</span></code></a></li>
 </ul>
 </li>

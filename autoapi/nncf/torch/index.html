@@ -329,7 +329,16 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.create_compressed_model"><code class="docutils literal notranslate"><span class="pre">create_compressed_model()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.load_state"><code class="docutils literal notranslate"><span class="pre">load_state()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.register_default_init_args"><code class="docutils literal notranslate"><span class="pre">register_default_init_args()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.register_module"><code class="docutils literal notranslate"><span class="pre">register_module()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.register_operator"><code class="docutils literal notranslate"><span class="pre">register_operator()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.nncf_model_input"><code class="docutils literal notranslate"><span class="pre">nncf_model_input()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.nncf_model_output"><code class="docutils literal notranslate"><span class="pre">nncf_model_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.disable_tracing"><code class="docutils literal notranslate"><span class="pre">disable_tracing()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.no_nncf_trace"><code class="docutils literal notranslate"><span class="pre">no_nncf_trace()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.forward_nncf_trace"><code class="docutils literal notranslate"><span class="pre">forward_nncf_trace()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.force_build_cpu_extensions"><code class="docutils literal notranslate"><span class="pre">force_build_cpu_extensions()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.force_build_cuda_extensions"><code class="docutils literal notranslate"><span class="pre">force_build_cuda_extensions()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -414,8 +423,35 @@ limitations under the License.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#nncf.torch.load_state" title="nncf.torch.load_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_state</span></code></a>(→ int)</p></td>
 <td><p>Used to load a checkpoint containing a compressed model into an NNCFNetwork object, but can</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nncf.torch.disable_tracing" title="nncf.torch.disable_tracing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">disable_tracing</span></code></a>(method)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nncf.torch.register_default_init_args" title="nncf.torch.register_default_init_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_default_init_args</span></code></a>(] = None, validate_fn, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nncf.torch.register_module" title="nncf.torch.register_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_module</span></code></a>(*quantizable_field_names[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nncf.torch.register_operator" title="nncf.torch.register_operator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_operator</span></code></a>([name])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nncf.torch.nncf_model_input" title="nncf.torch.nncf_model_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nncf_model_input</span></code></a>(tensor)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nncf.torch.nncf_model_output" title="nncf.torch.nncf_model_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nncf_model_output</span></code></a>(tensor)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nncf.torch.disable_tracing" title="nncf.torch.disable_tracing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">disable_tracing</span></code></a>(method)</p></td>
 <td><p>Patch a method so that it will be executed within no_nncf_trace context</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nncf.torch.no_nncf_trace" title="nncf.torch.no_nncf_trace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">no_nncf_trace</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nncf.torch.forward_nncf_trace" title="nncf.torch.forward_nncf_trace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward_nncf_trace</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nncf.torch.force_build_cpu_extensions" title="nncf.torch.force_build_cpu_extensions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">force_build_cpu_extensions</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nncf.torch.force_build_cuda_extensions" title="nncf.torch.force_build_cuda_extensions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">force_build_cuda_extensions</span></code></a>()</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -480,11 +516,56 @@ with compression algorithms applied to evaluate the model.
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="nncf.torch.register_default_init_args">
+<span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">register_default_init_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nncf_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><span class="pre">NNCFConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.utils.data.DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.loss._Loss</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.nn.modules.loss._Loss</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_steps_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable[[torch.utils.data.DataLoader,</span> <span class="pre">torch.nn.Module,</span> <span class="pre">torch.optim.Optimizer,</span> <span class="pre">CompressionAlgorithmController,</span> <span class="pre">Optional[int]],</span> <span class="pre">type(None)]</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.Module</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.utils.data.DataLoader</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.utils.data.DataLoader</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autoq_eval_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.Module</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.utils.data.DataLoader</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_eval_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.Module</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.utils.data.DataLoader</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distributed_callbacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="structures/index.html#nncf.torch.structures.ExecutionParameters" title="nncf.torch.structures.ExecutionParameters"><span class="pre">ExecutionParameters</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legr_train_optimizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.optim.Optimizer</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><span class="pre">NNCFConfig</span></a></span></span><a class="headerlink" href="#nncf.torch.register_default_init_args" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nncf.torch.register_module">
+<span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">register_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">quantizable_field_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignored_algorithms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.register_module" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nncf.torch.register_operator">
+<span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">register_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.register_operator" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nncf.torch.nncf_model_input">
+<span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">nncf_model_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.nncf_model_input" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nncf.torch.nncf_model_output">
+<span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">nncf_model_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.nncf_model_output" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="nncf.torch.disable_tracing">
 <span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">disable_tracing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.disable_tracing" title="Permalink to this definition">#</a></dt>
 <dd><p>Patch a method so that it will be executed within no_nncf_trace context
 :param method: A method to patch.</p>
 </dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nncf.torch.no_nncf_trace">
+<span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">no_nncf_trace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.no_nncf_trace" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nncf.torch.forward_nncf_trace">
+<span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">forward_nncf_trace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.forward_nncf_trace" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nncf.torch.force_build_cpu_extensions">
+<span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">force_build_cpu_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.force_build_cpu_extensions" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nncf.torch.force_build_cuda_extensions">
+<span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">force_build_cuda_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.force_build_cuda_extensions" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 
 </section>
 </section>
@@ -543,7 +624,16 @@ with compression algorithms applied to evaluate the model.
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.create_compressed_model"><code class="docutils literal notranslate"><span class="pre">create_compressed_model()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.load_state"><code class="docutils literal notranslate"><span class="pre">load_state()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.register_default_init_args"><code class="docutils literal notranslate"><span class="pre">register_default_init_args()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.register_module"><code class="docutils literal notranslate"><span class="pre">register_module()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.register_operator"><code class="docutils literal notranslate"><span class="pre">register_operator()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.nncf_model_input"><code class="docutils literal notranslate"><span class="pre">nncf_model_input()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.nncf_model_output"><code class="docutils literal notranslate"><span class="pre">nncf_model_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.disable_tracing"><code class="docutils literal notranslate"><span class="pre">disable_tracing()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.no_nncf_trace"><code class="docutils literal notranslate"><span class="pre">no_nncf_trace()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.forward_nncf_trace"><code class="docutils literal notranslate"><span class="pre">forward_nncf_trace()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.force_build_cpu_extensions"><code class="docutils literal notranslate"><span class="pre">force_build_cpu_extensions()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.torch.force_build_cuda_extensions"><code class="docutils literal notranslate"><span class="pre">force_build_cuda_extensions()</span></code></a></li>
 </ul>
 </li>
 </ul>

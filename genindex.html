@@ -364,6 +364,8 @@ document.write(`
         <li><a href="autoapi/nncf/torch/index.html#nncf.torch.create_compressed_model">(in module nncf.torch)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/nncf/tensorflow/index.html#nncf.tensorflow.create_compression_callbacks">create_compression_callbacks() (in module nncf.tensorflow)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -422,6 +424,14 @@ document.write(`
         <li><a href="autoapi/nncf/torch/pruning/filter_pruning/algo/index.html#nncf.torch.pruning.filter_pruning.algo.FilterPruningController">(class in nncf.torch.pruning.filter_pruning.algo)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/nncf/torch/index.html#nncf.torch.force_build_cpu_extensions">force_build_cpu_extensions() (in module nncf.torch)</a>
+</li>
+      <li><a href="autoapi/nncf/torch/index.html#nncf.torch.force_build_cuda_extensions">force_build_cuda_extensions() (in module nncf.torch)</a>
+</li>
+      <li><a href="autoapi/nncf/torch/index.html#nncf.torch.forward_nncf_trace">forward_nncf_trace() (in module nncf.torch)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/nncf/tensorflow/sparsity/magnitude/algorithm/index.html#nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.freeze">freeze() (nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController method)</a>
 
       <ul>
@@ -434,8 +444,6 @@ document.write(`
         <li><a href="autoapi/nncf/torch/sparsity/rb/algo/index.html#nncf.torch.sparsity.rb.algo.RBSparsityController.freeze">(nncf.torch.sparsity.rb.algo.RBSparsityController method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/nncf/index.html#nncf.NNCFConfig.from_dict">from_dict() (nncf.NNCFConfig class method)</a>
 </li>
   </ul></td>
@@ -1092,7 +1100,7 @@ document.write(`
 </li>
         <li><a href="autoapi/nncf/quantization/passes/index.html#module-nncf.quantization.passes">nncf.quantization.passes</a>
 </li>
-        <li><a href="autoapi/nncf/quantization/quantize/index.html#module-nncf.quantization.quantize">nncf.quantization.quantize</a>
+        <li><a href="autoapi/nncf/quantization/quantize_fns/index.html#module-nncf.quantization.quantize_fns">nncf.quantization.quantize_fns</a>
 </li>
         <li><a href="autoapi/nncf/quantization/telemetry_extractors/index.html#module-nncf.quantization.telemetry_extractors">nncf.quantization.telemetry_extractors</a>
 </li>
@@ -3606,10 +3614,10 @@ document.write(`
 </li>
       </ul></li>
       <li>
-    nncf.quantization.quantize
+    nncf.quantization.quantize_fns
 
       <ul>
-        <li><a href="autoapi/nncf/quantization/quantize/index.html#module-nncf.quantization.quantize">module</a>
+        <li><a href="autoapi/nncf/quantization/quantize_fns/index.html#module-nncf.quantization.quantize_fns">module</a>
 </li>
       </ul></li>
       <li>
@@ -5215,9 +5223,15 @@ document.write(`
         <li><a href="autoapi/nncf/version/index.html#module-nncf.version">module</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/nncf/torch/index.html#nncf.torch.nncf_model_input">nncf_model_input() (in module nncf.torch)</a>
+</li>
+      <li><a href="autoapi/nncf/torch/index.html#nncf.torch.nncf_model_output">nncf_model_output() (in module nncf.torch)</a>
+</li>
       <li><a href="autoapi/nncf/index.html#nncf.NNCFConfig">NNCFConfig (class in nncf)</a>
 </li>
       <li><a href="autoapi/nncf/common/initialization/dataloader/index.html#nncf.common.initialization.dataloader.NNCFDataLoader">NNCFDataLoader (class in nncf.common.initialization.dataloader)</a>
+</li>
+      <li><a href="autoapi/nncf/torch/index.html#nncf.torch.no_nncf_trace">no_nncf_trace() (in module nncf.torch)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -5251,6 +5265,8 @@ document.write(`
 </li>
       <li><a href="autoapi/nncf/config/structures/index.html#nncf.config.structures.QuantizationRangeInitArgs">QuantizationRangeInitArgs (class in nncf.config.structures)</a>
 </li>
+      <li><a href="autoapi/nncf/index.html#nncf.quantize">quantize() (in module nncf)</a>
+</li>
       <li><a href="autoapi/nncf/index.html#nncf.quantize_with_accuracy_control">quantize_with_accuracy_control() (in module nncf)</a>
 </li>
   </ul></td>
@@ -5265,9 +5281,17 @@ document.write(`
         <li><a href="autoapi/nncf/torch/sparsity/rb/algo/index.html#nncf.torch.sparsity.rb.algo.RBSparsityController">(class in nncf.torch.sparsity.rb.algo)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/nncf/tensorflow/index.html#nncf.tensorflow.register_default_init_args">register_default_init_args() (in module nncf.tensorflow)</a>
+
+      <ul>
+        <li><a href="autoapi/nncf/torch/index.html#nncf.torch.register_default_init_args">(in module nncf.torch)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/nncf/tensorflow/index.html#nncf.tensorflow.register_default_init_args">register_default_init_args() (in module nncf.tensorflow)</a>
+      <li><a href="autoapi/nncf/torch/index.html#nncf.torch.register_module">register_module() (in module nncf.torch)</a>
+</li>
+      <li><a href="autoapi/nncf/torch/index.html#nncf.torch.register_operator">register_operator() (in module nncf.torch)</a>
 </li>
       <li><a href="autoapi/nncf/tensorflow/index.html#nncf.tensorflow.AdaptiveCompressionTrainingLoop.run">run() (nncf.tensorflow.AdaptiveCompressionTrainingLoop method)</a>
 </li>
