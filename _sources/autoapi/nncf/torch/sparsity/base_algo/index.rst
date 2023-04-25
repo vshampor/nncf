@@ -29,7 +29,7 @@ Classes
 
 
 
-.. py:class:: BaseSparsityAlgoController(target_model: nncf.torch.nncf_network.NNCFNetwork, sparsified_module_info: List[SparseModuleInfo])
+.. py:class:: BaseSparsityAlgoController(target_model, sparsified_module_info)
 
    Bases: :py:obj:`nncf.torch.compression_method_api.PTCompressionAlgorithmController`, :py:obj:`nncf.common.sparsity.controller.SparsityController`
 
@@ -44,7 +44,7 @@ Classes
       it to a dummy one that does not change the compression rate.
 
 
-   .. py:method:: compression_stage() -> nncf.api.compression.CompressionStage
+   .. py:method:: compression_stage()
 
       Returns the compression stage. Should be used on saving best checkpoints
       to distinguish between uncompressed, partially compressed, and fully
@@ -53,7 +53,7 @@ Classes
       :return: The compression stage of the target model.
 
 
-   .. py:method:: strip_model(model: nncf.torch.nncf_network.NNCFNetwork, do_copy: bool = False) -> nncf.torch.nncf_network.NNCFNetwork
+   .. py:method:: strip_model(model, do_copy = False)
 
       Strips auxiliary layers that were used for the model compression, as it's
       only needed for training. The method is used before exporting the model

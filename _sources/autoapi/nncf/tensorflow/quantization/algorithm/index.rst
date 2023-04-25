@@ -29,13 +29,13 @@ Classes
 
 
 
-.. py:class:: QuantizationController(target_model, config, op_names: List[str])
+.. py:class:: QuantizationController(target_model, config, op_names)
 
    Bases: :py:obj:`nncf.common.compression.BaseCompressionAlgorithmController`
 
    Contains the implementation of the basic functionality of the compression controller.
 
-   .. py:method:: strip_model(model: tensorflow.keras.Model, do_copy: bool = False) -> tensorflow.keras.Model
+   .. py:method:: strip_model(model, do_copy = False)
 
       Strips auxiliary layers that were used for the model compression, as it's
       only needed for training. The method is used before exporting the model
@@ -46,7 +46,7 @@ Classes
       :return: The stripped model.
 
 
-   .. py:method:: statistics(quickly_collected_only: bool = False) -> nncf.common.statistics.NNCFStatistics
+   .. py:method:: statistics(quickly_collected_only = False)
 
       Returns a `Statistics` class instance that contains compression algorithm statistics.
 
@@ -56,7 +56,7 @@ Classes
       :return: A `Statistics` class instance that contains compression algorithm statistics.
 
 
-   .. py:method:: compression_stage() -> nncf.api.compression.CompressionStage
+   .. py:method:: compression_stage()
 
       Returns the compression stage. Should be used on saving best checkpoints
       to distinguish between uncompressed, partially compressed, and fully

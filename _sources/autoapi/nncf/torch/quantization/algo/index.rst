@@ -29,7 +29,7 @@ Classes
 
 
 
-.. py:class:: QuantizationController(target_model: nncf.torch.nncf_network.NNCFNetwork, config: nncf.config.NNCFConfig, debug_interface: QuantizationDebugInterface, weight_quantizers: Dict[nncf.common.quantization.structs.WeightQuantizerId, nncf.torch.quantization.structs.WeightQuantizerInfo], non_weight_quantizers: Dict[nncf.common.quantization.structs.NonWeightQuantizerId, nncf.torch.quantization.structs.NonWeightQuantizerInfo], groups_of_adjacent_quantizers: nncf.torch.quantization.precision_init.adjacent_quantizers.GroupsOfAdjacentQuantizers, quantizers_input_shapes: Dict[nncf.common.quantization.structs.QuantizerId, Tuple[int]], build_time_metric_info: nncf.torch.quantization.metrics.QuantizationShareBuildTimeInfo = None, build_time_range_init_params: nncf.torch.quantization.init_range.PTRangeInitParams = None)
+.. py:class:: QuantizationController(target_model, config, debug_interface, weight_quantizers, non_weight_quantizers, groups_of_adjacent_quantizers, quantizers_input_shapes, build_time_metric_info = None, build_time_range_init_params = None)
 
    Bases: :py:obj:`QuantizationControllerBase`
 
@@ -51,7 +51,7 @@ Classes
       should be made inside this function.
 
 
-   .. py:method:: compression_stage() -> nncf.api.compression.CompressionStage
+   .. py:method:: compression_stage()
 
       Returns the compression stage. Should be used on saving best checkpoints
       to distinguish between uncompressed, partially compressed, and fully
@@ -60,13 +60,13 @@ Classes
       :return: The compression stage of the target model.
 
 
-   .. py:method:: init_precision(precision_init_type: str, precision_init_params: nncf.torch.quantization.precision_init.base_init.BasePrecisionInitParams, precision_constraints: nncf.torch.quantization.precision_constraints.HardwareQuantizationConstraints) -> nncf.common.quantization.quantizer_setup.SingleConfigQuantizerSetup
+   .. py:method:: init_precision(precision_init_type, precision_init_params, precision_constraints)
 
       Precision initialization happens based on an measure of layer sensitivity to perturbations. The measure is
       calculated by average Hessian trace estimation for each layer using Hutchinson algorithm.
 
 
-   .. py:method:: init_range(range_init_params: nncf.torch.quantization.init_range.PTRangeInitParams = None)
+   .. py:method:: init_range(range_init_params = None)
 
       Tracks input statistics for quantizers in the model and sets ranges of the quantizers to correspond to
       minimum and maximum input tensor levels observed.
@@ -74,7 +74,7 @@ Classes
       that were used during compressed model creation will be used.
 
 
-   .. py:method:: statistics(quickly_collected_only=False) -> nncf.common.statistics.NNCFStatistics
+   .. py:method:: statistics(quickly_collected_only=False)
 
       Returns a `Statistics` class instance that contains compression algorithm statistics.
 
@@ -84,7 +84,7 @@ Classes
       :return: A `Statistics` class instance that contains compression algorithm statistics.
 
 
-   .. py:method:: strip_model(model: nncf.torch.nncf_network.NNCFNetwork, do_copy: bool = False) -> nncf.torch.nncf_network.NNCFNetwork
+   .. py:method:: strip_model(model, do_copy = False)
 
       Strips auxiliary layers that were used for the model compression, as it's
       only needed for training. The method is used before exporting the model

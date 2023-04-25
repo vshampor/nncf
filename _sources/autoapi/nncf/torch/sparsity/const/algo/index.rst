@@ -29,7 +29,7 @@ Classes
 
 
 
-.. py:class:: ConstSparsityController(target_model: nncf.torch.nncf_network.NNCFNetwork, sparsified_module_info: List[SparseModuleInfo])
+.. py:class:: ConstSparsityController(target_model, sparsified_module_info)
 
    Bases: :py:obj:`nncf.torch.sparsity.base_algo.BaseSparsityAlgoController`
 
@@ -43,14 +43,14 @@ Classes
       Freezes all sparsity masks. Sparsity masks will not be trained after calling this method.
 
 
-   .. py:method:: set_sparsity_level(sparsity_level: float)
+   .. py:method:: set_sparsity_level(sparsity_level)
 
       Sets the sparsity level that should be applied to the model's weights.
 
       :param sparsity_level: Sparsity level that should be applied to the model's weights.
 
 
-   .. py:method:: statistics(quickly_collected_only: bool = False) -> nncf.common.statistics.NNCFStatistics
+   .. py:method:: statistics(quickly_collected_only = False)
 
       Returns a `Statistics` class instance that contains compression algorithm statistics.
 

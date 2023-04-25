@@ -29,14 +29,14 @@ Classes
 
 
 
-.. py:class:: FilterPruningController(target_model: tensorflow.keras.Model, graph: nncf.common.graph.NNCFGraph, op_names: List[str], prunable_types: List[str], pruned_layer_groups: nncf.common.pruning.clusterization.Clusterization[nncf.tensorflow.pruning.base_algorithm.PrunedLayerInfo], config: nncf.NNCFConfig)
+.. py:class:: FilterPruningController(target_model, graph, op_names, prunable_types, pruned_layer_groups, config)
 
    Bases: :py:obj:`nncf.tensorflow.pruning.base_algorithm.BasePruningAlgoController`
 
    Serves as a handle to the additional modules, parameters and hooks inserted
    into the original uncompressed model to enable filter pruning.
 
-   .. py:method:: compression_stage() -> nncf.api.compression.CompressionStage
+   .. py:method:: compression_stage()
 
       Returns the compression stage. Should be used on saving best checkpoints
       to distinguish between uncompressed, partially compressed, and fully
@@ -51,7 +51,7 @@ Classes
       it to a dummy one that does not change the compression rate.
 
 
-   .. py:method:: statistics(quickly_collected_only: bool = False) -> nncf.common.statistics.NNCFStatistics
+   .. py:method:: statistics(quickly_collected_only = False)
 
       Returns a `Statistics` class instance that contains compression algorithm statistics.
 
@@ -61,7 +61,7 @@ Classes
       :return: A `Statistics` class instance that contains compression algorithm statistics.
 
 
-   .. py:method:: set_pruning_level(pruning_level: float, run_batchnorm_adaptation: bool = False)
+   .. py:method:: set_pruning_level(pruning_level, run_batchnorm_adaptation = False)
 
       Setup pruning masks in accordance to provided pruning level
       :param pruning_level: pruning ratio

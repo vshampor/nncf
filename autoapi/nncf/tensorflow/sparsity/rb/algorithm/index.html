@@ -370,12 +370,20 @@ limitations under the License.</p>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="nncf.tensorflow.sparsity.rb.algorithm.RBSparsityController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.tensorflow.sparsity.rb.algorithm.</span></span><span class="sig-name descname"><span class="pre">RBSparsityController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><span class="pre">nncf.NNCFConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.tensorflow.sparsity.rb.algorithm.RBSparsityController" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.tensorflow.sparsity.rb.algorithm.</span></span><span class="sig-name descname"><span class="pre">RBSparsityController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.tensorflow.sparsity.rb.algorithm.RBSparsityController" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">nncf.tensorflow.sparsity.base_algorithm.BaseSparsityController</span></code></p>
 <p>Serves as a handle to the additional modules, parameters and hooks inserted
 into the original uncompressed model to enable sparsity-specific compression.
 Hosts entities that are to be used during the training process, such as
 compression scheduler and compression loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="../../../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>nncf.NNCFConfig</em></a>) – </p></li>
+<li><p><strong>op_names</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.tensorflow.sparsity.rb.algorithm.RBSparsityController.set_sparsity_level">
 <span class="sig-name descname"><span class="pre">set_sparsity_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sparsity_level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.tensorflow.sparsity.rb.algorithm.RBSparsityController.set_sparsity_level" title="Permalink to this definition">#</a></dt>
@@ -395,16 +403,19 @@ compression scheduler and compression loss.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.tensorflow.sparsity.rb.algorithm.RBSparsityController.statistics">
-<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quickly_collected_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.common.statistics.NNCFStatistics</span></span></span><a class="headerlink" href="#nncf.tensorflow.sparsity.rb.algorithm.RBSparsityController.statistics" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quickly_collected_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.tensorflow.sparsity.rb.algorithm.RBSparsityController.statistics" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns a <cite>Statistics</cite> class instance that contains compression algorithm statistics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>quickly_collected_only</strong> – Enables collection of the statistics that
+<dd class="field-odd"><p><strong>quickly_collected_only</strong> (<em>bool</em>) – Enables collection of the statistics that
 don’t take too much time to compute. Can be helpful for the case when
 need to keep track of statistics on each training batch/step/iteration.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A <cite>Statistics</cite> class instance that contains compression algorithm statistics.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nncf.common.statistics.NNCFStatistics</p>
 </dd>
 </dl>
 </dd></dl>

@@ -373,37 +373,59 @@ limitations under the License.</p>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="nncf.torch.pruning.filter_pruning.algo.FilterPruningController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.pruning.filter_pruning.algo.</span></span><span class="sig-name descname"><span class="pre">FilterPruningController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.nncf_network.NNCFNetwork</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prunable_types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pruned_module_groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.common.pruning.clusterization.Clusterization</span><span class="p"><span class="pre">[</span></span><span class="pre">nncf.torch.pruning.structs.PrunedModuleInfo</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pruned_norms_operators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">nncf.common.graph.NNCFNode</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">nncf.torch.pruning.filter_pruning.layers.FilterPruningMask</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.nn.Module</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><span class="pre">nncf.NNCFConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.pruning.filter_pruning.algo.FilterPruningController" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.pruning.filter_pruning.algo.</span></span><span class="sig-name descname"><span class="pre">FilterPruningController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prunable_types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pruned_module_groups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pruned_norms_operators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.pruning.filter_pruning.algo.FilterPruningController" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">nncf.torch.pruning.base_algo.BasePruningAlgoController</span></code></p>
 <p>Serves as a handle to the additional modules, parameters and hooks inserted
 into the original uncompressed model in order to enable algorithm-specific compression.
 Hosts entities that are to be used during the training process, such as compression scheduler and
 compression loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_model</strong> (<em>nncf.torch.nncf_network.NNCFNetwork</em>) – </p></li>
+<li><p><strong>prunable_types</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>pruned_module_groups</strong> (<em>nncf.common.pruning.clusterization.Clusterization</em><em>[</em><em>nncf.torch.pruning.structs.PrunedModuleInfo</em><em>]</em>) – </p></li>
+<li><p><strong>pruned_norms_operators</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>nncf.common.graph.NNCFNode</em><em>, </em><em>nncf.torch.pruning.filter_pruning.layers.FilterPruningMask</em><em>, </em><em>torch.nn.Module</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>config</strong> (<a class="reference internal" href="../../../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>nncf.NNCFConfig</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.pruning.filter_pruning.algo.FilterPruningController.get_mask">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minfo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.pruning.structs.PrunedModuleInfo</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#nncf.torch.pruning.filter_pruning.algo.FilterPruningController.get_mask" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minfo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.pruning.filter_pruning.algo.FilterPruningController.get_mask" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns pruning mask for minfo.module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>minfo</strong> (<em>nncf.torch.pruning.structs.PrunedModuleInfo</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>torch.Tensor</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.pruning.filter_pruning.algo.FilterPruningController.statistics">
-<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quickly_collected_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.common.statistics.NNCFStatistics</span></span></span><a class="headerlink" href="#nncf.torch.pruning.filter_pruning.algo.FilterPruningController.statistics" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quickly_collected_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.pruning.filter_pruning.algo.FilterPruningController.statistics" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns a <cite>Statistics</cite> class instance that contains compression algorithm statistics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>quickly_collected_only</strong> – Enables collection of the statistics that
+<dd class="field-odd"><p><strong>quickly_collected_only</strong> (<em>bool</em>) – Enables collection of the statistics that
 don’t take too much time to compute. Can be helpful for the case when
 need to keep track of statistics on each training batch/step/iteration.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A <cite>Statistics</cite> class instance that contains compression algorithm statistics.</p>
 </dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nncf.common.statistics.NNCFStatistics</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.pruning.filter_pruning.algo.FilterPruningController.set_pruning_level">
-<span class="sig-name descname"><span class="pre">set_pruning_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pruning_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_batchnorm_adaptation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nncf.torch.pruning.filter_pruning.algo.FilterPruningController.set_pruning_level" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set_pruning_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pruning_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_batchnorm_adaptation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.pruning.filter_pruning.algo.FilterPruningController.set_pruning_level" title="Permalink to this definition">#</a></dt>
 <dd><p>Set the global or groupwise pruning level in the model.
 If pruning_level is a float, the correspoding global pruning level is set in the model,
 either in terms of the percentage of filters pruned or as the percentage of flops
@@ -411,6 +433,17 @@ removed, the latter being true in case the “prune_flops” flag of the control
 set to True.
 If pruning_level is a dict, the keys should correspond to layer group id’s and the
 values to groupwise pruning level to be set in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pruning_level</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>Dict</em><em>[</em><em>int</em><em>, </em><em>float</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>run_batchnorm_adaptation</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -421,13 +454,16 @@ values to groupwise pruning level to be set in the model.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.pruning.filter_pruning.algo.FilterPruningController.compression_stage">
-<span class="sig-name descname"><span class="pre">compression_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.api.compression.CompressionStage</span></span></span><a class="headerlink" href="#nncf.torch.pruning.filter_pruning.algo.FilterPruningController.compression_stage" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compression_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.pruning.filter_pruning.algo.FilterPruningController.compression_stage" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns the compression stage. Should be used on saving best checkpoints
 to distinguish between uncompressed, partially compressed, and fully
 compressed models.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The compression stage of the target model.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>nncf.api.compression.CompressionStage</p>
 </dd>
 </dl>
 </dd></dl>
@@ -441,19 +477,22 @@ it to a dummy one that does not change the compression rate.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.pruning.filter_pruning.algo.FilterPruningController.strip_model">
-<span class="sig-name descname"><span class="pre">strip_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.nncf_network.NNCFNetwork</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_copy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.torch.nncf_network.NNCFNetwork</span></span></span><a class="headerlink" href="#nncf.torch.pruning.filter_pruning.algo.FilterPruningController.strip_model" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">strip_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.pruning.filter_pruning.algo.FilterPruningController.strip_model" title="Permalink to this definition">#</a></dt>
 <dd><p>Strips auxiliary layers that were used for the model compression, as it’s
 only needed for training. The method is used before exporting the model
 in the target format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> – The compressed model.</p></li>
-<li><p><strong>do_copy</strong> – Modify copy of the model, defaults to False.</p></li>
+<li><p><strong>model</strong> (<em>nncf.torch.nncf_network.NNCFNetwork</em>) – The compressed model.</p></li>
+<li><p><strong>do_copy</strong> (<em>bool</em>) – Modify copy of the model, defaults to False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The stripped model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nncf.torch.nncf_network.NNCFNetwork</p>
 </dd>
 </dl>
 </dd></dl>

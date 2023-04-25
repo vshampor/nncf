@@ -33,7 +33,7 @@ Classes
 
 
 
-.. py:class:: QuantizationPrecisionInitArgs(criterion_fn: Callable[[Any, Any, torch.nn.modules.loss._Loss], torch.Tensor], criterion: torch.nn.modules.loss._Loss, data_loader: torch.utils.data.DataLoader, device: str = None)
+.. py:class:: QuantizationPrecisionInitArgs(criterion_fn, criterion, data_loader, device = None)
 
    Bases: :py:obj:`nncf.config.structures.NNCFExtraConfigStruct`
 
@@ -58,7 +58,7 @@ Classes
                   use the device of the model's parameters.
 
 
-.. py:class:: AutoQPrecisionInitArgs(data_loader: torch.utils.data.DataLoader, eval_fn: Callable[[torch.nn.Module, torch.utils.data.DataLoader], float], nncf_config: NNCFConfig)
+.. py:class:: AutoQPrecisionInitArgs(data_loader, eval_fn, nncf_config)
 
    Bases: :py:obj:`nncf.config.structures.NNCFExtraConfigStruct`
 
@@ -73,7 +73,7 @@ Classes
                will fail.
 
 
-.. py:class:: LeGRInitArgs(train_loader: torch.utils.data.DataLoader, train_fn: Callable[[torch.utils.data.DataLoader, torch.nn.Module, torch.optim.Optimizer, CompressionAlgorithmController, Optional[int]], type(None)], val_loader: torch.utils.data.DataLoader, val_fn: Callable[[torch.nn.Module, torch.utils.data.DataLoader], Tuple[float, float]], train_optimizer: Optional[torch.optim.Optimizer], nncf_config: NNCFConfig)
+.. py:class:: LeGRInitArgs(train_loader, train_fn, val_loader, val_fn, train_optimizer, nncf_config)
 
    Bases: :py:obj:`nncf.config.structures.NNCFExtraConfigStruct`
 
@@ -87,7 +87,7 @@ Classes
    :param nncf_config: NNCF config for compression.
 
 
-.. py:class:: DistributedCallbacksArgs(wrapping_callback: Callable[[torch.nn.Module], torch.nn.Module], unwrapping_callback: Callable[[torch.nn.Module], torch.nn.Module])
+.. py:class:: DistributedCallbacksArgs(wrapping_callback, unwrapping_callback)
 
    Bases: :py:obj:`nncf.config.structures.NNCFExtraConfigStruct`
 
@@ -99,7 +99,7 @@ Classes
    :param unwrapping_callback: Callback for unwrapping the model wrapped with wrapping_callback, returns original model
 
 
-.. py:class:: ExecutionParameters(cpu_only: bool, current_gpu: Optional[int])
+.. py:class:: ExecutionParameters(cpu_only, current_gpu)
 
    Parameters that are necessary for distributed training of the model.
    :param cpu_only: whether cpu-only mode is using for training

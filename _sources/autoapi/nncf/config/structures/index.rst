@@ -31,21 +31,21 @@ Classes
 
 
 
-.. py:class:: QuantizationRangeInitArgs(data_loader: nncf.common.initialization.dataloader.NNCFDataLoader, device: Optional[str] = None)
+.. py:class:: QuantizationRangeInitArgs(data_loader, device = None)
 
    Bases: :py:obj:`NNCFExtraConfigStruct`
 
    Stores additional arguments for quantization range initialization algorithms.
 
 
-.. py:class:: BNAdaptationInitArgs(data_loader: nncf.common.initialization.dataloader.NNCFDataLoader, device: Optional[str] = None)
+.. py:class:: BNAdaptationInitArgs(data_loader, device = None)
 
    Bases: :py:obj:`NNCFExtraConfigStruct`
 
    Stores additional arguments for batchnorm statistics adaptation algorithm.
 
 
-.. py:class:: ModelEvaluationArgs(eval_fn: Callable)
+.. py:class:: ModelEvaluationArgs(eval_fn)
 
    Bases: :py:obj:`NNCFExtraConfigStruct`
 

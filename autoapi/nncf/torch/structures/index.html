@@ -384,7 +384,7 @@ limitations under the License.</p>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="nncf.torch.structures.QuantizationPrecisionInitArgs">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.structures.</span></span><span class="sig-name descname"><span class="pre">QuantizationPrecisionInitArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">criterion_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.nn.modules.loss._Loss</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.loss._Loss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.utils.data.DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.structures.QuantizationPrecisionInitArgs" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.structures.</span></span><span class="sig-name descname"><span class="pre">QuantizationPrecisionInitArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">criterion_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.structures.QuantizationPrecisionInitArgs" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">nncf.config.structures.NNCFExtraConfigStruct</span></code></p>
 <p>Stores arguments for initialization of quantization’s bitwidth.
 Initialization is based on calculating a measure reflecting layers’ sensitivity to perturbations. The measure is
@@ -407,19 +407,25 @@ will fail.</p>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>device</strong> – Device to perform initialization at. Either ‘cpu’, ‘cuda’, or None (default); if None, will
-use the device of the model’s parameters.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<em>str</em>) – Device to perform initialization at. Either ‘cpu’, ‘cuda’, or None (default); if None, will
+use the device of the model’s parameters.</p></li>
+<li><p><strong>criterion_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>Any</em><em>, </em><em>Any</em><em>, </em><em>torch.nn.modules.loss._Loss</em><em>]</em><em>, </em><em>torch.Tensor</em><em>]</em>) – </p></li>
+<li><p><strong>criterion</strong> (<em>torch.nn.modules.loss._Loss</em>) – </p></li>
+<li><p><strong>data_loader</strong> (<em>torch.utils.data.DataLoader</em>) – </p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nncf.torch.structures.AutoQPrecisionInitArgs">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.structures.</span></span><span class="sig-name descname"><span class="pre">AutoQPrecisionInitArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.utils.data.DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.Module</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.utils.data.DataLoader</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nncf_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><span class="pre">NNCFConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.structures.AutoQPrecisionInitArgs" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.structures.</span></span><span class="sig-name descname"><span class="pre">AutoQPrecisionInitArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nncf_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.structures.AutoQPrecisionInitArgs" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">nncf.config.structures.NNCFExtraConfigStruct</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data_loader</strong> – ‘data_loader’ - provides an iterable over the given dataset. Instance of
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_loader</strong> (<em>torch.utils.data.DataLoader</em>) – ‘data_loader’ - provides an iterable over the given dataset. Instance of
 nncf.initialization.PTInitializingDataLoader; a regular ‘torch.utils.data.DataLoader’ may
 also be passed, but only in the simple case when it returns a tuple of (input, target) tensors.
 <em>WARNING</em>: The final quantizer setup of the created compressed model is dependent on the data
@@ -427,14 +433,17 @@ provided by the data_loader. When using PyTorch’s DistributedDataParallel with
 initialization, make sure that each process in the distributed group receives the same data
 from the data_loader as the other processes, otherwise the create_compressed_model call may
 create different compressed model objects for each distributed process and the distributed training
-will fail.</p>
+will fail.</p></li>
+<li><p><strong>eval_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.nn.Module</em><em>, </em><em>torch.utils.data.DataLoader</em><em>]</em><em>, </em><em>float</em><em>]</em>) – </p></li>
+<li><p><strong>nncf_config</strong> (<a class="reference internal" href="../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>NNCFConfig</em></a>) – </p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nncf.torch.structures.LeGRInitArgs">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.structures.</span></span><span class="sig-name descname"><span class="pre">LeGRInitArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.utils.data.DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable[[torch.utils.data.DataLoader,</span> <span class="pre">torch.nn.Module,</span> <span class="pre">torch.optim.Optimizer,</span> <span class="pre">CompressionAlgorithmController,</span> <span class="pre">Optional[int]],</span> <span class="pre">type(None)]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.utils.data.DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.Module</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.utils.data.DataLoader</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_optimizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.optim.Optimizer</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nncf_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><span class="pre">NNCFConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.structures.LeGRInitArgs" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.structures.</span></span><span class="sig-name descname"><span class="pre">LeGRInitArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nncf_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.structures.LeGRInitArgs" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">nncf.config.structures.NNCFExtraConfigStruct</span></code></p>
 <p>Stores arguments for learning global ranking in pruning algorithm.
 :param train_loader: provides an iterable over the given training (or initialising) dataset.
@@ -444,11 +453,23 @@ given args: [dataloader, model, optimizer, compression algorithm controller, tra
 :param val_fn: callable to validate model, calculates pair of validation [acc, loss] by given model and dataloader.
 :param train_optimizer: optional, optimizer for model training.
 :param nncf_config: NNCF config for compression.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_loader</strong> (<em>torch.utils.data.DataLoader</em>) – </p></li>
+<li><p><strong>train_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.utils.data.DataLoader</em><em>, </em><em>torch.nn.Module</em><em>, </em><em>torch.optim.Optimizer</em><em>, </em><em>CompressionAlgorithmController</em><em>, </em><em>Optional</em><em>[</em><em>int</em><em>]</em><em>]</em><em>, </em><em>type</em><em>(</em><em>None</em><em>)</em><em>]</em>) – </p></li>
+<li><p><strong>val_loader</strong> (<em>torch.utils.data.DataLoader</em>) – </p></li>
+<li><p><strong>val_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.nn.Module</em><em>, </em><em>torch.utils.data.DataLoader</em><em>]</em><em>, </em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>train_optimizer</strong> (<em>Optional</em><em>[</em><em>torch.optim.Optimizer</em><em>]</em>) – </p></li>
+<li><p><strong>nncf_config</strong> (<a class="reference internal" href="../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>NNCFConfig</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nncf.torch.structures.DistributedCallbacksArgs">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.structures.</span></span><span class="sig-name descname"><span class="pre">DistributedCallbacksArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wrapping_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.Module</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.nn.Module</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unwrapping_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">torch.nn.Module</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.nn.Module</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.structures.DistributedCallbacksArgs" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.structures.</span></span><span class="sig-name descname"><span class="pre">DistributedCallbacksArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wrapping_callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unwrapping_callback</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.structures.DistributedCallbacksArgs" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">nncf.config.structures.NNCFExtraConfigStruct</span></code></p>
 <p>A pair of callbacks that is needed for distributed training of the model: wrapping model with wrapping_callback for
 distributed training, and after all training steps unwrapping model to the initial not-distributed state with
@@ -456,14 +477,30 @@ unwrapping_callback.
 :param wrapping_callback: Callback that wraps the model for distributed training with any necessary structure (for
 example, torch.nn.DataParallel or any custom class), returns wrapped model ready for distributed training
 :param unwrapping_callback: Callback for unwrapping the model wrapped with wrapping_callback, returns original model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wrapping_callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.nn.Module</em><em>]</em><em>, </em><em>torch.nn.Module</em><em>]</em>) – </p></li>
+<li><p><strong>unwrapping_callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.nn.Module</em><em>]</em><em>, </em><em>torch.nn.Module</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nncf.torch.structures.ExecutionParameters">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.structures.</span></span><span class="sig-name descname"><span class="pre">ExecutionParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cpu_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_gpu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.structures.ExecutionParameters" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.structures.</span></span><span class="sig-name descname"><span class="pre">ExecutionParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cpu_only</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_gpu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.structures.ExecutionParameters" title="Permalink to this definition">#</a></dt>
 <dd><p>Parameters that are necessary for distributed training of the model.
 :param cpu_only: whether cpu-only mode is using for training
 :param current_gpu: id of GPU that should be used for training (if only one of all is used)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cpu_only</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>current_gpu</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

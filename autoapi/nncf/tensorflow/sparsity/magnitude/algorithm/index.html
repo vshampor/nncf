@@ -371,25 +371,38 @@ limitations under the License.</p>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.tensorflow.sparsity.magnitude.algorithm.</span></span><span class="sig-name descname"><span class="pre">MagnitudeSparsityController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><span class="pre">nncf.NNCFConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.tensorflow.sparsity.magnitude.algorithm.</span></span><span class="sig-name descname"><span class="pre">MagnitudeSparsityController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">nncf.tensorflow.sparsity.base_algorithm.BaseSparsityController</span></code></p>
 <p>Serves as a handle to the additional modules, parameters and hooks inserted
 into the original uncompressed model in order to enable algorithm-specific compression.
 Hosts entities that are to be used during the training process, such as compression scheduler and
 compression loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="../../../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>nncf.NNCFConfig</em></a>) – </p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.freeze">
-<span class="sig-name descname"><span class="pre">freeze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freeze</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.freeze" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">freeze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freeze</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.freeze" title="Permalink to this definition">#</a></dt>
 <dd><p>Freezes all sparsity masks. Sparsity masks will not be trained after calling this method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>freeze</strong> (<em>bool</em>) – </p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.set_sparsity_level">
-<span class="sig-name descname"><span class="pre">set_sparsity_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sparsity_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_batchnorm_adaptation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.set_sparsity_level" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set_sparsity_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sparsity_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_batchnorm_adaptation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.set_sparsity_level" title="Permalink to this definition">#</a></dt>
 <dd><p>Sets the sparsity level that should be applied to the model’s weights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>sparsity_level</strong> – Sparsity level that should be applied to the model’s weights.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sparsity_level</strong> – Sparsity level that should be applied to the model’s weights.</p></li>
+<li><p><strong>run_batchnorm_adaptation</strong> (<em>bool</em>) – </p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -403,29 +416,35 @@ it to a dummy one that does not change the compression rate.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.statistics">
-<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quickly_collected_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.common.statistics.NNCFStatistics</span></span></span><a class="headerlink" href="#nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.statistics" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quickly_collected_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.statistics" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns a <cite>Statistics</cite> class instance that contains compression algorithm statistics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>quickly_collected_only</strong> – Enables collection of the statistics that
+<dd class="field-odd"><p><strong>quickly_collected_only</strong> (<em>bool</em>) – Enables collection of the statistics that
 don’t take too much time to compute. Can be helpful for the case when
 need to keep track of statistics on each training batch/step/iteration.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A <cite>Statistics</cite> class instance that contains compression algorithm statistics.</p>
 </dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nncf.common.statistics.NNCFStatistics</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.compression_stage">
-<span class="sig-name descname"><span class="pre">compression_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.api.compression.CompressionStage</span></span></span><a class="headerlink" href="#nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.compression_stage" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compression_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nncf.tensorflow.sparsity.magnitude.algorithm.MagnitudeSparsityController.compression_stage" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns the compression stage. Should be used on saving best checkpoints
 to distinguish between uncompressed, partially compressed, and fully
 compressed models.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The compression stage of the target model.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>nncf.api.compression.CompressionStage</p>
 </dd>
 </dl>
 </dd></dl>

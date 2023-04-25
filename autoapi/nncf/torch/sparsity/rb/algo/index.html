@@ -371,32 +371,47 @@ limitations under the License.</p>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="nncf.torch.sparsity.rb.algo.RBSparsityController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.sparsity.rb.algo.</span></span><span class="sig-name descname"><span class="pre">RBSparsityController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.nncf_network.NNCFNetwork</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sparsified_module_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">nncf.torch.sparsity.base_algo.SparseModuleInfo</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><span class="pre">nncf.NNCFConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.sparsity.rb.algo.RBSparsityController" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.sparsity.rb.algo.</span></span><span class="sig-name descname"><span class="pre">RBSparsityController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sparsified_module_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.sparsity.rb.algo.RBSparsityController" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../../base_algo/index.html#nncf.torch.sparsity.base_algo.BaseSparsityAlgoController" title="nncf.torch.sparsity.base_algo.BaseSparsityAlgoController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nncf.torch.sparsity.base_algo.BaseSparsityAlgoController</span></code></a></p>
 <p>Serves as a handle to the additional modules, parameters and hooks inserted
 into the original uncompressed model in order to enable algorithm-specific compression.
 Hosts entities that are to be used during the training process, such as compression scheduler and
 compression loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_model</strong> (<em>nncf.torch.nncf_network.NNCFNetwork</em>) – </p></li>
+<li><p><strong>sparsified_module_info</strong> (<em>List</em><em>[</em><em>nncf.torch.sparsity.base_algo.SparseModuleInfo</em><em>]</em>) – </p></li>
+<li><p><strong>config</strong> (<a class="reference internal" href="../../../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>nncf.NNCFConfig</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.sparsity.rb.algo.RBSparsityController.set_sparsity_level">
-<span class="sig-name descname"><span class="pre">set_sparsity_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sparsity_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_sparsified_module_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.sparsity.base_algo.SparseModuleInfo</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.sparsity.rb.algo.RBSparsityController.set_sparsity_level" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set_sparsity_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sparsity_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_sparsified_module_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.sparsity.rb.algo.RBSparsityController.set_sparsity_level" title="Permalink to this definition">#</a></dt>
 <dd><p>Sets the sparsity level that should be applied to the model’s weights.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>sparsity_level</strong> – Sparsity level that should be applied to the model’s weights.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sparsity_level</strong> – Sparsity level that should be applied to the model’s weights.</p></li>
+<li><p><strong>target_sparsified_module_info</strong> (<em>nncf.torch.sparsity.base_algo.SparseModuleInfo</em>) – </p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.sparsity.rb.algo.RBSparsityController.compression_stage">
-<span class="sig-name descname"><span class="pre">compression_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.api.compression.CompressionStage</span></span></span><a class="headerlink" href="#nncf.torch.sparsity.rb.algo.RBSparsityController.compression_stage" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compression_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.sparsity.rb.algo.RBSparsityController.compression_stage" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns the compression stage. Should be used on saving best checkpoints
 to distinguish between uncompressed, partially compressed, and fully
 compressed models.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The compression stage of the target model.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>nncf.api.compression.CompressionStage</p>
 </dd>
 </dl>
 </dd></dl>
@@ -418,7 +433,7 @@ should be made inside this function.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.sparsity.rb.algo.RBSparsityController.statistics">
-<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quickly_collected_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.common.statistics.NNCFStatistics</span></span></span><a class="headerlink" href="#nncf.torch.sparsity.rb.algo.RBSparsityController.statistics" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quickly_collected_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.sparsity.rb.algo.RBSparsityController.statistics" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns a <cite>Statistics</cite> class instance that contains compression algorithm statistics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -428,6 +443,9 @@ need to keep track of statistics on each training batch/step/iteration.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A <cite>Statistics</cite> class instance that contains compression algorithm statistics.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nncf.common.statistics.NNCFStatistics</p>
 </dd>
 </dl>
 </dd></dl>

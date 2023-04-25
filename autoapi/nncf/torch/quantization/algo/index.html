@@ -373,12 +373,27 @@ limitations under the License.</p>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="nncf.torch.quantization.algo.QuantizationController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.quantization.algo.</span></span><span class="sig-name descname"><span class="pre">QuantizationController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.nncf_network.NNCFNetwork</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.config.NNCFConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug_interface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QuantizationDebugInterface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_quantizers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">nncf.common.quantization.structs.WeightQuantizerId</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">nncf.torch.quantization.structs.WeightQuantizerInfo</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_weight_quantizers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">nncf.common.quantization.structs.NonWeightQuantizerId</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">nncf.torch.quantization.structs.NonWeightQuantizerInfo</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups_of_adjacent_quantizers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.quantization.precision_init.adjacent_quantizers.GroupsOfAdjacentQuantizers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantizers_input_shapes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">nncf.common.quantization.structs.QuantizerId</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_time_metric_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.quantization.metrics.QuantizationShareBuildTimeInfo</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_time_range_init_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.quantization.init_range.PTRangeInitParams</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.quantization.algo.</span></span><span class="sig-name descname"><span class="pre">QuantizationController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug_interface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_quantizers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">non_weight_quantizers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups_of_adjacent_quantizers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantizers_input_shapes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_time_metric_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_time_range_init_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">QuantizationControllerBase</span></code></p>
 <p>Serves as a handle to the additional modules, parameters and hooks inserted
 into the original uncompressed model in order to enable algorithm-specific compression.
 Hosts entities that are to be used during the training process, such as compression scheduler and
 compression loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_model</strong> (<em>nncf.torch.nncf_network.NNCFNetwork</em>) – </p></li>
+<li><p><strong>config</strong> (<em>nncf.config.NNCFConfig</em>) – </p></li>
+<li><p><strong>debug_interface</strong> (<em>QuantizationDebugInterface</em>) – </p></li>
+<li><p><strong>weight_quantizers</strong> (<em>Dict</em><em>[</em><em>nncf.common.quantization.structs.WeightQuantizerId</em><em>, </em><em>nncf.torch.quantization.structs.WeightQuantizerInfo</em><em>]</em>) – </p></li>
+<li><p><strong>non_weight_quantizers</strong> (<em>Dict</em><em>[</em><em>nncf.common.quantization.structs.NonWeightQuantizerId</em><em>, </em><em>nncf.torch.quantization.structs.NonWeightQuantizerInfo</em><em>]</em>) – </p></li>
+<li><p><strong>groups_of_adjacent_quantizers</strong> (<em>nncf.torch.quantization.precision_init.adjacent_quantizers.GroupsOfAdjacentQuantizers</em>) – </p></li>
+<li><p><strong>quantizers_input_shapes</strong> (<em>Dict</em><em>[</em><em>nncf.common.quantization.structs.QuantizerId</em><em>, </em><em>Tuple</em><em>[</em><em>int</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>build_time_metric_info</strong> (<em>nncf.torch.quantization.metrics.QuantizationShareBuildTimeInfo</em>) – </p></li>
+<li><p><strong>build_time_range_init_params</strong> (<em>nncf.torch.quantization.init_range.PTRangeInitParams</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.quantization.algo.QuantizationController.prepare_for_export">
 <span class="sig-name descname"><span class="pre">prepare_for_export</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController.prepare_for_export" title="Permalink to this definition">#</a></dt>
@@ -396,7 +411,7 @@ should be made inside this function.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.quantization.algo.QuantizationController.compression_stage">
-<span class="sig-name descname"><span class="pre">compression_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.api.compression.CompressionStage</span></span></span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController.compression_stage" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compression_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController.compression_stage" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns the compression stage. Should be used on saving best checkpoints
 to distinguish between uncompressed, partially compressed, and fully
 compressed models.</p>
@@ -404,28 +419,48 @@ compressed models.</p>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The compression stage of the target model.</p>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>nncf.api.compression.CompressionStage</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.quantization.algo.QuantizationController.init_precision">
-<span class="sig-name descname"><span class="pre">init_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">precision_init_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision_init_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.quantization.precision_init.base_init.BasePrecisionInitParams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision_constraints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.quantization.precision_constraints.HardwareQuantizationConstraints</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.common.quantization.quantizer_setup.SingleConfigQuantizerSetup</span></span></span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController.init_precision" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">init_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">precision_init_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision_init_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision_constraints</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController.init_precision" title="Permalink to this definition">#</a></dt>
 <dd><p>Precision initialization happens based on an measure of layer sensitivity to perturbations. The measure is
 calculated by average Hessian trace estimation for each layer using Hutchinson algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>precision_init_type</strong> (<em>str</em>) – </p></li>
+<li><p><strong>precision_init_params</strong> (<em>nncf.torch.quantization.precision_init.base_init.BasePrecisionInitParams</em>) – </p></li>
+<li><p><strong>precision_constraints</strong> (<em>nncf.torch.quantization.precision_constraints.HardwareQuantizationConstraints</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>nncf.common.quantization.quantizer_setup.SingleConfigQuantizerSetup</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.quantization.algo.QuantizationController.init_range">
-<span class="sig-name descname"><span class="pre">init_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">range_init_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.quantization.init_range.PTRangeInitParams</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController.init_range" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">init_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">range_init_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController.init_range" title="Permalink to this definition">#</a></dt>
 <dd><p>Tracks input statistics for quantizers in the model and sets ranges of the quantizers to correspond to
 minimum and maximum input tensor levels observed.
 :param range_init_params: specifies parameters for this range initialization call; if None, the parameters
 that were used during compressed model creation will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>range_init_params</strong> (<em>nncf.torch.quantization.init_range.PTRangeInitParams</em>) – </p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.quantization.algo.QuantizationController.statistics">
-<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quickly_collected_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.common.statistics.NNCFStatistics</span></span></span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController.statistics" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quickly_collected_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController.statistics" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns a <cite>Statistics</cite> class instance that contains compression algorithm statistics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -436,24 +471,30 @@ need to keep track of statistics on each training batch/step/iteration.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A <cite>Statistics</cite> class instance that contains compression algorithm statistics.</p>
 </dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nncf.common.statistics.NNCFStatistics</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.quantization.algo.QuantizationController.strip_model">
-<span class="sig-name descname"><span class="pre">strip_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.nncf_network.NNCFNetwork</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_copy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.torch.nncf_network.NNCFNetwork</span></span></span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController.strip_model" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">strip_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.quantization.algo.QuantizationController.strip_model" title="Permalink to this definition">#</a></dt>
 <dd><p>Strips auxiliary layers that were used for the model compression, as it’s
 only needed for training. The method is used before exporting the model
 in the target format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> – The compressed model.</p></li>
-<li><p><strong>do_copy</strong> – Modify copy of the model, defaults to False.</p></li>
+<li><p><strong>model</strong> (<em>nncf.torch.nncf_network.NNCFNetwork</em>) – The compressed model.</p></li>
+<li><p><strong>do_copy</strong> (<em>bool</em>) – Modify copy of the model, defaults to False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The stripped model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nncf.torch.nncf_network.NNCFNetwork</p>
 </dd>
 </dl>
 </dd></dl>

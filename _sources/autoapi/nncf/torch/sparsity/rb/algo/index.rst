@@ -29,7 +29,7 @@ Classes
 
 
 
-.. py:class:: RBSparsityController(target_model: nncf.torch.nncf_network.NNCFNetwork, sparsified_module_info: List[nncf.torch.sparsity.base_algo.SparseModuleInfo], config: nncf.NNCFConfig)
+.. py:class:: RBSparsityController(target_model, sparsified_module_info, config)
 
    Bases: :py:obj:`nncf.torch.sparsity.base_algo.BaseSparsityAlgoController`
 
@@ -38,14 +38,14 @@ Classes
    Hosts entities that are to be used during the training process, such as compression scheduler and
    compression loss.
 
-   .. py:method:: set_sparsity_level(sparsity_level, target_sparsified_module_info: nncf.torch.sparsity.base_algo.SparseModuleInfo = None)
+   .. py:method:: set_sparsity_level(sparsity_level, target_sparsified_module_info = None)
 
       Sets the sparsity level that should be applied to the model's weights.
 
       :param sparsity_level: Sparsity level that should be applied to the model's weights.
 
 
-   .. py:method:: compression_stage() -> nncf.api.compression.CompressionStage
+   .. py:method:: compression_stage()
 
       Returns the compression stage. Should be used on saving best checkpoints
       to distinguish between uncompressed, partially compressed, and fully
@@ -67,7 +67,7 @@ Classes
       should be made inside this function.
 
 
-   .. py:method:: statistics(quickly_collected_only=False) -> nncf.common.statistics.NNCFStatistics
+   .. py:method:: statistics(quickly_collected_only=False)
 
       Returns a `Statistics` class instance that contains compression algorithm statistics.
 

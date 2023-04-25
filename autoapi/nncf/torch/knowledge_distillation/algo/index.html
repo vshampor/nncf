@@ -369,31 +369,50 @@ limitations under the License.</p>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="nncf.torch.knowledge_distillation.algo.KnowledgeDistillationController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.knowledge_distillation.algo.</span></span><span class="sig-name descname"><span class="pre">KnowledgeDistillationController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">nncf.torch.nncf_network.NNCFNetwork</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kd_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.knowledge_distillation.algo.KnowledgeDistillationController" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.torch.knowledge_distillation.algo.</span></span><span class="sig-name descname"><span class="pre">KnowledgeDistillationController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kd_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.knowledge_distillation.algo.KnowledgeDistillationController" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">nncf.torch.compression_method_api.PTCompressionAlgorithmController</span></code></p>
 <p>Serves as a handle to the additional modules, parameters and hooks inserted
 into the original uncompressed model in order to enable algorithm-specific compression.
 Hosts entities that are to be used during the training process, such as compression scheduler and
 compression loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_model</strong> (<em>nncf.torch.nncf_network.NNCFNetwork</em>) – </p></li>
+<li><p><strong>original_model</strong> (<em>torch.nn.Module</em>) – </p></li>
+<li><p><strong>kd_type</strong> (<em>str</em>) – </p></li>
+<li><p><strong>scale</strong> (<em>float</em>) – </p></li>
+<li><p><strong>temperature</strong> (<em>float</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.knowledge_distillation.algo.KnowledgeDistillationController.compression_stage">
-<span class="sig-name descname"><span class="pre">compression_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.api.compression.CompressionStage</span></span></span><a class="headerlink" href="#nncf.torch.knowledge_distillation.algo.KnowledgeDistillationController.compression_stage" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compression_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.knowledge_distillation.algo.KnowledgeDistillationController.compression_stage" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns level of compression. Should be used on saving best checkpoints to distinguish between
 uncompressed, partially compressed and fully compressed models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nncf.api.compression.CompressionStage</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nncf.torch.knowledge_distillation.algo.KnowledgeDistillationController.statistics">
-<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quickly_collected_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nncf.common.statistics.NNCFStatistics</span></span></span><a class="headerlink" href="#nncf.torch.knowledge_distillation.algo.KnowledgeDistillationController.statistics" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quickly_collected_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nncf.torch.knowledge_distillation.algo.KnowledgeDistillationController.statistics" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns a <cite>Statistics</cite> class instance that contains compression algorithm statistics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>quickly_collected_only</strong> – Enables collection of the statistics that
+<dd class="field-odd"><p><strong>quickly_collected_only</strong> (<em>bool</em>) – Enables collection of the statistics that
 don’t take too much time to compute. Can be helpful for the case when
 need to keep track of statistics on each training batch/step/iteration.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A <cite>Statistics</cite> class instance that contains compression algorithm statistics.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>nncf.common.statistics.NNCFStatistics</p>
 </dd>
 </dl>
 </dd></dl>

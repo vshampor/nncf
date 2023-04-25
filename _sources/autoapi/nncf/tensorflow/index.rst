@@ -51,7 +51,7 @@ Functions
 
 
 
-.. py:function:: create_compressed_model(model: tensorflow.keras.Model, config: nncf.NNCFConfig, compression_state: Optional[Dict[str, Any]] = None) -> Tuple[nncf.api.compression.CompressionAlgorithmController, tensorflow.keras.Model]
+.. py:function:: create_compressed_model(model, config, compression_state = None)
 
    The main function used to produce a model ready for compression fine-tuning
    from an original TensorFlow Keras model and a configuration object.
@@ -60,6 +60,7 @@ Functions
        from a checkpoint or another source.
    :param config: A configuration object used to determine the exact compression
        modifications to be applied to the model.
+   :type config: nncf.NNCFConfig
    :param compression_state: compression state to unambiguously restore the compressed model.
        Includes builder and controller states. If it is specified, trainable parameter initialization will be skipped
        during building.
@@ -72,7 +73,7 @@ Functions
 .. py:function:: create_compression_callbacks(compression_ctrl, log_tensorboard=True, log_text=True, log_dir=None)
 
 
-.. py:function:: register_default_init_args(nncf_config: nncf.config.NNCFConfig, data_loader: tensorflow.data.Dataset, batch_size: int, device: str = None) -> nncf.config.NNCFConfig
+.. py:function:: register_default_init_args(nncf_config, data_loader, batch_size, device = None)
 
    Register extra structures in the NNCFConfig. Initialization of some
    compression algorithms requires certain extra structures.
@@ -85,7 +86,7 @@ Functions
    :return: An instance of the NNCFConfig class with extra structures.
 
 
-.. py:class:: AdaptiveCompressionTrainingLoop(nncf_config: nncf.config.config.NNCFConfig, compression_controller: nncf.api.compression.CompressionAlgorithmController, uncompressed_model_accuracy: float, lr_updates_needed=True, verbose=True, minimal_compression_rate=0.0, maximal_compression_rate=0.95, dump_checkpoints=True)
+.. py:class:: AdaptiveCompressionTrainingLoop(nncf_config, compression_controller, uncompressed_model_accuracy, lr_updates_needed=True, verbose=True, minimal_compression_rate=0.0, maximal_compression_rate=0.95, dump_checkpoints=True)
 
    Bases: :py:obj:`BaseEarlyExitCompressionTrainingLoop`
 
@@ -94,7 +95,7 @@ Functions
    possible compression rate with a positive accuracy budget
    (the maximal allowed accuracy degradation criterion is satisfied).
 
-   .. py:method:: run(model: TModel, train_epoch_fn, validate_fn, configure_optimizers_fn=None, dump_checkpoint_fn=None, load_checkpoint_fn=None, early_stopping_fn=None, tensorboard_writer=None, log_dir=None, update_learning_rate_fn=None)
+   .. py:method:: run(model, train_epoch_fn, validate_fn, configure_optimizers_fn=None, dump_checkpoint_fn=None, load_checkpoint_fn=None, early_stopping_fn=None, tensorboard_writer=None, log_dir=None, update_learning_rate_fn=None)
 
       Implements the custom logic to run a training loop for model fine-tuning
       by using the provided `train_epoch_fn`, `validate_fn` and `configure_optimizers_fn` methods.
@@ -115,7 +116,7 @@ Functions
 
 
 
-.. py:class:: EarlyExitCompressionTrainingLoop(nncf_config: nncf.config.config.NNCFConfig, compression_controller: nncf.api.compression.CompressionAlgorithmController, uncompressed_model_accuracy: float, lr_updates_needed: bool = True, verbose: bool = True, dump_checkpoints: bool = True)
+.. py:class:: EarlyExitCompressionTrainingLoop(nncf_config, compression_controller, uncompressed_model_accuracy, lr_updates_needed = True, verbose = True, dump_checkpoints = True)
 
    Bases: :py:obj:`BaseEarlyExitCompressionTrainingLoop`
 

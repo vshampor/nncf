@@ -29,7 +29,7 @@ Classes
 
 
 
-.. py:class:: KnowledgeDistillationController(target_model: nncf.torch.nncf_network.NNCFNetwork, original_model: torch.nn.Module, kd_type: str, scale: float, temperature: float)
+.. py:class:: KnowledgeDistillationController(target_model, original_model, kd_type, scale, temperature)
 
    Bases: :py:obj:`nncf.torch.compression_method_api.PTCompressionAlgorithmController`
 
@@ -38,13 +38,13 @@ Classes
    Hosts entities that are to be used during the training process, such as compression scheduler and
    compression loss.
 
-   .. py:method:: compression_stage() -> nncf.api.compression.CompressionStage
+   .. py:method:: compression_stage()
 
       Returns level of compression. Should be used on saving best checkpoints to distinguish between
       uncompressed, partially compressed and fully compressed models.
 
 
-   .. py:method:: statistics(quickly_collected_only: bool = False) -> nncf.common.statistics.NNCFStatistics
+   .. py:method:: statistics(quickly_collected_only = False)
 
       Returns a `Statistics` class instance that contains compression algorithm statistics.
 

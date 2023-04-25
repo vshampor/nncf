@@ -68,7 +68,7 @@ Functions
       The dict must contain only json supported primitives.
 
 
-   .. py:method:: get_redefinable_global_param_value_for_algo(param_name: str, algo_name: str) -> Optional
+   .. py:method:: get_redefinable_global_param_value_for_algo(param_name, algo_name)
 
       Some parameters can be specified both on the global NNCF config .json level (so that they apply
       to all algos), and at the same time overridden in the algorithm-specific section of the .json.
@@ -84,7 +84,7 @@ Functions
 
 
 
-.. py:class:: Dataset(data_source: Iterable[DataItem], transform_func: Optional[Callable[[DataItem], ModelInput]] = None)
+.. py:class:: Dataset(data_source, transform_func = None)
 
    Bases: :py:obj:`Generic`\ [\ :py:obj:`DataItem`\ , :py:obj:`ModelInput`\ ]
 
@@ -99,7 +99,7 @@ Functions
    usually contains both examples and labels. So transformation function should extract
    the examples from the data item.
 
-   .. py:method:: get_data(indices: Optional[List[int]] = None) -> Iterable[DataItem]
+   .. py:method:: get_data(indices = None)
 
       Returns the iterable object that contains selected data items from the data source as-is.
 
@@ -109,7 +109,7 @@ Functions
       :return: The iterable object that contains selected data items from the data source as-is.
 
 
-   .. py:method:: get_inference_data(indices: Optional[List[int]] = None) -> Iterable[ModelInput]
+   .. py:method:: get_inference_data(indices = None)
 
       Returns the iterable object that contains selected data items from the data source, for which
       the transformation function was applied. The item, which was returned per iteration from this
@@ -199,21 +199,25 @@ Functions
    Derive from this class to define new enumerations.
 
 
-.. py:function:: quantize(model: nncf.api.compression.TModel, calibration_dataset: nncf.data.Dataset, preset: nncf.common.quantization.structs.QuantizationPreset = QuantizationPreset.PERFORMANCE, target_device: nncf.parameters.TargetDevice = TargetDevice.ANY, subset_size: int = 300, fast_bias_correction: bool = True, model_type: Optional[nncf.parameters.ModelType] = None, ignored_scope: Optional[nncf.scopes.IgnoredScope] = None) -> nncf.api.compression.TModel
+.. py:function:: quantize(model, calibration_dataset, preset = QuantizationPreset.PERFORMANCE, target_device = TargetDevice.ANY, subset_size = 300, fast_bias_correction = True, model_type = None, ignored_scope = None)
 
    Applies post-training quantization algorithm to provided model.
 
    :param model: A model to be quantized.
+   :type  model: TModel
    :param calibration_dataset: A representative dataset for the
        calibration process.
+   :type  calibration_dataset: nncf.Dataset
    :param preset: A preset that controls the quantization mode
        (symmetric and asymmetric). It can take the following values:
        - `performance`: Symmetric quantization of weights and activations.
        - `mixed`: Symmetric quantization of weights and asymmetric
          quantization of activations.
+   :type  preset: nncf.QuantizationPreset
    :param target_device: A target device the specificity of which will be taken
        into account while compressing in order to obtain the best performance
        for this type of device.
+   :type  target_device: nncf.TargetDevice
    :param subset_size: Size of a subset to calculate activations
        statistics used for quantization.
    :param fast_bias_correction: Setting this option to `False` enables a different
@@ -221,18 +225,24 @@ Functions
        more time but requires less memory.
    :param model_type: Model type is needed to specify additional patterns
        in the model. Supported only `transformer` now.
+   :type  model_type: Optional[nncf.ModelType]
    :param ignored_scope: An ignored scope that defined the list of model control
        flow graph nodes to be ignored during quantization.
+   :type  ignored_scope: Optional[nncf.IgnoredScope]
    :return: The quantized model.
+   :rtype: TModel
 
 
-.. py:function:: quantize_with_accuracy_control(model: nncf.api.compression.TModel, calibration_dataset: nncf.data.Dataset, validation_dataset: nncf.data.Dataset, validation_fn: Callable[[Any, Iterable[Any]], float], max_drop: float = 0.01, preset: nncf.common.quantization.structs.QuantizationPreset = QuantizationPreset.PERFORMANCE, target_device: nncf.parameters.TargetDevice = TargetDevice.ANY, subset_size: int = 300, fast_bias_correction: bool = True, model_type: Optional[nncf.parameters.ModelType] = None, ignored_scope: Optional[nncf.scopes.IgnoredScope] = None) -> nncf.api.compression.TModel
+.. py:function:: quantize_with_accuracy_control(model, calibration_dataset, validation_dataset, validation_fn, max_drop = 0.01, preset = QuantizationPreset.PERFORMANCE, target_device = TargetDevice.ANY, subset_size = 300, fast_bias_correction = True, model_type = None, ignored_scope = None)
 
    Applies post-training quantization algorithm with accuracy control to provided model.
 
    :param model: A model to be quantized.
+   :type model: TModel
    :param calibration_dataset: A representative dataset for the calibration process.
+   :type calibration_dataset: nncf.Dataset
    :param validation_dataset: A dataset for the validation process.
+   :type validation_dataset: nncf.Dataset
    :param validation_fn: A validation function to validate the model. It should take
        two argumets:
        - `model`: model to be validate.
@@ -242,9 +252,11 @@ Functions
        A higher value corresponds to better performance of the model.
    :param max_drop: The maximum absolute accuracy drop that should be achieved after the quantization.
    :param preset: A preset that controls the quantization mode.
+   :type preset: nncf.QuantizationPreset
    :param target_device: A target device the specificity of which will be taken
        into account while compressing in order to obtain the best performance
        for this type of device.
+   :type target_device: nncf.TargetDevice
    :param subset_size: Size of a subset to calculate activations
        statistics used for quantization.
    :param fast_bias_correction: Setting this option to `False` enables a different
@@ -252,8 +264,11 @@ Functions
        more time but requires less memory.
    :param model_type: Model type is needed to specify additional patterns
        in the model. Supported only `transformer` now.
+   :type model_type: nncf.ModelType
    :param ignored_scope: An ignored scope that defined the list of model control
        flow graph nodes to be ignored during quantization.
+   :type ignored_scope: nncf.IgnoredScope
    :return: The quantized model.
+   :rtype: TModel
 
 

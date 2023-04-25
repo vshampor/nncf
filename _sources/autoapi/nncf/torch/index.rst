@@ -61,44 +61,45 @@ Functions
 
 
 
-.. py:function:: create_compressed_model(model: torch.nn.Module, config: nncf.config.NNCFConfig, compression_state: Optional[Dict[str, Any]] = None, dummy_forward_fn: Callable[[torch.nn.Module], Any] = None, wrap_inputs_fn: Callable[[Tuple, Dict], Tuple[Tuple, Dict]] = None, wrap_outputs_fn: Callable[[Tuple, Dict], Tuple[Tuple, Dict]] = None, dump_graphs=True) -> Tuple[nncf.api.compression.CompressionAlgorithmController, nncf.torch.nncf_network.NNCFNetwork]
+.. py:function:: create_compressed_model(model, config, compression_state = None, dummy_forward_fn = None, wrap_inputs_fn = None, wrap_outputs_fn = None, dump_graphs=True)
 
    The main function used to produce a model ready for compression fine-tuning from an original PyTorch
    model and a configuration object.
    dummy_forward_fn
    :param model: The original model. Should have its parameters already loaded from a checkpoint or another
-   source.
+       source.
    :param config: A configuration object used to determine the exact compression modifications to be applied
-   to the model
+       to the model
+   :type config: nncf.NNCFConfig
    :param compression_state: representation of the entire compression state to unambiguously restore
-   the compressed model. Includes builder and controller states.
+       the compressed model. Includes builder and controller states.
    :param dummy_forward_fn: if supplied, will be used instead of a *forward* function call to build
-   the internal graph representation via tracing. Specifying this is useful when the original training pipeline
-   has special formats of data loader output or has additional *forward* arguments other than input tensors.
-   Otherwise, the *forward* call of the model during graph tracing will be made with mock tensors according
-   to the shape specified in the config object. The dummy_forward_fn code MUST contain calls to nncf.nncf_model_input
-   functions made with each compressed model input tensor in the underlying model's args/kwargs tuple, and these
-   calls should be exactly the same as in the wrap_inputs_fn function code (see below); if dummy_forward_fn is
-   specified, then wrap_inputs_fn also must be specified.
+       the internal graph representation via tracing. Specifying this is useful when the original training pipeline
+       has special formats of data loader output or has additional *forward* arguments other than input tensors.
+       Otherwise, the *forward* call of the model during graph tracing will be made with mock tensors according
+       to the shape specified in the config object. The dummy_forward_fn code MUST contain calls to
+       nncf.nncf_model_input functions made with each compressed model input tensor in the underlying model's
+       args/kwargs tuple, and these calls should be exactly the same as in the wrap_inputs_fn function code
+       (see below); if dummy_forward_fn is specified, then wrap_inputs_fn also must be specified.
    :param wrap_inputs_fn: if supplied, will be used on the module's input arguments during a regular, non-dummy
-   forward call before passing the inputs to the underlying compressed model. This is required if the model's input
-   tensors that are important for compression are not supplied as arguments to the model's forward call directly, but
-   instead are located in a container (such as list), and the model receives the container as an argument.
-   wrap_inputs_fn should take as input two arguments - the tuple of positional arguments to the underlying
-   model's forward call, and a dict of keyword arguments to the same. The function should wrap each tensor among the
-   supplied model's args and kwargs that is important for compression (e.g. quantization) with an nncf.nncf_model_input
-   function, which is a no-operation function and marks the tensors as inputs to be traced by NNCF in the internal
-   graph representation. Output is the tuple of (args, kwargs), where args and kwargs are the same as were supplied in
-   input, but each tensor in the original input. Must be specified if dummy_forward_fn is specified.
+       forward call before passing the inputs to the underlying compressed model. This is required if the model's
+       input tensors that are important for compression are not supplied as arguments to the model's forward call
+       directly, but instead are located in a container (such as list), and the model receives the container as an
+       argument. wrap_inputs_fn should take as input two arguments - the tuple of positional arguments to the
+       underlying model's forward call, and a dict of keyword arguments to the same. The function should wrap each
+       tensor among nncf.nncf_model_input function, which is a no-operation function and marks the tensors as inputs
+       to be traced by NNCF in the internal graph representation. Output is the tuple of (args, kwargs), where args
+       and kwargs are the same as were supplied in input, but each tensor in the original input. Must be specified
+       if dummy_forward_fn is specified.
    :param wrap_outputs_fn: same as `wrap_inputs_fn`, but applies to model outputs
    :param dump_graphs: Whether to dump the internal graph representation of the
-   original and compressed models in the .dot format into the log directory.
+       original and compressed models in the .dot format into the log directory.
    :return: A controller for the compression algorithm (or algorithms, in which case the controller
-   is an instance of CompositeCompressionController) and the model ready for compression parameter training wrapped
-   as an object of NNCFNetwork.
+       is an instance of CompositeCompressionController) and the model ready for compression parameter training wrapped
+       as an object of NNCFNetwork.
 
 
-.. py:function:: load_state(model: torch.nn.Module, state_dict_to_load: dict, is_resume: bool = False, keys_to_ignore: List[str] = None) -> int
+.. py:function:: load_state(model, state_dict_to_load, is_resume = False, keys_to_ignore = None)
 
    Used to load a checkpoint containing a compressed model into an NNCFNetwork object, but can
    be used for any PyTorch module as well. Will do matching of state_dict_to_load parameters to
@@ -119,19 +120,19 @@ Functions
    :return: The number of state_dict_to_load entries successfully matched and loaded into model.
 
 
-.. py:function:: register_default_init_args(nncf_config: NNCFConfig, train_loader: torch.utils.data.DataLoader, criterion: torch.nn.modules.loss._Loss = None, criterion_fn: Callable[[Any, Any, torch.nn.modules.loss._Loss], torch.Tensor] = None, train_steps_fn: Callable[[torch.utils.data.DataLoader, torch.nn.Module, torch.optim.Optimizer, CompressionAlgorithmController, Optional[int]], type(None)] = None, validate_fn: Callable[[torch.nn.Module, torch.utils.data.DataLoader], Tuple[float, float]] = None, val_loader: torch.utils.data.DataLoader = None, autoq_eval_fn: Callable[[torch.nn.Module, torch.utils.data.DataLoader], float] = None, model_eval_fn: Callable[[torch.nn.Module, torch.utils.data.DataLoader], float] = None, distributed_callbacks: Tuple[Callable, Callable] = None, execution_parameters: ExecutionParameters = None, legr_train_optimizer: torch.optim.Optimizer = None, device: str = None) -> NNCFConfig
+.. py:function:: register_default_init_args(nncf_config, train_loader, criterion = None, criterion_fn = None, train_steps_fn = None, validate_fn = None, val_loader = None, autoq_eval_fn = None, model_eval_fn = None, distributed_callbacks = None, execution_parameters = None, legr_train_optimizer = None, device = None)
 
 
-.. py:function:: register_module(*quantizable_field_names: str, ignored_algorithms: list = None)
+.. py:function:: register_module(*quantizable_field_names, ignored_algorithms = None)
 
 
 .. py:function:: register_operator(name=None)
 
 
-.. py:function:: nncf_model_input(tensor: torch.Tensor)
+.. py:function:: nncf_model_input(tensor)
 
 
-.. py:function:: nncf_model_output(tensor: torch.Tensor)
+.. py:function:: nncf_model_output(tensor)
 
 
 .. py:function:: disable_tracing(method)

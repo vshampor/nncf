@@ -29,7 +29,7 @@ Classes
 
 
 
-.. py:class:: FilterPruningController(target_model: nncf.torch.nncf_network.NNCFNetwork, prunable_types: List[str], pruned_module_groups: nncf.common.pruning.clusterization.Clusterization[nncf.torch.pruning.structs.PrunedModuleInfo], pruned_norms_operators: List[Tuple[nncf.common.graph.NNCFNode, nncf.torch.pruning.filter_pruning.layers.FilterPruningMask, torch.nn.Module]], config: nncf.NNCFConfig)
+.. py:class:: FilterPruningController(target_model, prunable_types, pruned_module_groups, pruned_norms_operators, config)
 
    Bases: :py:obj:`nncf.torch.pruning.base_algo.BasePruningAlgoController`
 
@@ -38,13 +38,13 @@ Classes
    Hosts entities that are to be used during the training process, such as compression scheduler and
    compression loss.
 
-   .. py:method:: get_mask(minfo: nncf.torch.pruning.structs.PrunedModuleInfo) -> torch.Tensor
+   .. py:method:: get_mask(minfo)
       :staticmethod:
 
       Returns pruning mask for minfo.module.
 
 
-   .. py:method:: statistics(quickly_collected_only: bool = False) -> nncf.common.statistics.NNCFStatistics
+   .. py:method:: statistics(quickly_collected_only = False)
 
       Returns a `Statistics` class instance that contains compression algorithm statistics.
 
@@ -54,7 +54,7 @@ Classes
       :return: A `Statistics` class instance that contains compression algorithm statistics.
 
 
-   .. py:method:: set_pruning_level(pruning_level: Union[float, Dict[int, float]], run_batchnorm_adaptation: bool = False) -> None
+   .. py:method:: set_pruning_level(pruning_level, run_batchnorm_adaptation = False)
 
       Set the global or groupwise pruning level in the model.
       If pruning_level is a float, the correspoding global pruning level is set in the model,
@@ -70,7 +70,7 @@ Classes
       Applies pruning masks to layer weights before exporting the model to ONNX.
 
 
-   .. py:method:: compression_stage() -> nncf.api.compression.CompressionStage
+   .. py:method:: compression_stage()
 
       Returns the compression stage. Should be used on saving best checkpoints
       to distinguish between uncompressed, partially compressed, and fully
@@ -85,7 +85,7 @@ Classes
       it to a dummy one that does not change the compression rate.
 
 
-   .. py:method:: strip_model(model: nncf.torch.nncf_network.NNCFNetwork, do_copy: bool = False) -> nncf.torch.nncf_network.NNCFNetwork
+   .. py:method:: strip_model(model, do_copy = False)
 
       Strips auxiliary layers that were used for the model compression, as it's
       only needed for training. The method is used before exporting the model

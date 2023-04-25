@@ -29,7 +29,7 @@ Classes
 
 
 
-.. py:class:: RBSparsityController(target_model, config: nncf.NNCFConfig, op_names: List[str])
+.. py:class:: RBSparsityController(target_model, config, op_names)
 
    Bases: :py:obj:`nncf.tensorflow.sparsity.base_algorithm.BaseSparsityController`
 
@@ -50,7 +50,7 @@ Classes
       Freezes all sparsity masks. Sparsity masks will not be trained after calling this method.
 
 
-   .. py:method:: statistics(quickly_collected_only: bool = False) -> nncf.common.statistics.NNCFStatistics
+   .. py:method:: statistics(quickly_collected_only = False)
 
       Returns a `Statistics` class instance that contains compression algorithm statistics.
 
