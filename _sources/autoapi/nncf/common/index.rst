@@ -24,6 +24,7 @@ Subpackages
    :titlesonly:
    :maxdepth: 3
 
+   accuracy_aware_training/index.rst
    initialization/index.rst
 
 

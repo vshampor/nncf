@@ -1,9 +1,9 @@
 :orphan:
 
-:py:mod:`nncf.openvino.quantization.accuracy_aware`
-===================================================
+:py:mod:`nncf.openvino.pot.quantization.quantize_model`
+=======================================================
 
-.. py:module:: nncf.openvino.quantization.accuracy_aware
+.. py:module:: nncf.openvino.pot.quantization.quantize_model
 
 .. autoapi-nested-parse::
 

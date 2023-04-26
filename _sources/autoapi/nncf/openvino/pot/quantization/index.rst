@@ -1,9 +1,9 @@
 :orphan:
 
-:py:mod:`nncf.openvino.engine`
-==============================
+:py:mod:`nncf.openvino.pot.quantization`
+========================================
 
-.. py:module:: nncf.openvino.engine
+.. py:module:: nncf.openvino.pot.quantization
 
 .. autoapi-nested-parse::
 

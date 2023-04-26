@@ -1,9 +1,9 @@
 :orphan:
 
-:py:mod:`nncf.quantization.algorithms.definitions`
-==================================================
+:py:mod:`nncf.quantization.range_estimator`
+===========================================
 
-.. py:module:: nncf.quantization.algorithms.definitions
+.. py:module:: nncf.quantization.range_estimator
 
 .. autoapi-nested-parse::
 

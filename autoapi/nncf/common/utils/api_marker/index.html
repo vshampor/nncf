@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>nncf.quantization.algorithms.definitions &#8212; nncf v2.4.0 documentation</title>
+    <title>nncf.common.utils.api_marker &#8212; nncf v2.4.0 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
     <script src="../../../../../_static/doctools.js"></script>
     <script src="../../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/nncf/quantization/algorithms/definitions/index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/nncf/common/utils/api_marker/index';</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -123,47 +123,55 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../common/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../common/initialization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.initialization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../common/initialization/dataloader/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.initialization.dataloader</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../accuracy_aware_training/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.accuracy_aware_training</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../accuracy_aware_training/training_loop/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.accuracy_aware_training.training_loop</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../initialization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.initialization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../initialization/dataloader/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.initialization.dataloader</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.config</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.config</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../config/structures/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.config.structures</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../tensorflow/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../tensorflow/pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.pruning</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../quantization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.quantization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../quantization/advanced_parameters/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.quantization.advanced_parameters</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../tensorflow/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../tensorflow/pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.pruning</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../tensorflow/pruning/filter_pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.pruning.filter_pruning</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../tensorflow/quantization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.quantization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../tensorflow/quantization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.quantization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../tensorflow/quantization/algorithm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.quantization.algorithm</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../tensorflow/sparsity/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.sparsity</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../tensorflow/sparsity/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.sparsity</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../tensorflow/sparsity/magnitude/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.sparsity.magnitude</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../tensorflow/sparsity/rb/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.sparsity.rb</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../torch/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../torch/knowledge_distillation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.knowledge_distillation</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../torch/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../torch/knowledge_distillation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.knowledge_distillation</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../torch/knowledge_distillation/algo/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.knowledge_distillation.algo</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../torch/pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.pruning</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../torch/pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.pruning</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../torch/pruning/filter_pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.pruning.filter_pruning</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../torch/quantization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.quantization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../torch/quantization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.quantization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../torch/quantization/algo/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.quantization.algo</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../torch/sparsity/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.sparsity</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../torch/sparsity/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.sparsity</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../torch/sparsity/const/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.sparsity.const</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../torch/sparsity/magnitude/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.sparsity.magnitude</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../torch/sparsity/rb/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.sparsity.rb</span></code></a></li>
@@ -230,7 +238,7 @@
       
       
       
-      <li><a href="../../../../../_sources/autoapi/nncf/quantization/algorithms/definitions/index.rst" target="_blank"
+      <li><a href="../../../../../_sources/autoapi/nncf/common/utils/api_marker/index.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -310,7 +318,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>nncf.quantization.algorithms.definitions</h1>
+    <h1>nncf.common.utils.api_marker</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -324,8 +332,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="module-nncf.quantization.algorithms.definitions">
-<span id="nncf-quantization-algorithms-definitions"></span><h1><a class="reference internal" href="#module-nncf.quantization.algorithms.definitions" title="nncf.quantization.algorithms.definitions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.quantization.algorithms.definitions</span></code></a><a class="headerlink" href="#module-nncf.quantization.algorithms.definitions" title="Permalink to this heading">#</a></h1>
+  <section id="module-nncf.common.utils.api_marker">
+<span id="nncf-common-utils-api-marker"></span><h1><a class="reference internal" href="#module-nncf.common.utils.api_marker" title="nncf.common.utils.api_marker"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.utils.api_marker</span></code></a><a class="headerlink" href="#module-nncf.common.utils.api_marker" title="Permalink to this heading">#</a></h1>
 <p>Copyright (c) 2023 Intel Corporation
 Licensed under the Apache License, Version 2.0 (the “License”);
 you may not use this file except in compliance with the License.

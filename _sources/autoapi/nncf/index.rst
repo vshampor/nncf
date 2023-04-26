@@ -26,6 +26,7 @@ Subpackages
 
    common/index.rst
    config/index.rst
+   quantization/index.rst
    tensorflow/index.rst
    torch/index.rst
 
@@ -132,7 +133,7 @@ Functions
 
    Examples:
 
-   ```
+   ``
    import nncf
 
    # Exclude by node name:
@@ -155,7 +156,7 @@ Functions
 
    ...
 
-   ```
+   ``
 
    **Note** Operation types must be specified according to the model framework.
 
@@ -184,11 +185,6 @@ Functions
    into account while compressing in order to obtain the best performance
    for this type of device.
 
-   :param ANY:
-   :param CPU:
-   :param GPU:
-   :param VPU:
-
 
 .. py:class:: QuantizationPreset
 
@@ -199,7 +195,7 @@ Functions
    Derive from this class to define new enumerations.
 
 
-.. py:function:: quantize(model, calibration_dataset, preset = QuantizationPreset.PERFORMANCE, target_device = TargetDevice.ANY, subset_size = 300, fast_bias_correction = True, model_type = None, ignored_scope = None)
+.. py:function:: quantize(model, calibration_dataset, preset = QuantizationPreset.PERFORMANCE, target_device = TargetDevice.ANY, subset_size = 300, fast_bias_correction = True, model_type = None, ignored_scope = None, advanced_parameters = None)
 
    Applies post-training quantization algorithm to provided model.
 
@@ -229,11 +225,13 @@ Functions
    :param ignored_scope: An ignored scope that defined the list of model control
        flow graph nodes to be ignored during quantization.
    :type  ignored_scope: Optional[nncf.IgnoredScope]
+   :param advanced_parameters: Advanced quantization parameters for
+       fine-tuning the quantization algorithm.
    :return: The quantized model.
    :rtype: TModel
 
 
-.. py:function:: quantize_with_accuracy_control(model, calibration_dataset, validation_dataset, validation_fn, max_drop = 0.01, preset = QuantizationPreset.PERFORMANCE, target_device = TargetDevice.ANY, subset_size = 300, fast_bias_correction = True, model_type = None, ignored_scope = None)
+.. py:function:: quantize_with_accuracy_control(model, calibration_dataset, validation_dataset, validation_fn, max_drop = 0.01, preset = QuantizationPreset.PERFORMANCE, target_device = TargetDevice.ANY, subset_size = 300, fast_bias_correction = True, model_type = None, ignored_scope = None, advanced_quantization_parameters = None, advanced_accuracy_restorer_parameters = None)
 
    Applies post-training quantization algorithm with accuracy control to provided model.
 
@@ -268,6 +266,10 @@ Functions
    :param ignored_scope: An ignored scope that defined the list of model control
        flow graph nodes to be ignored during quantization.
    :type ignored_scope: nncf.IgnoredScope
+   :param advanced_quantization_parameters: Advanced quantization parameters for
+       fine-tuning the quantization algorithm.
+   :param advanced_accuracy_restorer_parameters: Advanced parameters for fine-tuning
+       the accuracy restorer algorithm.
    :return: The quantized model.
    :rtype: TModel
 
