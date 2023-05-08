@@ -380,6 +380,7 @@ def patch_torch_operators():
 
     ORIGINAL_OPERATORS.append(OriginalOpInfo("__call__", torch.nn.Module, torch.nn.Module.__call__))
     torch.nn.Module.__call__ = wrap_module_call(torch.nn.Module.__call__)
+    torch.fx._symbolic_trace._orig_module_call = torch.nn.Module.__call__
     ignore_scope(DataParallel)
     ignore_scope(DistributedDataParallel)
 

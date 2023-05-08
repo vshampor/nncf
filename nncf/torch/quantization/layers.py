@@ -378,8 +378,8 @@ class BaseQuantizer(nn.Module, ABC):
         # TODO: refactor to get rid of extra if's and calls on each forward
         if not self.is_enabled_quantization():
             return x
-        if is_fx_tracing():
-            return x * x
+        # if is_fx_tracing():
+        #     return x * x
         is_exporting = is_tracing_state()
         if is_exporting:
             with no_nncf_trace():

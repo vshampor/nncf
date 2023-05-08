@@ -12,6 +12,7 @@ import functools
 from copy import deepcopy
 from typing import Callable, List, Tuple
 
+import torch
 from torch.nn import DataParallel
 
 from nncf.common.graph.layer_attributes import BaseLayerAttributes
@@ -78,14 +79,24 @@ def wrap_operator(operator, operator_info: PatchedOperatorInfo):
         ctx.in_operator = True
 
         try:
-            if operator_info.skip_trace:
+            if operator_info.skip_trace and operator_info.name != "handle_torch_function":
                 result = operator(*args, **kwargs)
             elif ctx.is_forwarding:
                 from nncf.torch.dynamic_graph.trace_functions import forward_trace_only  # pylint: disable=cyclic-import
 
                 result = forward_trace_only(operator, *args, **kwargs)
             else:
-                op_name = operator_info.name
+                if operator_info.name == 'handle_torch_function':
+                    # During torch.fx.symbolic_trace, actual functions are not executed, and instead
+                    # are being handled inside torch.fx.Proxy.__torch_function__, which is invoked by the
+                    # 'handle_torch_function' method.
+                    relevant_args = args[1]
+                    overloaded_args = torch.overrides._get_overloaded_args(relevant_args)
+                    types = tuple(map(type, overloaded_args))
+                    if torch.fx.Proxy in types:
+                        op_name = args[0].__name__
+                else:
+                    op_name = operator_info.name
                 op_address = ctx.get_caller_context(op_name)
                 ctx.register_operator_call(op_address.operator_name, op_address.scope_in_model)
 
