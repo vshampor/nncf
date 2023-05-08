@@ -5,16 +5,7 @@
 
 .. autoapi-nested-parse::
 
-   Copyright (c) 2019-2023 Intel Corporation
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-        http://www.apache.org/licenses/LICENSE-2.0
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+   Neural Network Compression Framework (NNCF) for enhanced OpenVINO™ inference.
 
 
 
@@ -24,6 +15,7 @@ Subpackages
    :titlesonly:
    :maxdepth: 3
 
+   api/index.rst
    common/index.rst
    config/index.rst
    quantization/index.rst
@@ -39,10 +31,10 @@ Classes
 
    nncf.NNCFConfig
    nncf.Dataset
-   nncf.IgnoredScope
    nncf.ModelType
    nncf.TargetDevice
    nncf.QuantizationPreset
+   nncf.IgnoredScope
 
 
 
@@ -60,13 +52,34 @@ Functions
 
    Bases: :py:obj:`dict`
 
-   A regular dictionary object extended with some utility functions.
+   Contains the configuration parameters required for NNCF to apply the selected algorithms.
+
+   This is a regular dictionary object extended with some utility functions, such as the ability to attach well-defined
+   structures to pass non-serializable objects as parameters. It is primarily built from a .json file, or from a
+   Python JSON-like dictionary - both data types will be checked against a JSONSchema. See the definition of the
+   schema at https://openvinotoolkit.github.io/nncf/schema/, or by calling NNCFConfig.schema().
 
    .. py:method:: from_dict(nncf_dict)
       :classmethod:
 
-      Load NNCF config from dict;
-      The dict must contain only json supported primitives.
+      Load NNCF config from a Python dictionary. The dict must contain only JSON-supported primitives.
+
+      :param nncf_dict: A Python dict with the JSON-style configuration for NNCF.
+
+
+   .. py:method:: from_json(path)
+      :classmethod:
+
+      Load NNCF config from a JSON file at `path`.
+
+      :param path: Path to the .json file containing the NNCF configuration.
+
+
+   .. py:method:: register_extra_structs(struct_list)
+
+      Attach the supplied list of extra configuration structures to this configuration object.
+
+      :param struct_list: List of extra configuration structures.
 
 
    .. py:method:: get_redefinable_global_param_value_for_algo(param_name, algo_name)
@@ -84,21 +97,36 @@ Functions
       :return: The value of the parameter that should be applied for the algo specified by `algo_name`.
 
 
+   .. py:method:: schema()
+      :staticmethod:
+
+      Returns the JSONSchema against which the input data formats (.json or Python dict) are validated.
+
+
 
 .. py:class:: Dataset(data_source, transform_func = None)
 
    Bases: :py:obj:`Generic`\ [\ :py:obj:`DataItem`\ , :py:obj:`ModelInput`\ ]
 
-   The `nncf.Dataset` class defines the interface by which compression algorithms
+   Wrapper for passing custom user datasets into NNCF algorithms.
+
+   This class defines the interface by which compression algorithms
    retrieve data items from the passed data source object. These data items are used
-   for different purposes, for example, model inference and model validation. It depends
-   on the compression algorithm.
+   for different purposes, for example, model inference and model validation, based
+   on the choice of the exact compression algorithm.
 
    If the data item has been returned from the data source per iteration and it cannot be
    used as input for model inference, the transformation function is used to extract the
    model's input from this data item. For example, in supervised learning, the data item
    usually contains both examples and labels. So transformation function should extract
    the examples from the data item.
+
+   :param data_source: The iterable object serving as the source of data items.
+   :param transform_func: The function that is used to extract the model's input
+       from the data item. The data item here is the data item that is returned from
+       the data source per iteration. This function should be passed when
+       the data item cannot be directly used as model's input. If this is not specified, then the data item
+       will be passed into the model as-is.
 
    .. py:method:: get_data(indices = None)
 
@@ -124,54 +152,11 @@ Functions
 
 
 
-.. py:class:: IgnoredScope
-
-   Dataclass that contains description of the ignored scope.
-
-   The ignored scope defines model sub-graphs that should be excluded from
-   the compression process such as quantization, pruning and etc.
-
-   Examples:
-
-   ``
-   import nncf
-
-   # Exclude by node name:
-   node_names = ['node_1', 'node_2', 'node_3']
-   ignored_scope = nncf.IgnoredScope(names=node_names)
-
-   # Exclude using regular expressions:
-   patterns = ['node_\d']
-   ignored_scope = nncf.IgnoredScope(patterns=patterns)
-
-   # Exclude by operation type:
-
-   # OpenVINO opset https://docs.openvino.ai/latest/openvino_docs_ops_opset.html
-   operation_types = ['Multiply', 'GroupConvolution', 'Interpolate']
-   ignored_scope = nncf.IgnoredScope(types=operation_types)
-
-   # ONNX opset https://github.com/onnx/onnx/blob/main/docs/Operators.md
-   operation_types = ['Mul', 'Conv', 'Resize']
-   ignored_scope = nncf.IgnoredScope(types=operation_types)
-
-   ...
-
-   ``
-
-   **Note** Operation types must be specified according to the model framework.
-
-   :param names: List of ignored node names.
-   :param patterns: List of regular expressions that define patterns for names of
-       ignored nodes.
-   :param types: List of ignored operation types.
-
-
 .. py:class:: ModelType
 
    Bases: :py:obj:`enum.Enum`
 
-   Describes the model type the specificity of which will be taken into
-   account during compression.
+   Describes the model type the specificity of which will be taken into account during compression.
 
    :param TRANSFORMER: Transformer-based models
        (https://arxiv.org/pdf/1706.03762.pdf)
@@ -181,8 +166,9 @@ Functions
 
    Bases: :py:obj:`enum.Enum`
 
-   Describes the target device the specificity of which will be taken
-   into account while compressing in order to obtain the best performance
+   Target device architecture for compression.
+
+   Compression will take into account the value of this parameter in order to obtain the best performance
    for this type of device.
 
 
@@ -190,14 +176,12 @@ Functions
 
    Bases: :py:obj:`enum.Enum`
 
-   Generic enumeration.
-
-   Derive from this class to define new enumerations.
+   An enum with values corresponding to the available quantization presets.
 
 
 .. py:function:: quantize(model, calibration_dataset, preset = QuantizationPreset.PERFORMANCE, target_device = TargetDevice.ANY, subset_size = 300, fast_bias_correction = True, model_type = None, ignored_scope = None, advanced_parameters = None)
 
-   Applies post-training quantization algorithm to provided model.
+   Applies post-training quantization to the provided model.
 
    :param model: A model to be quantized.
    :type  model: TModel
@@ -270,7 +254,50 @@ Functions
        fine-tuning the quantization algorithm.
    :param advanced_accuracy_restorer_parameters: Advanced parameters for fine-tuning
        the accuracy restorer algorithm.
+   :type advanced_accuracy_restorer_parameters: Optional[AdvancedAccuracyRestorerParameters]
    :return: The quantized model.
    :rtype: TModel
+
+
+.. py:class:: IgnoredScope
+
+   Provides an option to specify portions of model to be excluded from compression.
+
+   The ignored scope defines model sub-graphs that should be excluded from the compression process such as
+   quantization, pruning and etc.
+
+   Example:
+
+   ..  code-block:: python
+
+           import nncf
+
+           # Exclude by node name:
+           node_names = ['node_1', 'node_2', 'node_3']
+           ignored_scope = nncf.IgnoredScope(names=node_names)
+
+           # Exclude using regular expressions:
+           patterns = ['node_\d']
+           ignored_scope = nncf.IgnoredScope(patterns=patterns)
+
+           # Exclude by operation type:
+
+           # OpenVINO opset https://docs.openvino.ai/latest/openvino_docs_ops_opset.html
+           operation_types = ['Multiply', 'GroupConvolution', 'Interpolate']
+           ignored_scope = nncf.IgnoredScope(types=operation_types)
+
+           # ONNX opset https://github.com/onnx/onnx/blob/main/docs/Operators.md
+           operation_types = ['Mul', 'Conv', 'Resize']
+           ignored_scope = nncf.IgnoredScope(types=operation_types)
+
+   **Note:** Operation types must be specified according to the model framework.
+
+   :param names: List of ignored node names.
+   :param names: List of ignored node names.
+   :type names: List[str]
+   :param patterns: List of regular expressions that define patterns for names of ignored nodes.
+   :type patterns: List[str]
+   :param types: List of ignored operation types.
+   :type types: List[str]
 
 

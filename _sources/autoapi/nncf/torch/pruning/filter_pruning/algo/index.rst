@@ -3,20 +3,6 @@
 
 .. py:module:: nncf.torch.pruning.filter_pruning.algo
 
-.. autoapi-nested-parse::
-
-   Copyright (c) 2023 Intel Corporation
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-        http://www.apache.org/licenses/LICENSE-2.0
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
-
 
 
 Classes
@@ -38,6 +24,43 @@ Classes
    Hosts entities that are to be used during the training process, such as compression scheduler and
    compression loss.
 
+   .. py:property:: loss
+      :type: nncf.api.compression.CompressionLoss
+
+      The compression loss for this particular algorithm combination.
+
+
+   .. py:property:: scheduler
+      :type: nncf.common.pruning.schedulers.PruningScheduler
+
+      The compression scheduler for this particular algorithm combination.
+
+
+   .. py:property:: pruning_level
+      :type: float
+
+      Global pruning level in the model
+
+
+   .. py:property:: current_groupwise_pruning_level
+      :type: Dict[int, float]
+
+      Return the dict of layer group id's and corresponding current groupwise
+      pruning levels in the model
+
+
+   .. py:property:: compression_rate
+
+      Returns a float compression rate value ranging from 0 to 1 (e.g. the sparsity level,
+      or the ratio of filters pruned).
+
+
+   .. py:property:: maximal_compression_rate
+      :type: float
+
+      Returns the maximal model compression rate supported by the compression controller.
+
+
    .. py:method:: get_mask(minfo)
       :staticmethod:
 
@@ -51,7 +74,6 @@ Classes
       :param quickly_collected_only: Enables collection of the statistics that
           don't take too much time to compute. Can be helpful for the case when
           need to keep track of statistics on each training batch/step/iteration.
-      :return: A `Statistics` class instance that contains compression algorithm statistics.
 
 
    .. py:method:: set_pruning_level(pruning_level, run_batchnorm_adaptation = False)
@@ -81,8 +103,8 @@ Classes
 
    .. py:method:: disable_scheduler()
 
-      Disables current compression scheduler during training by changing
-      it to a dummy one that does not change the compression rate.
+      Disables current compression scheduler during training by changing it to a dummy one that does not change
+      the compression rate.
 
 
    .. py:method:: strip_model(model, do_copy = False)

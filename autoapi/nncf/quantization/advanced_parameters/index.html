@@ -44,7 +44,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/nncf/quantization/advanced_parameters/index';</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="nncf.tensorflow" href="../../tensorflow/index.html" />
+    <link rel="next" title="nncf.quantization.range_estimator" href="../range_estimator/index.html" />
     <link rel="prev" title="nncf.quantization" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -125,55 +125,79 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../common/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../common/accuracy_aware_training/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.accuracy_aware_training</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.api</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/compression/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.api.compression</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/statistics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.api.statistics</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../common/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../common/accuracy_aware_training/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.accuracy_aware_training</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../common/accuracy_aware_training/statistics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.accuracy_aware_training.statistics</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../common/accuracy_aware_training/training_loop/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.accuracy_aware_training.training_loop</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../common/initialization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.initialization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../common/initialization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.initialization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../common/initialization/dataloader/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.initialization.dataloader</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../common/pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.pruning</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../common/pruning/schedulers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.pruning.schedulers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../common/pruning/statistics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.pruning.statistics</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.config</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../common/quantization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.quantization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../common/quantization/statistics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.quantization.statistics</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../common/quantization/structs/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.quantization.structs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../common/sparsity/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.sparsity</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../common/sparsity/statistics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.sparsity.statistics</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../common/compression/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.compression</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../common/statistics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.common.statistics</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.config</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../config/structures/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.config.structures</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.quantization</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.quantization</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l3 current active"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.quantization.advanced_parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../range_estimator/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.quantization.range_estimator</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../tensorflow/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../tensorflow/pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.pruning</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../tensorflow/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../tensorflow/pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.pruning</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../tensorflow/pruning/filter_pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.pruning.filter_pruning</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../tensorflow/pruning/base_algorithm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.pruning.base_algorithm</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../tensorflow/quantization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.quantization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../tensorflow/quantization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.quantization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../tensorflow/quantization/algorithm/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.quantization.algorithm</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../tensorflow/sparsity/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.sparsity</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../tensorflow/sparsity/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.sparsity</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../tensorflow/sparsity/magnitude/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.sparsity.magnitude</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../tensorflow/sparsity/rb/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow.sparsity.rb</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../torch/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../torch/knowledge_distillation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.knowledge_distillation</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../torch/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../torch/knowledge_distillation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.knowledge_distillation</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../torch/knowledge_distillation/algo/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.knowledge_distillation.algo</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../torch/pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.pruning</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../torch/pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.pruning</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../torch/pruning/filter_pruning/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.pruning.filter_pruning</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../torch/quantization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.quantization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../torch/quantization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.quantization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../torch/quantization/algo/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.quantization.algo</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../torch/sparsity/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.sparsity</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../torch/sparsity/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.sparsity</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-19"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../torch/sparsity/const/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.sparsity.const</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../torch/sparsity/magnitude/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.sparsity.magnitude</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../torch/sparsity/rb/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.torch.sparsity.rb</span></code></a></li>
@@ -333,7 +357,11 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantization.advanced_parameters.OverflowFix"><code class="docutils literal notranslate"><span class="pre">OverflowFix</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantization.advanced_parameters.QuantizationParameters"><code class="docutils literal notranslate"><span class="pre">QuantizationParameters</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantization.advanced_parameters.AdvancedBiasCorrectionParameters"><code class="docutils literal notranslate"><span class="pre">AdvancedBiasCorrectionParameters</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantization.advanced_parameters.AdvancedQuantizationParameters"><code class="docutils literal notranslate"><span class="pre">AdvancedQuantizationParameters</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantization.advanced_parameters.AdvancedAccuracyRestorerParameters"><code class="docutils literal notranslate"><span class="pre">AdvancedAccuracyRestorerParameters</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -349,48 +377,148 @@ document.write(`
                   
   <section id="module-nncf.quantization.advanced_parameters">
 <span id="nncf-quantization-advanced-parameters"></span><h1><a class="reference internal" href="#module-nncf.quantization.advanced_parameters" title="nncf.quantization.advanced_parameters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.quantization.advanced_parameters</span></code></a><a class="headerlink" href="#module-nncf.quantization.advanced_parameters" title="Permalink to this heading">#</a></h1>
-<p>Copyright (c) 2023 Intel Corporation
-Licensed under the Apache License, Version 2.0 (the “License”);
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at</p>
-<blockquote>
-<div><p><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
-</div></blockquote>
-<p>Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an “AS IS” BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.</p>
+<p>Structures and functions for passing advanced parameters to NNCF post-training quantization APIs.</p>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h2>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#nncf.quantization.advanced_parameters.AdvancedQuantizationParameters" title="nncf.quantization.advanced_parameters.AdvancedQuantizationParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AdvancedQuantizationParameters</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nncf.quantization.advanced_parameters.OverflowFix" title="nncf.quantization.advanced_parameters.OverflowFix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OverflowFix</span></code></a></p></td>
+<td><p>This option controls whether to apply the overflow issue fix for the 8-bit</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nncf.quantization.advanced_parameters.QuantizationParameters" title="nncf.quantization.advanced_parameters.QuantizationParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QuantizationParameters</span></code></a></p></td>
+<td><p>Contains quantization parameters for weights or activations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nncf.quantization.advanced_parameters.AdvancedBiasCorrectionParameters" title="nncf.quantization.advanced_parameters.AdvancedBiasCorrectionParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AdvancedBiasCorrectionParameters</span></code></a></p></td>
+<td><p>Contains advanced parameters for fine-tuning bias correction algorithm.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#nncf.quantization.advanced_parameters.AdvancedQuantizationParameters" title="nncf.quantization.advanced_parameters.AdvancedQuantizationParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AdvancedQuantizationParameters</span></code></a></p></td>
 <td><p>Contains advanced parameters for fine-tuning qunatization algorithm.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#nncf.quantization.advanced_parameters.AdvancedAccuracyRestorerParameters" title="nncf.quantization.advanced_parameters.AdvancedAccuracyRestorerParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AdvancedAccuracyRestorerParameters</span></code></a></p></td>
+<td><p>Contains advanced parameters for fine-tuning the accuracy restorer algorithm.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
+<dt class="sig sig-object py" id="nncf.quantization.advanced_parameters.OverflowFix">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.quantization.advanced_parameters.</span></span><span class="sig-name descname"><span class="pre">OverflowFix</span></span><a class="reference external" href="https://github.com/openvinotoolkit/nncf/blob/develop/nncf/quantization/advanced_parameters.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nncf.quantization.advanced_parameters.OverflowFix" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>This option controls whether to apply the overflow issue fix for the 8-bit
+quantization.</p>
+<p>8-bit instructions of older Intel CPU generations (based on SSE, AVX-2, and AVX-512
+instruction sets) suffer from the so-called saturation (overflow) issue: in some
+configurations, the output does not fit into an intermediate buffer and has to be
+clamped. This can lead to an accuracy drop on the aforementioned architectures.
+The fix set to use only half a quantization range to avoid overflow for specific
+operations.</p>
+<p>If you are going to infer the quantized model on the architectures with AVX-2, and
+AVX-512 instruction sets, we recommend using FIRST_LAYER option as lower aggressive
+fix of the overflow issue. If you still face significant accuracy drop, try using
+ENABLE, but this may get worse the accuracy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ENABLE</strong> – All weights of all types of Convolutions and MatMul operations
+are be quantized using a half of the 8-bit quantization range.</p></li>
+<li><p><strong>FIRST_LAYER</strong> – Weights of the first Convolutions of each model inputs
+are quantized using a half of the 8-bit quantization range.</p></li>
+<li><p><strong>DISABLE</strong> – All weights are quantized using the full 8-bit quantization range.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nncf.quantization.advanced_parameters.QuantizationParameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.quantization.advanced_parameters.</span></span><span class="sig-name descname"><span class="pre">QuantizationParameters</span></span><a class="reference external" href="https://github.com/openvinotoolkit/nncf/blob/develop/nncf/quantization/advanced_parameters.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nncf.quantization.advanced_parameters.QuantizationParameters" title="Permalink to this definition">#</a></dt>
+<dd><p>Contains quantization parameters for weights or activations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_bits</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – The number of bits to use for quantization.</p></li>
+<li><p><strong>mode</strong> (<a class="reference internal" href="../../common/quantization/structs/index.html#nncf.common.quantization.structs.QuantizationMode" title="nncf.common.quantization.structs.QuantizationMode"><em>nncf.common.quantization.structs.QuantizationMode</em></a>) – The quantization mode to use, such as ‘symmetric’, ‘asymmetric’, etc.</p></li>
+<li><p><strong>signedness_to_force</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – Whether to force the weights or activations to be
+signed (True), unsigned (False)</p></li>
+<li><p><strong>per_channel</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – True if per-channel quantization is used, and False if
+per-tensor quantization is used.</p></li>
+<li><p><strong>narrow_range</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – <p>Whether to use a narrow quantization range.</p>
+<p>If False, then the input will be quantized into quantization range</p>
+<ul>
+<li><p>[0; 2^num_bits - 1] for unsigned quantization and</p></li>
+<li><p>[-2^(num_bits - 1); 2^(num_bits - 1) - 1] for signed quantization</p></li>
+</ul>
+<p>If True, then the ranges would be:</p>
+<ul>
+<li><p>[0; 2^num_bits - 2] for unsigned quantization and</p></li>
+<li><p>[-2^(num_bits - 1) + 1; 2^(num_bits - 1) - 1] for signed quantization</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nncf.quantization.advanced_parameters.AdvancedBiasCorrectionParameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.quantization.advanced_parameters.</span></span><span class="sig-name descname"><span class="pre">AdvancedBiasCorrectionParameters</span></span><a class="reference external" href="https://github.com/openvinotoolkit/nncf/blob/develop/nncf/quantization/advanced_parameters.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nncf.quantization.advanced_parameters.AdvancedBiasCorrectionParameters" title="Permalink to this definition">#</a></dt>
+<dd><p>Contains advanced parameters for fine-tuning bias correction algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>apply_for_all_nodes</strong> (<em>bool</em>) – Whether to apply the correction to all nodes in the
+model, or only to nodes that have a bias.</p></li>
+<li><p><strong>threshold</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – The threshold value determines the maximum bias correction value.
+The bias correction are skipped If the value is higher than threshold.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="nncf.quantization.advanced_parameters.AdvancedQuantizationParameters">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.quantization.advanced_parameters.</span></span><span class="sig-name descname"><span class="pre">AdvancedQuantizationParameters</span></span><a class="headerlink" href="#nncf.quantization.advanced_parameters.AdvancedQuantizationParameters" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.quantization.advanced_parameters.</span></span><span class="sig-name descname"><span class="pre">AdvancedQuantizationParameters</span></span><a class="reference external" href="https://github.com/openvinotoolkit/nncf/blob/develop/nncf/quantization/advanced_parameters.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nncf.quantization.advanced_parameters.AdvancedQuantizationParameters" title="Permalink to this definition">#</a></dt>
 <dd><p>Contains advanced parameters for fine-tuning qunatization algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>overflow_fix</strong> – This option controls whether to apply the overflow issue fix
+<li><p><strong>overflow_fix</strong> (<a class="reference internal" href="#nncf.quantization.advanced_parameters.OverflowFix" title="nncf.quantization.advanced_parameters.OverflowFix"><em>nncf.quantization.advanced_parameters.OverflowFix</em></a>) – This option controls whether to apply the overflow issue fix
 for the 8-bit quantization, defaults to OverflowFix.FIRST_LAYER.</p></li>
-<li><p><strong>quantize_outputs</strong> – Whether to insert additional quantizers right before each
+<li><p><strong>quantize_outputs</strong> (<em>bool</em>) – Whether to insert additional quantizers right before each
 of the model outputs.</p></li>
-<li><p><strong>inplace_statistics</strong> – Defines wheather to calculate quantizers statistics by
+<li><p><strong>inplace_statistics</strong> (<em>bool</em>) – Defines whether to calculate quantizers statistics by
 backend graph operations or by default Python implementation, defaults to True.</p></li>
-<li><p><strong>disable_bias_correction</strong> – Whether to disable the bias correction.</p></li>
-<li><p><strong>activations_quantization_params</strong> – Quantization parameters for activations.</p></li>
-<li><p><strong>weights_quantization_params</strong> – Quantization parameters for weights.</p></li>
-<li><p><strong>activations_range_estimator_params</strong> – Range estimator parameters for
-activations.</p></li>
-<li><p><strong>weights_range_estimator_params</strong> – Range estimator parameters for weights.</p></li>
-<li><p><strong>bias_correction_params</strong> – Advanced bias correction paramters.</p></li>
-<li><p><strong>backend_params</strong> – Backend-specific parameters.</p></li>
+<li><p><strong>disable_bias_correction</strong> (<em>bool</em>) – Whether to disable the bias correction.</p></li>
+<li><p><strong>activations_quantization_params</strong> (<a class="reference internal" href="#nncf.quantization.advanced_parameters.QuantizationParameters" title="nncf.quantization.advanced_parameters.QuantizationParameters"><em>nncf.quantization.advanced_parameters.QuantizationParameters</em></a>) – Quantization parameters for activations.</p></li>
+<li><p><strong>weights_quantization_params</strong> (<a class="reference internal" href="#nncf.quantization.advanced_parameters.QuantizationParameters" title="nncf.quantization.advanced_parameters.QuantizationParameters"><em>nncf.quantization.advanced_parameters.QuantizationParameters</em></a>) – Quantization parameters for weights.</p></li>
+<li><p><strong>activations_range_estimator_params</strong> (<a class="reference internal" href="../range_estimator/index.html#nncf.quantization.range_estimator.RangeEstimatorParameters" title="nncf.quantization.range_estimator.RangeEstimatorParameters"><em>nncf.quantization.range_estimator.RangeEstimatorParameters</em></a>) – Range estimator parameters for activations.</p></li>
+<li><p><strong>weights_range_estimator_params</strong> (<a class="reference internal" href="../range_estimator/index.html#nncf.quantization.range_estimator.RangeEstimatorParameters" title="nncf.quantization.range_estimator.RangeEstimatorParameters"><em>nncf.quantization.range_estimator.RangeEstimatorParameters</em></a>) – Range estimator parameters for weights.</p></li>
+<li><p><strong>bias_correction_params</strong> (<a class="reference internal" href="#nncf.quantization.advanced_parameters.AdvancedBiasCorrectionParameters" title="nncf.quantization.advanced_parameters.AdvancedBiasCorrectionParameters"><em>nncf.quantization.advanced_parameters.AdvancedBiasCorrectionParameters</em></a>) – Advanced bias correction parameters.</p></li>
+<li><p><strong>backend_params</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Backend-specific parameters.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nncf.quantization.advanced_parameters.AdvancedAccuracyRestorerParameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nncf.quantization.advanced_parameters.</span></span><span class="sig-name descname"><span class="pre">AdvancedAccuracyRestorerParameters</span></span><a class="reference external" href="https://github.com/openvinotoolkit/nncf/blob/develop/nncf/quantization/advanced_parameters.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nncf.quantization.advanced_parameters.AdvancedAccuracyRestorerParameters" title="Permalink to this definition">#</a></dt>
+<dd><p>Contains advanced parameters for fine-tuning the accuracy restorer algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_num_iterations</strong> (<em>int</em>) – The maximum number of iterations of the algorithm.
+In other words, the maximum number of layers that may be reverted back to
+floating-point precision. By default, it is limited by the overall number of
+quantized layers.</p></li>
+<li><p><strong>tune_hyperparams</strong> (<em>int</em>) – Whether to tune of quantization parameters as a
+preliminary step before reverting layers back to the floating-point precision.
+It can bring an additional boost in performance and accuracy, at the cost of
+increased overall quantization time. The default value is <cite>False</cite>.</p></li>
+<li><p><strong>convert_to_mixed_preset</strong> (<em>bool</em>) – Whether to convert the model to mixed mode if
+the accuracy criteria of the symmetrically quantized model are not satisfied.
+The default value is <cite>False</cite>.</p></li>
+<li><p><strong>ranking_subset_size</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Size of a subset that is used to rank layers by their
+contribution to the accuracy drop.</p></li>
 </ul>
 </dd>
 </dl>
@@ -421,11 +549,11 @@ activations.</p></li>
       </div>
     </a>
     <a class="right-next"
-       href="../../tensorflow/index.html"
+       href="../range_estimator/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.tensorflow</span></code></p>
+        <p class="prev-next-title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">nncf.quantization.range_estimator</span></code></p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -448,7 +576,11 @@ activations.</p></li>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantization.advanced_parameters.OverflowFix"><code class="docutils literal notranslate"><span class="pre">OverflowFix</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantization.advanced_parameters.QuantizationParameters"><code class="docutils literal notranslate"><span class="pre">QuantizationParameters</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantization.advanced_parameters.AdvancedBiasCorrectionParameters"><code class="docutils literal notranslate"><span class="pre">AdvancedBiasCorrectionParameters</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantization.advanced_parameters.AdvancedQuantizationParameters"><code class="docutils literal notranslate"><span class="pre">AdvancedQuantizationParameters</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nncf.quantization.advanced_parameters.AdvancedAccuracyRestorerParameters"><code class="docutils literal notranslate"><span class="pre">AdvancedAccuracyRestorerParameters</span></code></a></li>
 </ul>
 </li>
 </ul>

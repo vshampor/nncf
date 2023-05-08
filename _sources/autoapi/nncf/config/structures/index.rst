@@ -5,16 +5,7 @@
 
 .. autoapi-nested-parse::
 
-   Copyright (c) 2023 Intel Corporation
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-        http://www.apache.org/licenses/LICENSE-2.0
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+   Structures for passing live Python objects into NNCF algorithms.
 
 
 
@@ -37,6 +28,10 @@ Classes
 
    Stores additional arguments for quantization range initialization algorithms.
 
+   :param data_loader: Provides an iterable over the given dataset.
+   :param device: Device to perform initialization. If `device` is `None`
+       then the device of the model parameters will be used.
+
 
 .. py:class:: BNAdaptationInitArgs(data_loader, device = None)
 
@@ -44,12 +39,18 @@ Classes
 
    Stores additional arguments for batchnorm statistics adaptation algorithm.
 
+   :param data_loader: Provides an iterable over the given dataset.
+   :param device: Device to perform initialization. If `device` is `None`
+       then the device of the model parameters will be used.
+
 
 .. py:class:: ModelEvaluationArgs(eval_fn)
 
    Bases: :py:obj:`NNCFExtraConfigStruct`
 
-   This is the class from which all extra structures that define additional
-   NNCFConfig arguments inherit.
+   Stores additional arguments for running the model in the evaluation mode, should this be required for an algorithm.
+
+   :param eval_fn: A function accepting a single argument - the model object - and returning the model's metric on
+       the evaluation split of the dataset corresponding to the model.
 
 

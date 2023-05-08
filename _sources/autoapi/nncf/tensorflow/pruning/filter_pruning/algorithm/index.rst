@@ -3,20 +3,6 @@
 
 .. py:module:: nncf.tensorflow.pruning.filter_pruning.algorithm
 
-.. autoapi-nested-parse::
-
-   Copyright (c) 2023 Intel Corporation
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-        http://www.apache.org/licenses/LICENSE-2.0
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
-
 
 
 Classes
@@ -33,8 +19,32 @@ Classes
 
    Bases: :py:obj:`nncf.tensorflow.pruning.base_algorithm.BasePruningAlgoController`
 
-   Serves as a handle to the additional modules, parameters and hooks inserted
-   into the original uncompressed model to enable filter pruning.
+   Controller class for the filter pruning algorithm.
+
+   .. py:property:: scheduler
+      :type: nncf.common.pruning.schedulers.PruningScheduler
+
+      The compression scheduler for this particular algorithm combination.
+
+
+   .. py:property:: loss
+      :type: nncf.api.compression.CompressionLoss
+
+      The compression loss for this particular algorithm combination.
+
+
+   .. py:property:: compression_rate
+      :type: float
+
+      Returns a float compression rate value ranging from 0 to 1 (e.g. the sparsity level,
+      or the ratio of filters pruned).
+
+
+   .. py:property:: maximal_compression_rate
+      :type: float
+
+      Returns the maximal model compression rate supported by the compression controller.
+
 
    .. py:method:: compression_stage()
 
@@ -47,8 +57,8 @@ Classes
 
    .. py:method:: disable_scheduler()
 
-      Disables current compression scheduler during training by changing
-      it to a dummy one that does not change the compression rate.
+      Disables current compression scheduler during training by changing it to a dummy one that does not change
+      the compression rate.
 
 
    .. py:method:: statistics(quickly_collected_only = False)
@@ -58,14 +68,14 @@ Classes
       :param quickly_collected_only: Enables collection of the statistics that
           don't take too much time to compute. Can be helpful for the case when
           need to keep track of statistics on each training batch/step/iteration.
-      :return: A `Statistics` class instance that contains compression algorithm statistics.
 
 
    .. py:method:: set_pruning_level(pruning_level, run_batchnorm_adaptation = False)
 
-      Setup pruning masks in accordance to provided pruning level
-      :param pruning_level: pruning ratio
-      :return:
+      Setup pruning masks in accordance to provided pruning level.
+
+      :param pruning_level: Pruning level to be set.
+      :param run_batchnorm_adaptation: Whether to run batchnorm adaptation after setting the pruning level.
 
 
 

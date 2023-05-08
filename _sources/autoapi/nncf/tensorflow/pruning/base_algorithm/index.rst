@@ -1,22 +1,35 @@
-:orphan:
-
 :py:mod:`nncf.tensorflow.pruning.base_algorithm`
 ================================================
 
 .. py:module:: nncf.tensorflow.pruning.base_algorithm
 
-.. autoapi-nested-parse::
 
-   Copyright (c) 2023 Intel Corporation
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-        http://www.apache.org/licenses/LICENSE-2.0
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   nncf.tensorflow.pruning.base_algorithm.BasePruningAlgoController
+
+
+
+
+.. py:class:: BasePruningAlgoController(target_model, op_names, prunable_types, pruned_layer_groups_info, config)
+
+   Bases: :py:obj:`nncf.common.compression.BaseCompressionAlgorithmController`, :py:obj:`abc.ABC`
+
+   Base class for TF pruning algorithm controllers.
+
+   .. py:method:: strip_model(model, do_copy = False)
+
+      Strips auxiliary layers that were used for the model compression, as it's
+      only needed for training. The method is used before exporting the model
+      in the target format.
+
+      :param model: The compressed model.
+      :param do_copy: Modify copy of the model, defaults to False.
+      :return: The stripped model.
 
 
 

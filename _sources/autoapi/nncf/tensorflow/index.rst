@@ -5,16 +5,7 @@
 
 .. autoapi-nested-parse::
 
-   Copyright (c) 2023 Intel Corporation
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-        http://www.apache.org/licenses/LICENSE-2.0
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+   Base subpackage for NNCF TensorFlow functionality.
 
 
 
@@ -55,13 +46,11 @@ Functions
    :param compression_state: compression state to unambiguously restore the compressed model.
        Includes builder and controller states. If it is specified, trainable parameter initialization will be skipped
        during building.
-   :return: A tuple (compression_ctrl, compressed_model) where
-       - compression_ctrl: The controller of the compression algorithm.
-       - compressed_model: The model with additional modifications
-           necessary to enable algorithm-specific compression during fine-tuning.
+   :return: A tuple of the compression controller for the requested algorithm(s) and the model object with additional
+    modifications necessary to enable algorithm-specific compression during fine-tuning.
 
 
-.. py:function:: create_compression_callbacks(compression_ctrl, log_tensorboard=True, log_text=True, log_dir=None)
+.. py:function:: create_compression_callbacks(compression_ctrl, log_tensorboard = True, log_text = True, log_dir = None)
 
 
 .. py:function:: register_default_init_args(nncf_config, data_loader, batch_size, device = None)
@@ -70,10 +59,12 @@ Functions
    compression algorithms requires certain extra structures.
 
    :param nncf_config: An instance of the NNCFConfig class without extra structures.
+   :type nncf_config: nncf.NNCFConfig
    :param data_loader: Dataset used for initialization.
    :param batch_size: Batch size used for initialization.
    :param device: Device to perform initialization. If `device` is `None` then the device
        of the model parameters will be used.
    :return: An instance of the NNCFConfig class with extra structures.
+   :rtype: nncf.NNCFConfig
 
 
