@@ -33,4 +33,5 @@ def export_model(ctrl: CompressionAlgorithmController, save_path: str, no_strip_
         input_tensor_list.append(torch.rand(input_shape))
 
     with torch.no_grad():
+        model = torch.fx.symbolic_trace(model)
         torch.onnx.export(model, tuple(input_tensor_list), save_path, input_names=input_names)

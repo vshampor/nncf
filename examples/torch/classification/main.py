@@ -325,9 +325,9 @@ def main_worker(current_gpu, config: SampleConfig):
             )
 
     if "test" in config.mode:
-        # val_model = model
-        val_model = compression_ctrl.strip().eval()
-        val_model = torch.fx.symbolic_trace(val_model)
+        val_model = model
+        # val_model = compression_ctrl.strip().eval()
+        # val_model = torch.fx.symbolic_trace(val_model)
         validate(val_loader, val_model, criterion, config)
 
     config.mlflow.end_run()
