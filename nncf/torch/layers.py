@@ -53,6 +53,26 @@ def maybe_reapply_weight_norm(src: torch.nn.Module, dst: torch.nn.Module) -> tor
     return dst
 
 
+def preserve_python_module_name_for_fx(src: torch.nn.Module, dst: torch.nn.Module) -> torch.nn.Module:
+    # As of PyTorch 2.0, torch.fx uses the __module__ parameter of the traced module objects to determine
+    # whether the module is a "leaf" module (and thus should not be traced into) or not.
+    # BatchNorms in particular contain an "if" clause in their code and therefore are only traceable with .fx if
+    # these are determined to be "leaf" modules.
+    # Applying this function on the NNCF-wrapped modules makes the modules be considered as "leaf" by the default
+    # torch.fx._symbolic_trace.Tracer, but at the same time this means that the "forward" of the NNCF-wrapped module
+    # will never be executed, and any pre- and post-ops that NNCF had set up via the module pre- and post-op mechanism
+    # will be lost.
+    # Currently we do not set up pre- or post-ops for BatchNorms, so applying this to NNCFBatchNorm* modules should
+    # be safe. Alternatives would be to either:
+    # 1) make the users utilize our own subclass of torch.fx._symbolic_trace.Tracer in
+    #    which we redefine the `.call_module(...)` or `.is_leaf_module(...)` methods, or
+    # 2) somehow "lower" the module-level pre- and post-ops to function-level pre- and post-hooks, or
+    # 3) to patch the `torch.fx._symbolic_trace.Tracer.call_module` method so that it will execute pre- and post-hooks
+    #    set up by NNCF for modules that are natively "leaf".
+    dst.__module__ = src.__module__
+    return dst
+
+
 def align_module_internals(src: torch.nn.Module, dst: torch.nn.Module) -> torch.nn.Module:
     dict_update(src.__dict__, dst.__dict__)
     dst = maybe_reapply_weight_norm(src, dst)
@@ -218,6 +238,7 @@ class NNCFBatchNorm1d(_NNCFModuleMixin, nn.BatchNorm1d):
         assert module.__class__.__name__ == nn.BatchNorm1d.__name__
 
         nncf_bn = NNCFBatchNorm1d(module.num_features)
+        nncf_bn = preserve_python_module_name_for_fx(module, nncf_bn)
         nncf_bn = align_module_internals(module, nncf_bn)
         return nncf_bn
 
@@ -231,6 +252,7 @@ class NNCFBatchNorm2d(_NNCFModuleMixin, nn.BatchNorm2d):
         assert module.__class__.__name__ == nn.BatchNorm2d.__name__
 
         nncf_bn = NNCFBatchNorm2d(module.num_features)
+        nncf_bn = preserve_python_module_name_for_fx(module, nncf_bn)
         nncf_bn = align_module_internals(module, nncf_bn)
         return nncf_bn
 
@@ -244,6 +266,7 @@ class NNCFBatchNorm3d(_NNCFModuleMixin, nn.BatchNorm3d):
         assert module.__class__.__name__ == nn.BatchNorm3d.__name__
 
         nncf_bn = NNCFBatchNorm3d(module.num_features)
+        nncf_bn = preserve_python_module_name_for_fx(module, nncf_bn)
         nncf_bn = align_module_internals(module, nncf_bn)
         return nncf_bn
 
