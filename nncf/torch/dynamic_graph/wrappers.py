@@ -9,6 +9,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import functools
+import inspect
 from copy import deepcopy
 from typing import Callable, List, Tuple
 
@@ -95,6 +96,16 @@ def wrap_operator(operator, operator_info: PatchedOperatorInfo):
                     types = tuple(map(type, overloaded_args))
                     if torch.fx.Proxy in types:
                         op_name = args[0].__name__
+                    if op_name == 'relu':
+                        fn = args[0]
+                        fqn = f"{inspect.getmodule(fn).__name__}.{fn.__name__}"
+                        if fqn == "torch.nn.functional.relu":
+                            if 'inplace' in kwargs:
+                                inplace = kwargs['inplace']
+                                if inplace:
+                                    op_name = 'relu_'
+
+
                 else:
                     op_name = operator_info.name
                 op_address = ctx.get_caller_context(op_name)

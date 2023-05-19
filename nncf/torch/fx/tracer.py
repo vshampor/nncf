@@ -18,29 +18,14 @@ from typing import Union
 import torch
 from torch.fx import GraphModule
 from torch.fx import Tracer
+from torch.fx.proxy import ScopeContextManager
+
+from nncf.torch.dynamic_graph.scope import Scope
 
 
 class NNCFTracer(Tracer):
-    def call_module(
-        self,
-        m: torch.nn.Module,
-        forward: Callable[..., Any],
-        args: Tuple[Any, ...],
-        kwargs: Dict[str, Any],
-    ) -> Any:
-        module_qualified_name = self.path_of_module(m)
-        with ScopeContextManager(self.scope, Scope(module_qualified_name, type(m))) as _scope:
-            # module_stack is an ordered dict so writing then deleting the
-            # entry is equivalent to push/pop on a list
-            self.module_stack[_scope.module_path] = _scope.module_type
-            if not self.is_leaf_module(m, module_qualified_name):
-                ret_val = forward(*args, **kwargs)
-            else:
-                ret_val = self.create_proxy("call_module", module_qualified_name, args, kwargs)
-            key, _ = self.module_stack.popitem(last=True)
-            assert key == _scope.module_path, f" Unexpected key {key}"
-
-        return ret_val
+    def is_leaf_module(self, m: torch.nn.Module, qualified_name: str):
+        return False
 
 
 def symbolic_trace(
