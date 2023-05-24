@@ -21,10 +21,15 @@ from torch.fx import Tracer
 from torch.fx.proxy import ScopeContextManager
 
 from nncf.torch.dynamic_graph.scope import Scope
+from nncf.torch.layers import NNCFBatchNorm1d
+from nncf.torch.layers import NNCFBatchNorm2d
+from nncf.torch.layers import NNCFBatchNorm3d
 
 
 class NNCFTracer(Tracer):
     def is_leaf_module(self, m: torch.nn.Module, qualified_name: str):
+        if isinstance(m, (NNCFBatchNorm1d, NNCFBatchNorm2d, NNCFBatchNorm3d)):
+            return True
         return False
 
 
