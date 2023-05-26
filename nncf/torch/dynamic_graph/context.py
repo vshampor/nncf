@@ -33,7 +33,8 @@ from nncf.torch.dynamic_graph.trace_tensor import TensorMeta
 from nncf.torch.dynamic_graph.trace_tensor import TracedTensor
 
 
-class ThreadLocalGlobalContext(threading.local):
+#class ThreadLocalGlobalContext(threading.local):
+class ThreadLocalGlobalContext:
     def __init__(self):
         super().__init__()
         self.context = None
@@ -57,7 +58,8 @@ class PreHookId:
         return hash(str(self))
 
 
-class TracingThreadLocals(threading.local):
+#class TracingThreadLocals(threading.local):
+class TracingThreadLocals:
     def __init__(self):
         super().__init__()
         self.reset()
