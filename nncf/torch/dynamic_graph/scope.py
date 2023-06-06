@@ -60,6 +60,8 @@ class Scope:
         return hash(str(self))
 
     def __eq__(self, other: "Scope"):
+        if not isinstance(other, Scope):
+            return False
         return self.scope_elements == other.scope_elements
 
     def __getitem__(self, key) -> ScopeElement:
