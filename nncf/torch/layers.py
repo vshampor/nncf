@@ -180,8 +180,10 @@ class NNCFConv2d(_NNCFModuleMixin, nn.Conv2d):
         )
 
     def _conv_forward_proxy(self, input_, weight, bias, padding_value, padding, num_groups):
-        with no_jit_trace():
-            padding_val = padding_value.item()
+        # with no_jit_trace():
+        #     padding_val = padding_value.item()
+        padding_val = padding_value.item()
+
         self.get_padding_value_ref().data.fill_(padding_val)
         self.groups = num_groups
 

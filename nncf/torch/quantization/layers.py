@@ -449,8 +449,8 @@ class BaseQuantizer(nn.Module, ABC):
 
     @property
     def num_bits(self):
-        with no_jit_trace():
-            return self._num_bits.item()
+        # with no_jit_trace():
+        return self._num_bits.item()
 
     @num_bits.setter
     def num_bits(self, num_bits: int):
@@ -701,8 +701,8 @@ class SymmetricQuantizer(BaseQuantizer):
 
     @property
     def signed(self):
-        with no_jit_trace():
-            return self.signed_tensor.item() == 1
+        # with no_jit_trace():
+        return self.signed_tensor.item() == 1
 
     @signed.setter
     def signed(self, signed: bool):
