@@ -138,6 +138,16 @@ class NNCFNetworkInterface(torch.nn.Module):
         """
         raise NotImplementedError("Calling `forward` on NNCFInterface is prohibited.")
 
+    def unwrap_for_compile(self) -> torch.nn.Module:
+        clean_copy = self.get_clean_shallow_copy()
+
+        for nncf_module in self._nncf_replaced_modules.keys():
+            original_cls = nncf_module.__class__.__bases__[1]
+            nncf_module.__class__ = original_cls
+        clean_copy.__class__ = self._original_class
+        clean_copy.register_buffer("empty_buffer", torch.ones([1]))
+        return clean_copy
+
     def get_original_forward(self) -> Callable:
         """
         Returns the forward function of the original model, unmodified by NNCF. The returned function will

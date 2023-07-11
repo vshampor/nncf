@@ -48,7 +48,7 @@ class Scope:
         if scope_elements is not None:
             self.scope_elements = scope_elements
         else:
-            self.scope_elements = []
+            self.scope_elements = []  # type: List[ScopeElement]
 
     def __str__(self):
         return "/".join([str(scope_el) for scope_el in self.scope_elements])

@@ -239,6 +239,7 @@ _JIT_ALREADY_WRAPPED = False
 _OPERATORS_ALREADY_WRAPPED = False
 _ORIG_JIT_SCRIPT = None
 _ORIG_JIT_TRACE_MAKE_MODULE = None
+_ORIG_JIT_SCRIPT_IF_TRACING = None
 
 
 def patch_torch_jit():
@@ -259,6 +260,8 @@ def patch_torch_jit():
 
     # Patch torch.jit._script_if_tracing because it references an original
     # unpatched torch.jit.script and the patching above does not affect it
+    global _ORIG_JIT_SCRIPT_IF_TRACING
+    _ORIG_JIT_SCRIPT_IF_TRACING = getattr(torch.jit._trace, "_script_if_tracing")
     setattr(torch.jit, "_script_if_tracing", torch_jit_script_if_tracing)
 
 
@@ -394,6 +397,11 @@ def unpatch_torch_operators():
     for orig_op_info in ORIGINAL_OPERATORS:
         setattr(orig_op_info.namespace, orig_op_info.name, orig_op_info.op)
 
+    setattr(torch.jit, "script", _ORIG_JIT_SCRIPT)
+    setattr(torch.jit, "make_module", _ORIG_JIT_TRACE_MAKE_MODULE)
+    setattr(torch.jit, "_script_if_tracing", _ORIG_JIT_SCRIPT_IF_TRACING)
+    torch.nn.Module.__call__ = ORIGINAL_CALL
+    torch.fx._symbolic_trace._orig_module_call = ORIGINAL_CALL
 
 @contextmanager
 def disable_patching():

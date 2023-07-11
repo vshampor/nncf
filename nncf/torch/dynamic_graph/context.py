@@ -42,6 +42,14 @@ class ThreadLocalGlobalContext:
 
 _CURRENT_CONTEXT = ThreadLocalGlobalContext()
 
+_COMPRESSION_STATE = None
+
+def set_compression_state(state):
+    global _COMPRESSION_STATE
+    _COMPRESSION_STATE = state
+
+def get_compression_state():
+    return _COMPRESSION_STATE
 
 class PreHookId:
     def __init__(self, op_address: OperationAddress, input_port_id: int):

@@ -13,6 +13,7 @@
 """
 Base subpackage for NNCF PyTorch functionality.
 """
+from contextlib import contextmanager
 
 from nncf import nncf_logger
 from nncf.common.logging.logger import warn_bkc_version_mismatch
@@ -67,4 +68,20 @@ from nncf.torch.dynamic_graph.patch_pytorch import patch_torch_operators
 
 from nncf.torch.extensions import force_build_cpu_extensions, force_build_cuda_extensions
 
-patch_torch_operators()
+# patch_torch_operators()
+
+
+@contextmanager
+def disable():
+    from nncf.torch.dynamic_graph.patch_pytorch import unpatch_torch_operators
+    unpatch_torch_operators()
+    yield
+    patch_torch_operators()
+
+
+@contextmanager
+def enable():
+    from nncf.torch.dynamic_graph.patch_pytorch import unpatch_torch_operators
+    patch_torch_operators()
+    yield
+    unpatch_torch_operators()
