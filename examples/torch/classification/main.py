@@ -72,7 +72,9 @@ from nncf.common.accuracy_aware_training import create_accuracy_aware_training_l
 from nncf.common.utils.tensorboard import prepare_for_tensorboard
 from nncf.config.utils import is_accuracy_aware_training
 from nncf.torch import create_compressed_model
+from nncf.torch import disable
 from nncf.torch.checkpoint_loading import load_state
+from nncf.torch.dynamic_graph.context import get_compile_output
 from nncf.torch.dynamic_graph.graph_tracer import create_input_infos
 from nncf.torch.initialization import default_criterion_fn
 from nncf.torch.initialization import register_default_init_args
@@ -327,8 +329,25 @@ def main_worker(current_gpu, config: SampleConfig):
     if "test" in config.mode:
         val_model = model
         val_model = compression_ctrl.strip().eval()
-        val_model = torch.fx.symbolic_trace(val_model)
-        print(f"VSHAMPOR: {val_model.code}")
+
+        from nncf.torch.quantization.compile import embedding_backend
+
+        with disable():
+            nncf_n_i = val_model.nncf
+
+            state = compression_ctrl.get_compression_state()
+            state['graph'] = nncf_n_i.get_graph()
+            state['ctrl'] = compression_ctrl
+
+            val_model = val_model.nncf.unwrap_for_compile()
+            from nncf.torch.dynamic_graph.context import set_compression_state
+            set_compression_state(state)
+            val_model = torch.compile(val_model, backend="nncf")
+            val_model(torch.ones([1, 3, 224, 224]).cuda())
+
+        #
+        # val_model = torch.fx.symbolic_trace(val_model)
+        # print(f"VSHAMPOR: {val_model.code}")
         # val_model = torch.jit.trace(val_model, torch.ones([1, 3, 224, 224]).cuda())
         validate(val_loader, val_model, criterion, config)
 

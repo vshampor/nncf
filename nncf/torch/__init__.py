@@ -68,7 +68,7 @@ from nncf.torch.dynamic_graph.patch_pytorch import patch_torch_operators
 
 from nncf.torch.extensions import force_build_cpu_extensions, force_build_cuda_extensions
 
-# patch_torch_operators()
+patch_torch_operators()
 
 
 @contextmanager

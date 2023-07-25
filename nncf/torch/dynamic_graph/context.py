@@ -51,6 +51,15 @@ def set_compression_state(state):
 def get_compression_state():
     return _COMPRESSION_STATE
 
+_COMPILE_GRAPHMODULE_OUTPUT = None
+
+def set_compile_output(gm):
+    global _COMPILE_GRAPHMODULE_OUTPUT
+    _COMPILE_GRAPHMODULE_OUTPUT = gm
+
+def get_compile_output():
+    return _COMPILE_GRAPHMODULE_OUTPUT
+
 class PreHookId:
     def __init__(self, op_address: OperationAddress, input_port_id: int):
         self.op_address = op_address

@@ -27,11 +27,15 @@ from nncf.common.graph import NNCFGraph
 from nncf.common.graph.definitions import MODEL_INPUT_OP_NAME
 from nncf.common.quantization.quantizer_setup import ActivationQuantizationInsertionPoint
 from nncf.common.utils.dot_file_rw import write_dot_graph
+from nncf.torch.dynamic_graph.context import get_compile_output
 from nncf.torch.dynamic_graph.context import get_compression_state
+from nncf.torch.dynamic_graph.context import set_compile_output
 from nncf.torch.dynamic_graph.operation_address import OperationAddress
 from nncf.torch.dynamic_graph.scope import Scope
+from nncf.torch.quantization.algo import QuantizationController
 from nncf.torch.quantization.layers import PTQuantizationPoint
 from nncf.torch.quantization.layers import PTQuantizerSetup
+from nncf.torch.quantization.strip import convert_to_torch_fakequantizer
 
 
 def get_node_id(node: torch.fx.Node, idx: int) -> str:
@@ -58,13 +62,18 @@ def visualize_fx_graph(fx_graph: torch.fx.Graph, dot_path: Path):
 
 def quantize_weight_for_basic_module(graph_module: torch.fx.GraphModule,
                                      basic_module_call_node: torch.fx.Node,
-                                     uid: str):
+                                     uid: str,
+                                     fq_module: torch.nn.Module = None):
     graph = graph_module.graph
     target_basic_module_accessor = basic_module_call_node.target
     target_basic_module = getattr(graph_module, target_basic_module_accessor)
     module_input = next(iter(basic_module_call_node.all_input_nodes))
     fq_w_module_name = f'nncf_quantizers_fq_w_{uid}'
-    graph_module.add_submodule(fq_w_module_name, torch.ao.quantization.FakeQuantize(quant_min=0, quant_max=255))
+
+    if fq_module is None:
+        fq_module = torch.ao.quantization.FakeQuantize(quant_min=0, quant_max=255)
+
+    graph_module.add_submodule(fq_w_module_name, fq_module)
 
     with graph.inserting_before(basic_module_call_node):
         weight_node = graph.create_node('get_attr', target_basic_module_accessor + '.weight',
@@ -102,16 +111,35 @@ def quantize_weight_for_basic_module(graph_module: torch.fx.GraphModule,
     return call_basic_module_op_node
 
 
-def quantize_activation_after(graph_module: torch.fx.GraphModule, node_to_quantize: torch.fx.Node, uid: str) -> torch.fx.Node:
+def quantize_activation_after(graph_module: torch.fx.GraphModule, node_to_quantize: torch.fx.Node, uid: str,
+                              fq_module: torch.nn.Module = None) -> torch.fx.Node:
     graph = graph_module.graph
     fq_a_module_name = f'nncf_quantizers_fq_a_{uid}'
-    graph_module.add_submodule(fq_a_module_name, torch.ao.quantization.FakeQuantize(quant_min=0, quant_max=255))
+    if fq_module is None:
+        fq_module = torch.ao.quantization.FakeQuantize(quant_min=0, quant_max=255)
+    graph_module.add_submodule(fq_a_module_name, fq_module)
     with graph.inserting_after(node_to_quantize):
         call_fq_a_node = graph.call_module(fq_a_module_name, args=(node_to_quantize,))
         for node in graph.nodes:
             if node is call_fq_a_node:
                 continue
             node.replace_input_with(node_to_quantize, call_fq_a_node)
+    return call_fq_a_node
+
+
+def quantize_activation_before(graph_module: torch.fx.GraphModule, node_to_quantize: torch.fx.Node,
+                               input_port_id: int,
+                               uid: str,
+                               fq_module: torch.nn.Module = None) -> torch.fx.Node:
+    graph = graph_module.graph
+    fq_a_module_name = f'nncf_quantizers_fq_a_{uid}'
+    if fq_module is None:
+        fq_module = torch.ao.quantization.FakeQuantize(quant_min=0, quant_max=255)
+    graph_module.add_submodule(fq_a_module_name, fq_module)
+    with graph.inserting_before(node_to_quantize):
+        port_input = node_to_quantize.all_input_nodes[input_port_id]
+        call_fq_a_node = graph.call_module(fq_a_module_name, args=(port_input,))
+        node_to_quantize.replace_input_with(port_input, call_fq_a_node)
     return call_fq_a_node
 
 
@@ -181,6 +209,7 @@ def embedding_backend(gm: GraphModule, inputs) -> Callable:
     qsetup = PTQuantizerSetup.from_state(state['builder_state']['quantization']['quantizer_setup'])
 
     nncf_graph = state['graph']  # type: NNCFGraph
+    qctrl = state['ctrl']  # type: QuantizationController
     nncf_node_name_vs_fx_target_name = {}  # type: Dict[OperationAddress, str]
     op_counts = Counter()
     for nncf_node in nncf_graph.get_all_nodes():
@@ -204,9 +233,6 @@ def embedding_backend(gm: GraphModule, inputs) -> Callable:
         if qp.is_weight_quantization_point():
             target_node_name = fx_module_path
         elif qp.is_activation_quantization_point():
-            if qp.target_point.input_port_id is not None:
-                # pre-hook
-                raise RuntimeError("Pre-hooks not supported")
             if fx_module_path is not None and hasattr(gm, fx_module_path):
                 # QP is for one of the standard modules
                 target_node_name = fx_module_path
@@ -238,16 +264,38 @@ def embedding_backend(gm: GraphModule, inputs) -> Callable:
                 print(f"QP: {qp.target_point}")
                 processed_qps += 1
                 if qp.is_weight_quantization_point():
+                    found = False
+                    for qinfo in qctrl.weight_quantizers.values():
+                        for qtp in qinfo.affected_insertions:
+                            if qtp == qp.target_point:
+                                found = True
+                                break
+                        if found:
+                            break
+
+                    if not found:
+                        raise RuntimeError("No fitting FQ found for a weight")
+                    fq = convert_to_torch_fakequantizer(qinfo.quantizer_module_ref)
+
                     target_module = getattr(gm, node.target)
                     assert isinstance(target_module, (Conv2d, Linear))
-                    quantize_weight_for_basic_module(gm, node, node_name)
+                    quantize_weight_for_basic_module(gm, node, node_name, fq)
                 elif qp.is_activation_quantization_point():
-                    quantize_activation_after(gm, node, node_name)
-
-        bad_nodes = [n for n in gm.graph.nodes if n.name == 'self_layer1_0_relu']
-        assert len(bad_nodes) == 1
-        bad_node = bad_nodes[0]
-        print(f"Inputs: {bad_node.all_input_nodes}, users: {bad_node.users}")
+                    found = False
+                    for qinfo in qctrl.non_weight_quantizers.values():
+                        for qtp in qinfo.affected_insertions:
+                            if qtp == qp.target_point:
+                                found = True
+                                break
+                        if found:
+                            break
+                    if not found:
+                        raise RuntimeError("No fitting FQ found for a weight")
+                    fq = convert_to_torch_fakequantizer(qinfo.quantizer_module_ref)
+                    if qp.target_point.input_port_id is None:
+                        quantize_activation_after(gm, node, node_name, fq)
+                    else:
+                        quantize_activation_before(gm, node, qp.target_point.input_port_id, node_name, fq)
 
     # for idx, node in enumerate(original_nodes):
     #     if node.op == 'call_module':
@@ -269,4 +317,7 @@ def embedding_backend(gm: GraphModule, inputs) -> Callable:
     print(gm.graph)
     visualize_fx_graph(gm.graph, Path('after.dot'))
     gm.recompile()
+    # prev = get_compile_output()  # DOES NOT WORK - torch.compile calls the optimizing backend on all subgraphs repeatedly
+    # if prev is None:
+    #     set_compile_output(gm)
     return gm

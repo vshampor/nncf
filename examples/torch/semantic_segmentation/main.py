@@ -57,6 +57,7 @@ from nncf.common.accuracy_aware_training import create_accuracy_aware_training_l
 from nncf.common.utils.tensorboard import prepare_for_tensorboard
 from nncf.config.utils import is_accuracy_aware_training
 from nncf.torch import create_compressed_model
+from nncf.torch import disable
 from nncf.torch import load_state
 from nncf.torch.initialization import register_default_init_args
 from nncf.torch.utils import is_main_process
@@ -361,9 +362,9 @@ def train(
             config.tb.add_scalar("train/learning_rate", optimizer.param_groups[0]["lr"], epoch)
             config.tb.add_scalar("train/compression_loss", compression_ctrl.loss(), epoch)
 
-            statistics = compression_ctrl.statistics(quickly_collected_only=True)
-            for key, value in prepare_for_tensorboard(statistics).items():
-                config.tb.add_scalar("compression/statistics/{0}".format(key), value, epoch)
+            # statistics = compression_ctrl.statistics(quickly_collected_only=True)
+            # for key, value in prepare_for_tensorboard(statistics).items():
+            #     config.tb.add_scalar("compression/statistics/{0}".format(key), value, epoch)
 
         if (epoch + 1) % config.save_freq == 0 or epoch + 1 == config.epochs:
             logger.info(">>>> [Epoch: {0:d}] Validation".format(epoch))
@@ -619,6 +620,20 @@ def main_worker(current_gpu, config):
         params = sum(np.prod(p.size()) for p in model_parameters)
         logger.info("Trainable argument count:{params}".format(params=params))
         val_model = val_model.to(config.device)
+        from nncf.torch.quantization.compile import embedding_backend
+
+        with disable():
+            nncf_n_i = val_model.nncf
+
+            state = compression_ctrl.get_compression_state()
+            state['graph'] = nncf_n_i.get_graph()
+            state['ctrl'] = compression_ctrl
+
+            val_model = val_model.nncf.unwrap_for_compile()
+            from nncf.torch.dynamic_graph.context import set_compression_state
+            set_compression_state(state)
+            val_model = torch.compile(val_model, backend="nncf")
+
         test(val_model, val_loader, criterion, color_encoding, config)
 
     if "export" in config.mode:
