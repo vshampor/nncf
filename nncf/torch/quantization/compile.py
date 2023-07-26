@@ -200,8 +200,8 @@ def quantize_weight_and_activation_for_basic_module(graph_module: torch.fx.Graph
     return call_basic_module_op_node
 
 
-@register_backend(name="nncf")
-def embedding_backend(gm: GraphModule, inputs) -> Callable:
+@register_backend(name="_nncf_internal")
+def compression_translator_compile_backend(gm: GraphModule, inputs) -> Callable:
     visualize_fx_graph(gm.graph, Path('before.dot'))
     original_nodes: List[Node] = list(gm.graph.nodes)
 

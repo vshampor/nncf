@@ -104,8 +104,6 @@ def wrap_operator(operator, operator_info: PatchedOperatorInfo):
                                 inplace = kwargs['inplace']
                                 if inplace:
                                     op_name = 'relu_'
-
-
                 else:
                     op_name = operator_info.name
                 op_address = ctx.get_caller_context(op_name)

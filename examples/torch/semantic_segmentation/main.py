@@ -620,7 +620,7 @@ def main_worker(current_gpu, config):
         params = sum(np.prod(p.size()) for p in model_parameters)
         logger.info("Trainable argument count:{params}".format(params=params))
         val_model = val_model.to(config.device)
-        from nncf.torch.quantization.compile import embedding_backend
+        from nncf.torch.quantization.compile import compression_translator_compile_backend
 
         with disable():
             nncf_n_i = val_model.nncf

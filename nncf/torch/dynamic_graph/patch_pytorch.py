@@ -236,10 +236,12 @@ class OriginalOpInfo:
 ORIGINAL_OPERATORS: List[OriginalOpInfo] = []
 ORIGINAL_CALL = torch.nn.Module.__call__
 _JIT_ALREADY_WRAPPED = False
+_COMPILE_ALREADY_WRAPPED = False
 _OPERATORS_ALREADY_WRAPPED = False
 _ORIG_JIT_SCRIPT = None
 _ORIG_JIT_TRACE_MAKE_MODULE = None
 _ORIG_JIT_SCRIPT_IF_TRACING = None
+_ORIG_COMPILE = None
 
 
 def patch_torch_jit():
@@ -263,6 +265,34 @@ def patch_torch_jit():
     global _ORIG_JIT_SCRIPT_IF_TRACING
     _ORIG_JIT_SCRIPT_IF_TRACING = getattr(torch.jit._trace, "_script_if_tracing")
     setattr(torch.jit, "_script_if_tracing", torch_jit_script_if_tracing)
+
+
+def patch_torch_compile():
+    global _ORIG_COMPILE
+    _ORIG_COMPILE = getattr(torch, "compile")
+
+    @functools.wraps(_ORIG_COMPILE)
+    def wrapped(*args, **kwargs):
+        model = args[0]
+        from nncf.torch.nncf_network import NNCFNetwork
+        if not isinstance(model, NNCFNetwork):
+            return _ORIG_COMPILE(*args, **kwargs)
+
+        from nncf.torch.quantization.compile import compression_translator_compile_backend
+        from nncf.torch import disable
+        with disable():
+            nncf_n_i = model.nncf
+
+            state = model.nncf.compression_controller.get_compression_state()
+            state['graph'] = nncf_n_i.get_graph()
+            state['ctrl'] = model.nncf.compression_controller
+
+            model = model.nncf.unwrap_for_compile()
+            from nncf.torch.dynamic_graph.context import set_compression_state
+            set_compression_state(state)
+            return _ORIG_COMPILE(model, backend="_nncf_internal")
+
+    setattr(torch, "compile", wrapped)
 
 
 def patch_namespace_opname(namespace, op_info: PatchedOperatorInfo):
@@ -315,6 +345,11 @@ def patch_torch_operators():
     if not _JIT_ALREADY_WRAPPED:
         patch_torch_jit()
         _JIT_ALREADY_WRAPPED = True
+
+    global _COMPILE_ALREADY_WRAPPED
+    if not _COMPILE_ALREADY_WRAPPED:
+        patch_torch_compile()
+        _COMPILE_ALREADY_WRAPPED = True
 
     # Do not patch operators twice as well
     global _OPERATORS_ALREADY_WRAPPED
