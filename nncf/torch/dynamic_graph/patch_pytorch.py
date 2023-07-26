@@ -23,6 +23,7 @@ from torch.nn.parallel import DistributedDataParallel
 
 from nncf import nncf_logger
 from nncf.common.utils.api_marker import api
+from nncf.torch.dynamic_graph.context import set_compression_state
 from nncf.torch.dynamic_graph.structs import NamespaceTarget
 from nncf.torch.dynamic_graph.structs import PatchedOperatorInfo
 from nncf.torch.dynamic_graph.trace_tensor import TracedTensor
@@ -275,22 +276,20 @@ def patch_torch_compile():
     def wrapped(*args, **kwargs):
         model = args[0]
         from nncf.torch.nncf_network import NNCFNetwork
-        if not isinstance(model, NNCFNetwork):
+        if isinstance(model, NNCFNetwork):
+            from nncf.torch import disable
+            with disable():
+                state = model.nncf.compression_controller.get_compression_state()
+                state['graph'] = model.nncf.get_graph()
+                state['ctrl'] = model.nncf.compression_controller
+                set_compression_state(state)
+                model = model.nncf.unwrap_for_compile()
+                args = (model, )
+                if kwargs.get('backend') == "openvino":
+                    kwargs["options"] = state
+
             return _ORIG_COMPILE(*args, **kwargs)
-
-        from nncf.torch.quantization.compile import compression_translator_compile_backend
-        from nncf.torch import disable
-        with disable():
-            nncf_n_i = model.nncf
-
-            state = model.nncf.compression_controller.get_compression_state()
-            state['graph'] = nncf_n_i.get_graph()
-            state['ctrl'] = model.nncf.compression_controller
-
-            model = model.nncf.unwrap_for_compile()
-            from nncf.torch.dynamic_graph.context import set_compression_state
-            set_compression_state(state)
-            return _ORIG_COMPILE(model, backend="_nncf_internal")
+        return _ORIG_COMPILE(*args, **kwargs)
 
     setattr(torch, "compile", wrapped)
 

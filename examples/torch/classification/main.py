@@ -695,6 +695,9 @@ def validate(val_loader, model, criterion, config, epoch=0, log_validation_info=
     # switch to evaluate mode
     model.eval()
 
+    import openvino.frontend.pytorch.torchdynamo.backend
+    model = torch.compile(model, backend="openvino")
+
     casting = autocast if config.mixed_precision else NullContextManager
     with torch.no_grad():
         end = time.time()

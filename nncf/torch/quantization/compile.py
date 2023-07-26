@@ -79,10 +79,15 @@ def quantize_weight_for_basic_module(graph_module: torch.fx.GraphModule,
         weight_node = graph.create_node('get_attr', target_basic_module_accessor + '.weight',
                                         name=f'{target_basic_module.__class__.__name__}_weight_{uid}')
 
-    with graph.inserting_before(basic_module_call_node):
-        bias_node = graph.create_node('get_attr', target_basic_module_accessor + '.bias',
-                                      name=f'{target_basic_module.__class__.__name__}_bias_{uid}')
-    with graph.inserting_after(bias_node):
+    if target_basic_module.bias is not None:
+        with graph.inserting_before(basic_module_call_node):
+            bias_node = graph.create_node('get_attr', target_basic_module_accessor + '.bias',
+                                          name=f'{target_basic_module.__class__.__name__}_bias_{uid}')
+    else:
+        bias_node = None
+
+    next_node = bias_node if bias_node is not None else weight_node
+    with graph.inserting_after(next_node):
         call_fq_w_node = graph.call_module(fq_w_module_name, args=(weight_node,))
 
     with graph.inserting_after(call_fq_w_node):
@@ -200,12 +205,9 @@ def quantize_weight_and_activation_for_basic_module(graph_module: torch.fx.Graph
     return call_basic_module_op_node
 
 
-@register_backend(name="_nncf_internal")
-def compression_translator_compile_backend(gm: GraphModule, inputs) -> Callable:
+def translate_compression(gm: GraphModule, state) -> GraphModule:
     visualize_fx_graph(gm.graph, Path('before.dot'))
     original_nodes: List[Node] = list(gm.graph.nodes)
-
-    state = get_compression_state()
     qsetup = PTQuantizerSetup.from_state(state['builder_state']['quantization']['quantizer_setup'])
 
     nncf_graph = state['graph']  # type: NNCFGraph
@@ -316,8 +318,14 @@ def compression_translator_compile_backend(gm: GraphModule, inputs) -> Callable:
 
     print(gm.graph)
     visualize_fx_graph(gm.graph, Path('after.dot'))
+    gm.graph.lint()
     gm.recompile()
     # prev = get_compile_output()  # DOES NOT WORK - torch.compile calls the optimizing backend on all subgraphs repeatedly
     # if prev is None:
     #     set_compile_output(gm)
     return gm
+
+@register_backend(name="_nncf_internal")
+def compression_translator_compile_backend(gm: GraphModule, inputs) -> Callable:
+    state = get_compression_state()
+    return translate_compression(gm, state)
