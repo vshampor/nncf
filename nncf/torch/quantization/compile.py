@@ -228,8 +228,12 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
         op_address = OperationAddress.from_str(qp.target_point.target_node_name)
         scope = op_address.scope_in_model
         if scope.scope_elements:
-            underscored_path = '_'.join([se.calling_field_name for se in scope.scope_elements[1:]])
-            fx_module_path = f'self_{underscored_path}'
+            calling_field_elements = [se.calling_field_name for se in scope.scope_elements[1:]]
+            if any([x is None for x in calling_field_elements]):
+                fx_module_path = None
+            else:
+                underscored_path = '_'.join(calling_field_elements)
+                fx_module_path = f'self_{underscored_path}'
         else:
             fx_module_path = None
         if qp.is_weight_quantization_point():
