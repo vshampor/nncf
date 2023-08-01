@@ -333,3 +333,14 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
 def compression_translator_compile_backend(gm: GraphModule, inputs) -> Callable:
     state = get_compression_state()
     return translate_compression(gm, state)
+
+
+GRAPH_COUNT = 0
+
+@register_backend
+def _test(gm, inputs):
+    print(f"Backend called, graph length: {len(list(gm.graph.nodes))}")
+    global GRAPH_COUNT
+    visualize_fx_graph(gm.graph, Path(f"fx_graph_{GRAPH_COUNT}.dot"))
+    GRAPH_COUNT += 1
+    return gm
