@@ -14,6 +14,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Callable
 from typing import List
+from typing import Tuple
 
 import networkx as nx
 import torch
@@ -60,6 +61,37 @@ def visualize_fx_graph(fx_graph: torch.fx.Graph, dot_path: Path):
     write_dot_graph(nx_graph, dot_path)
 
 
+def get_call_fq_fn_node(fq_module: torch.ao.quantization.FakeQuantize,
+                        input_node: Node,
+                        scale_node: Node,
+                        zero_point_node: Node,
+                        graph: torch.fx.Graph) -> Node:
+
+    if fq_module.is_per_channel:
+        return graph.call_function(torch.fake_quantize_per_channel_affine,
+                                   args=(input_node,
+                                         scale_node,
+                                         zero_point_node,
+                                         fq_module.ch_axis,
+                                         fq_module.quant_min,
+                                         fq_module.quant_max))
+    else:
+        return graph.call_function(torch.fake_quantize_per_tensor_affine,
+                                   args=(input_node,
+                                         scale_node,
+                                         zero_point_node,
+                                         fq_module.quant_min,
+                                         fq_module.quant_max))
+
+
+def get_scale_zp_nodes(fq_qualname: str, graph: torch.fx.Graph) -> Tuple[Node, Node]:
+    # Note: When called under .inserting_before or .inserting_after context, the order of node definitions in the graph
+    # may not necessarily correspond to the order of lines below.
+    scale_node = graph.get_attr(f"{fq_qualname}.scale")
+    zero_point_node = graph.get_attr(f"{fq_qualname}.zero_point")
+    return scale_node, zero_point_node
+
+
 def quantize_weight_for_basic_module(graph_module: torch.fx.GraphModule,
                                      basic_module_call_node: torch.fx.Node,
                                      uid: str,
@@ -87,8 +119,12 @@ def quantize_weight_for_basic_module(graph_module: torch.fx.GraphModule,
         bias_node = None
 
     next_node = bias_node if bias_node is not None else weight_node
+
     with graph.inserting_after(next_node):
-        call_fq_w_node = graph.call_module(fq_w_module_name, args=(weight_node,))
+        scale_node, zp_node = get_scale_zp_nodes(fq_w_module_name, graph)
+
+    with graph.inserting_after(scale_node):
+        call_fq_w_node = get_call_fq_fn_node(fq_module, weight_node, scale_node, zp_node, graph)
 
     with graph.inserting_after(call_fq_w_node):
         # Have to lower the original call_module[conv2d] node to the call_function ops,
@@ -123,8 +159,12 @@ def quantize_activation_after(graph_module: torch.fx.GraphModule, node_to_quanti
     if fq_module is None:
         fq_module = torch.ao.quantization.FakeQuantize(quant_min=0, quant_max=255)
     graph_module.add_submodule(fq_a_module_name, fq_module)
+
     with graph.inserting_after(node_to_quantize):
-        call_fq_a_node = graph.call_module(fq_a_module_name, args=(node_to_quantize,))
+        scale_node, zp_node = get_scale_zp_nodes(fq_a_module_name, graph)
+
+    with graph.inserting_after(scale_node):
+        call_fq_a_node = get_call_fq_fn_node(fq_module, node_to_quantize, scale_node, zp_node, graph)
         for node in graph.nodes:
             if node is call_fq_a_node:
                 continue
@@ -142,9 +182,12 @@ def quantize_activation_before(graph_module: torch.fx.GraphModule, node_to_quant
         fq_module = torch.ao.quantization.FakeQuantize(quant_min=0, quant_max=255)
     graph_module.add_submodule(fq_a_module_name, fq_module)
     with graph.inserting_before(node_to_quantize):
-        port_input = node_to_quantize.all_input_nodes[input_port_id]
-        call_fq_a_node = graph.call_module(fq_a_module_name, args=(port_input,))
-        node_to_quantize.replace_input_with(port_input, call_fq_a_node)
+        scale_node, zp_node = get_scale_zp_nodes(fq_a_module_name, graph)
+
+    with graph.inserting_after(scale_node):  # when inserting_before as above, scale_node will follow the zp node
+        input_for_port = node_to_quantize.all_input_nodes[input_port_id]
+        call_fq_a_node = get_call_fq_fn_node(fq_module, input_for_port, scale_node, zp_node, graph)
+        node_to_quantize.replace_input_with(input_for_port, call_fq_a_node)
     return call_fq_a_node
 
 
