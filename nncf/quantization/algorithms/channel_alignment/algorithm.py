@@ -134,7 +134,7 @@ class ChannelAlignment(Algorithm):
                     conv_out_cont.dims,
                 )
 
-            ascale = (stat.max_values - stat.min_values).as_float32()
+            ascale = (stat.max_values - stat.min_values).astype()
             backend = ascale.backend
             eps = backend.eps(ascale.dtype)
             if (ascale > eps).any():
