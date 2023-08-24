@@ -87,7 +87,7 @@ class PostTrainingQuantization(Algorithm):
         """
         super().__init__()
         self.algorithms = []
-        self.first_stage_algorithms: List[self.FirstStageAlgorithm] = []
+        self.first_stage_algorithms: List[PostTrainingQuantization.FirstStageAlgorithm] = []
 
         if target_device is TargetDevice.VPU:
             warning_deprecated("VPU device is deprecated and will no longer be supported in the future.")
