@@ -138,16 +138,6 @@ class PTMinMaxAlgoBackend(MinMaxAlgoBackend):
         )
 
     @staticmethod
-    def unify_statistics(statistics: List[PTMinMaxTensorStatistic]) -> PTMinMaxTensorStatistic:
-        max_values, min_values = [], []
-        for statistic in statistics:
-            max_values.append(statistic.max_values)
-            min_values.append(statistic.min_values)
-        max_values = torch.max(torch.tensor(max_values))
-        min_values = torch.min(torch.tensor(min_values))
-        return PTMinMaxTensorStatistic(min_values=min_values, max_values=max_values)
-
-    @staticmethod
     def get_statistic_collector(
         range_estimator_params: RangeEstimatorParameters,
         nncf_graph: NNCFGraph,
