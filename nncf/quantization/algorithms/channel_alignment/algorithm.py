@@ -14,7 +14,6 @@ from typing import Any, Dict, List, Optional, Tuple, TypeVar
 import numpy as np
 from tqdm import tqdm
 
-from nncf.common.tensor import TensorDtype
 from nncf import Dataset
 from nncf.common.factory import CommandCreatorFactory
 from nncf.common.factory import ModelTransformerFactory
@@ -25,6 +24,7 @@ from nncf.common.graph.transformations.commands import TargetPoint
 from nncf.common.graph.transformations.commands import TargetType
 from nncf.common.graph.transformations.layout import TransformationLayout
 from nncf.common.tensor import NNCFTensor
+from nncf.common.tensor import TensorDtype
 from nncf.common.tensor_statistics.statistic_point import StatisticPoint
 from nncf.common.tensor_statistics.statistic_point import StatisticPointsContainer
 from nncf.common.tensor_statistics.statistics import MinMaxTensorStatistic
@@ -251,7 +251,7 @@ class ChannelAlignment(Algorithm):
         else:
             updated_bias_in_value = None
 
-        scale_out_shape =[1 for _ in conv_out_value.shape]
+        scale_out_shape = [1 for _ in conv_out_value.shape]
         scale_out_shape[conv_out_descr.conv_weight_in_channels_dim] = scale_factor.shape[
             conv_in_descr.bias_channels_dim
         ]
@@ -436,7 +436,7 @@ class StatefulTensor:
         return self._mod_times > 0
 
 
-BackendOpType = TypeVar('BackendOpType')
+BackendOpType = TypeVar("BackendOpType")
 
 
 class ConvParamsContainer:
@@ -444,7 +444,9 @@ class ConvParamsContainer:
     Convolution container class which is incapsulating common convolutional parameters collection.
     """
 
-    def __init__(self, conv_op: BackendOpType, model, nncf_graph: NNCFGraph, backend_entity: ChannelAlignmentAlgoBackend):
+    def __init__(
+        self, conv_op: BackendOpType, model, nncf_graph: NNCFGraph, backend_entity: ChannelAlignmentAlgoBackend
+    ):
         """
         :param conv_op: Backend-specific conv node.
         :param model: Backend-specific model instance.
