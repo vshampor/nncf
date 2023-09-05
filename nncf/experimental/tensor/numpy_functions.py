@@ -162,3 +162,9 @@ def _(
 @functions.zeros_like.register(np.number)
 def _(a: Union[np.ndarray, np.number]) -> np.ndarray:
     return np.zeros_like(a)
+
+
+@functions.mean.register(np.ndarray)
+@functions.mean.register(np.number)
+def _(a: Union[np.ndarray, np.number], axis) -> np.ndarray:
+    return np.mean(a, axis=axis, keepdims=True)

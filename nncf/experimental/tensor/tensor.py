@@ -141,6 +141,8 @@ class Tensor:
     def reshape(self, shape: TTensor) -> "Tensor":
         return _call_function("reshape", self, shape)
 
+    def mean(self, axis: int) -> "Tensor":
+        return _call_function("mean", self, axis)
 
 def _call_function(func_name: str, *args):
     """

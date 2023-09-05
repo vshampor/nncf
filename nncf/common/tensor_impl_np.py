@@ -71,9 +71,7 @@ class NPNNCFTensor(NNCFTensor[np.ndarray]):
         return NPNNCFTensorBackend
 
     def mean(self, axis: int, keepdims: bool = None) -> "NPNNCFTensor":
-        if keepdims is None:
-            keepdims = np._NoValue
-        return self.__class__(np.mean(self.tensor, axis=axis, keepdims=keepdims))
+        return self.__class__(np.mean(self.tensor, axis=axis, keepdims=True))
 
     def median(self, axis: int = None, keepdims: bool = False) -> "NNCFTensor":
         return self.__class__(np.median(self.tensor, axis=axis, keepdims=keepdims))

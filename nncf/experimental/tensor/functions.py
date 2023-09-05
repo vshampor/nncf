@@ -88,6 +88,18 @@ def max(a: TTensor, axis: Optional[Union[int, Tuple[int]]] = None) -> TTensor:  
 
 @functools.singledispatch
 @_tensor_guard
+def mean(a: TTensor, axis: Optional[Union[int, Tuple[int]]] = None) -> TTensor:  # pylint: disable=redefined-builtin
+    """
+    Return the maximum of an array or maximum along an axis.
+
+    :param a: The input tensor.
+    :param axis: Axis or axes along which to operate. By default, flattened input is used.
+    :return: Maximum of a.
+    """
+    return Tensor(mean(a.data, axis))
+
+@functools.singledispatch
+@_tensor_guard
 def min(a: TTensor, axis: Optional[Union[int, Tuple[int]]] = None) -> TTensor:  # pylint: disable=redefined-builtin
     """
     Return the minimum of an array or minimum along an axis.
