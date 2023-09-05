@@ -58,7 +58,7 @@ class NNCFTensor(Generic[TensorType], abc.ABC):
         return self.__class__(retval)
 
     def __init__(self, tensor: TensorType):
-        # assert not isinstance(tensor, NNCFTensor)
+        assert not isinstance(tensor, NNCFTensor)
         self._tensor: TensorType = tensor
 
     def __bool__(self):
