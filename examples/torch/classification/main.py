@@ -75,6 +75,7 @@ from nncf.torch import create_compressed_model
 from nncf.torch import disable
 from nncf.torch.checkpoint_loading import load_state
 from nncf.torch.dynamic_graph.context import get_compile_output
+from nncf.torch.dynamic_graph.context import set_compression_state
 from nncf.torch.dynamic_graph.graph_tracer import create_input_infos
 from nncf.torch.initialization import default_criterion_fn
 from nncf.torch.initialization import register_default_init_args
@@ -330,9 +331,16 @@ def main_worker(current_gpu, config: SampleConfig):
         val_model = model
         val_model = compression_ctrl.strip().eval()
 
-        # val_model = torch.fx.symbolic_trace(val_model)
-        # print(f"VSHAMPOR: {val_model.code}")
-        # val_model = torch.jit.trace(val_model, torch.ones([1, 3, 224, 224]).cuda())
+
+        with disable():
+            nncf_n_i = val_model.nncf
+
+            state = compression_ctrl.get_compression_state()
+            state['graph'] = nncf_n_i.get_graph()
+            state['ctrl'] = compression_ctrl
+
+            set_compression_state(state)
+
         validate(val_loader, val_model, criterion, config)
 
     config.mlflow.end_run()
