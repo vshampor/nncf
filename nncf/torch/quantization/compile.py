@@ -23,6 +23,7 @@ from torch.fx import GraphModule
 from torch.fx import Node
 from torch.nn import Conv2d
 from torch.nn import Linear
+from torch.nn import Embedding
 
 from nncf.common.graph import NNCFGraph
 from nncf.common.graph.definitions import MODEL_INPUT_OP_NAME
@@ -111,7 +112,7 @@ def quantize_weight_for_basic_module(graph_module: torch.fx.GraphModule,
         weight_node = graph.create_node('get_attr', target_basic_module_accessor + '.weight',
                                         name=f'{target_basic_module.__class__.__name__}_weight_{uid}')
 
-    if target_basic_module.bias is not None:
+    if getattr(target_basic_module, 'bias', None) is not None:
         with graph.inserting_before(basic_module_call_node):
             bias_node = graph.create_node('get_attr', target_basic_module_accessor + '.bias',
                                           name=f'{target_basic_module.__class__.__name__}_bias_{uid}')
@@ -144,6 +145,11 @@ def quantize_weight_for_basic_module(graph_module: torch.fx.GraphModule,
                 'input': module_input,
                 'weight': call_fq_w_node,
                 'bias': bias_node
+            })
+        elif isinstance(target_basic_module, Embedding):
+            call_basic_module_op_node = graph.call_function(torch.nn.functional.embedding, kwargs={
+                'input': module_input,
+                'weight': call_fq_w_node,
             })
         else:
             raise NotImplementedError
@@ -189,63 +195,6 @@ def quantize_activation_before(graph_module: torch.fx.GraphModule, node_to_quant
         call_fq_a_node = get_call_fq_fn_node(fq_module, input_for_port, scale_node, zp_node, graph)
         node_to_quantize.replace_input_with(input_for_port, call_fq_a_node)
     return call_fq_a_node
-
-
-def quantize_weight_and_activation_for_basic_module(graph_module: torch.fx.GraphModule,
-                                                    basic_module_call_node: torch.fx.Node,
-                                                    count: int) -> torch.fx.Node:
-    graph = graph_module.graph
-    target_basic_module_accessor = basic_module_call_node.target
-    target_basic_module = getattr(graph_module, target_basic_module_accessor)
-    module_input = next(iter(basic_module_call_node.all_input_nodes))
-
-    fq_a_module_name = f'nncf_quantizers.fq_a_{count}'
-    fq_w_module_name = f'nncf_quantizers.fq_w_{count}'
-    graph_module.add_submodule(fq_a_module_name, torch.ao.quantization.FakeQuantize(quant_min=0, quant_max=255))
-    graph_module.add_submodule(fq_w_module_name, torch.ao.quantization.FakeQuantize(quant_min=0, quant_max=255))
-
-    with graph.inserting_before(basic_module_call_node):
-        weight_node = graph.create_node('get_attr', target_basic_module_accessor + '.weight',
-                                        name=f'{target_basic_module.__class__.__name__}_weight_{count}')
-
-    with graph.inserting_before(basic_module_call_node):
-        bias_node = graph.create_node('get_attr', target_basic_module_accessor + '.bias',
-                                      name=f'{target_basic_module.__class__.__name__}_bias_{count}')
-
-    with graph.inserting_after(bias_node):
-        call_fq_w_node = graph.call_module(fq_w_module_name, args=(weight_node,))
-
-    with graph.inserting_after(module_input):
-        call_fq_a_node = graph.call_module(fq_a_module_name, args=(module_input,))
-        for node in graph.nodes:
-            if node is call_fq_a_node:
-                continue
-            node.replace_input_with(module_input, call_fq_a_node)
-
-    with graph.inserting_after(call_fq_w_node):
-        # Have to lower the original call_module[conv2d] node to the call_function ops,
-        # because cannot setup a pre-op for FakeQuantizing the weight in the torch.fx.Graph domain
-        if isinstance(target_basic_module, Conv2d):
-            call_basic_module_op_node = graph.call_function(torch.nn.functional.conv2d, kwargs={
-                'input': call_fq_a_node,
-                'weight': call_fq_w_node,
-                'bias': bias_node,
-                'stride': target_basic_module.stride,
-                'padding': target_basic_module.padding,
-                'dilation': target_basic_module.dilation,
-                'groups': target_basic_module.groups
-            })
-        elif isinstance(target_basic_module, Linear):
-            call_basic_module_op_node = graph.call_function(torch.nn.functional.linear, kwargs={
-                'input': call_fq_a_node,
-                'weight': call_fq_w_node,
-                'bias': bias_node
-            })
-        else:
-            raise NotImplementedError
-    basic_module_call_node.replace_all_uses_with(call_basic_module_op_node)
-    graph.erase_node(basic_module_call_node)
-    return call_basic_module_op_node
 
 
 def translate_compression(gm: GraphModule, state) -> GraphModule:
@@ -327,7 +276,7 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
                     fq = convert_to_torch_fakequantizer(qinfo.quantizer_module_ref)
 
                     target_module = getattr(gm, node.target)
-                    assert isinstance(target_module, (Conv2d, Linear))
+                    assert isinstance(target_module, (Conv2d, Linear, Embedding))
                     quantize_weight_for_basic_module(gm, node, node_name, fq)
                 elif qp.is_activation_quantization_point():
                     found = False
@@ -345,15 +294,6 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
                         quantize_activation_after(gm, node, node_name, fq)
                     else:
                         quantize_activation_before(gm, node, qp.target_point.input_port_id, node_name, fq)
-
-    # for idx, node in enumerate(original_nodes):
-    #     if node.op == 'call_module':
-    #         target_module = getattr(gm, node.target)
-    #         if isinstance(target_module, (Conv2d, Linear)):
-    #             new_quantized_module_node = quantize_weight_for_basic_module(gm, node, idx)
-    #             module_input = next(iter(new_quantized_module_node.all_input_nodes))
-    #             quantize_activation_after(gm, module_input, idx)
-    #             # quantize_weight_and_activation_for_basic_module(gm, node, idx)
 
     print(f"QPs processed: {processed_qps}")
 
