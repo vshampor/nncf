@@ -40,6 +40,25 @@ from nncf.torch.quantization.layers import PTQuantizerSetup
 from nncf.torch.quantization.strip import convert_to_torch_fakequantizer
 
 
+def _snake_case(s: str) -> str:
+    # Copied as-is from torch code at torch.fx.graph._snake_case
+    """
+    Transforms the given string ``s`` to a Python-style variable name
+
+    Examples:
+        ``mod.snake_case`` -> ``mod.snake_case``
+        ``mod.pascalCase``-> ``mod.pascal_case``
+        ``mod.ALL_CAPS`` -> ``mod.all_caps``
+    """
+    chars = []
+    prev_lower = False
+    for c in s:
+        if prev_lower and c.isupper():
+            chars.append('_')
+        chars.append(c.lower())
+        prev_lower = c.islower()
+    return ''.join(chars)
+
 def get_node_id(node: torch.fx.Node, idx: int) -> str:
     return f"{idx} {node.op} {node.name}" #{node.target if not inspect.isfunction(node.target) else node.target.__name__}"
 
@@ -210,7 +229,7 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
         target_name = gm.graph._target_to_str(nncf_node.node_type)
         op_counts[target_name] += 1
         if op_counts[target_name] > 1:
-            target_name += f'_{op_counts[target_name]}'
+            target_name += f'_{op_counts[target_name] - 1}'
         nncf_node_name_vs_fx_target_name[nncf_node.node_name] = target_name
 
     target_node_name_vs_qp = defaultdict(list)
@@ -224,16 +243,21 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
             if any([x is None for x in calling_field_elements]):
                 fx_module_path = None
             else:
+                # In the torch.compile code, the actual name building happens in:
+                # torch._dynamo.output_graph.OutputGraph.register_attr_or_module for the attribute
+                # name by which the module will be put into the GraphModule; on top of that,
+                # the node name will have an additional _snake_case(...) function applied, so that
+                # the 'LayerNorm' portion, for instance, gets turned into 'layer_norm' etc.
                 underscored_path = '_'.join(calling_field_elements)
                 fx_module_path = f'self_{underscored_path}'
         else:
             fx_module_path = None
         if qp.is_weight_quantization_point():
-            target_node_name = fx_module_path
+            target_node_name = _snake_case(fx_module_path)
         elif qp.is_activation_quantization_point():
             if fx_module_path is not None and hasattr(gm, fx_module_path):
                 # QP is for one of the standard modules
-                target_node_name = fx_module_path
+                target_node_name = _snake_case(fx_module_path)
                 if op_address.call_order > 0:
                     target_node_name += f"_{op_address.call_order}"
             elif op_address.operator_name == MODEL_INPUT_OP_NAME:
@@ -253,14 +277,14 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
     #         fx_node_vs_canonical_name[node] = node.name
 
     print(f"QPs in total: {len(qsetup.quantization_points)}")
-    processed_qps = 0
+    processed_qps = set()
     for idx, node in enumerate(original_nodes):
         node_name = node.name
         if node_name in target_node_name_vs_qp:
             qps = target_node_name_vs_qp[node_name]
             for qp in qps:
                 print(f"QP: {qp.target_point}")
-                processed_qps += 1
+                processed_qps.add(qp)
                 if qp.is_weight_quantization_point():
                     found = False
                     for qinfo in qctrl.weight_quantizers.values():
@@ -288,14 +312,18 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
                         if found:
                             break
                     if not found:
-                        raise RuntimeError("No fitting FQ found for a weight")
+                        raise RuntimeError("No fitting FQ found for an activation")
                     fq = convert_to_torch_fakequantizer(qinfo.quantizer_module_ref)
                     if qp.target_point.input_port_id is None:
                         quantize_activation_after(gm, node, node_name, fq)
                     else:
                         quantize_activation_before(gm, node, qp.target_point.input_port_id, node_name, fq)
 
-    print(f"QPs processed: {processed_qps}")
+    print(f"QPs processed: {len(processed_qps)}")
+    missed_qps = set(qsetup.quantization_points.values()) - processed_qps
+    print(f"Missed QPs: {len(missed_qps)}")
+    linesep = '\n'
+    print(f"Missed QP locations: {linesep.join(str(q.target_point) for q in missed_qps)}")
 
     actual_fq_calls = 0
     for node in gm.graph.nodes:
