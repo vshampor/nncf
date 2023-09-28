@@ -304,7 +304,6 @@ def patch_namespace_opname(namespace, op_info: PatchedOperatorInfo):
             old_wrapper_ref = PATCHED_FN_REGISTRY[get_qualname_patched(op_info)]
             old_wrapper_ref.__code__ = old_wrapper_ref.__code__.replace(co_code=wrapper_host.__code__.co_code)
             return
-        print(f"Processing {op_name}")
         wrapper_stub = get_wrapper_stub(op_info)
         orig_op_info = OriginalOpInfo(op_name, namespace, deepcopy(wrapper_stub))
         ORIGINAL_OPERATORS.append(orig_op_info)
