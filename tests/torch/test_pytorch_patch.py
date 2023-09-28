@@ -15,7 +15,7 @@ import torch
 
 from nncf.config import NNCFConfig
 from nncf.torch.dynamic_graph.context import TracingContext
-from nncf.torch.dynamic_graph.patch_pytorch import _ORIG_JIT_SCRIPT
+from nncf.torch.dynamic_graph.patch_pytorch import _ORIG_JIT_SCRIPT, disable_patching
 from nncf.torch.dynamic_graph.patch_pytorch import MagicFunctionsToPatch
 from nncf.torch.dynamic_graph.trace_tensor import TensorMeta
 from nncf.torch.dynamic_graph.trace_tensor import TracedTensor
@@ -127,3 +127,20 @@ def test_jit_trace_model():
 
     model = compression_ctrl.strip()
     torch.jit.trace(model, example_inputs=torch.rand(model.INPUT_SIZE))
+
+
+def test_cached_reference_is_unpatched_with_disable_patching(mocker):
+    cached_fn = torch.nn.functional.gelu
+    import nncf.torch.dynamic_graph.wrappers as wrappers
+    inputs = torch.ones([1])
+    get_context_spy = mocker.spy(wrappers, "get_current_context")
+    _ = cached_fn(inputs)
+    assert get_context_spy.call_count == 1
+
+    with disable_patching():
+        assert torch.nn.functional.gelu is not cached_fn
+        _ = cached_fn(inputs)
+        assert get_context_spy.call_count == 1  # unchanged, i.e. the real NNCF wrapper function has not been called
+
+    _ = cached_fn(inputs)
+    assert get_context_spy.call_count == 2
