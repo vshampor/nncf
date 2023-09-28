@@ -12,7 +12,8 @@
 import functools
 import inspect
 from contextlib import contextmanager
-from typing import List
+from copy import deepcopy
+from typing import List, Dict, Callable
 
 import torch
 import torch.utils.cpp_extension
@@ -27,7 +28,7 @@ from nncf.torch.dynamic_graph.structs import NamespaceTarget
 from nncf.torch.dynamic_graph.trace_tensor import TracedTensor
 from nncf.torch.dynamic_graph.wrappers import ignore_scope
 from nncf.torch.dynamic_graph.wrappers import wrap_module_call
-from nncf.torch.dynamic_graph.wrappers import wrap_operator
+from nncf.torch.dynamic_graph.wrappers import get_wrapper
 
 
 def get_namespace_to_patch(namespace_target: NamespaceTarget) -> object:
@@ -176,7 +177,10 @@ def register_operator(name=None):
         op_name = name
         if op_name is None:
             op_name = operator.__name__
-        return wrap_operator(operator, PatchedOperatorInfo(op_name, NamespaceTarget.EXTERNAL))
+
+        op_info = PatchedOperatorInfo(op_name, NamespaceTarget.EXTERNAL)
+        op_info.operator = operator
+        return get_wrapper(op_info)
 
     return wrap
 
@@ -247,6 +251,7 @@ class OriginalOpInfo:
 
 
 ORIGINAL_OPERATORS = []  # type: List[OriginalOpInfo]
+PATCHED_FN_REGISTRY: Dict[str, Callable] = {}
 ORIGINAL_CALL = torch.nn.Module.__call__
 _JIT_ALREADY_WRAPPED = False
 _OPERATORS_ALREADY_WRAPPED = False
@@ -275,12 +280,44 @@ def patch_torch_jit():
     setattr(torch.jit, "_script_if_tracing", torch_jit_script_if_tracing)
 
 
+def get_wrapper_stub(op_info):
+    @functools.wraps(op_info.operator)
+    def wrapper_stub(*args, **kwargs):
+        return op_info.operator(*args, **kwargs)
+    return wrapper_stub
+
+def get_qualname_orig(op_info: OriginalOpInfo):
+    return op_info.namespace.__name__ + '.' + op_info.name
+
+def get_qualname_patched(op_info: PatchedOperatorInfo):
+    return op_info.operator_namespace.value + '.' + op_info.name
+
 def patch_namespace_opname(namespace, op_info: PatchedOperatorInfo):
     op_name = op_info.name
     if hasattr(namespace, op_name):
         orig = getattr(namespace, op_name)
-        ORIGINAL_OPERATORS.append(OriginalOpInfo(op_name, namespace, orig))
-        setattr(namespace, op_name, wrap_operator(orig, op_info))
+        op_info.operator = orig
+        wrapper_host = get_wrapper(op_info)
+        # do not wrap function twice
+        if getattr(orig, "_original_op_code", None) is not None:
+            nncf_logger.debug(f"Operator: {orig.__name__} is already wrapped")
+            old_wrapper_ref = PATCHED_FN_REGISTRY[get_qualname_patched(op_info)]
+            old_wrapper_ref.__code__ = old_wrapper_ref.__code__.replace(co_code=wrapper_host.__code__.co_code)
+            return
+        print(f"Processing {op_name}")
+        wrapper_stub = get_wrapper_stub(op_info)
+        orig_op_info = OriginalOpInfo(op_name, namespace, deepcopy(wrapper_stub))
+        ORIGINAL_OPERATORS.append(orig_op_info)
+
+        # pylint: disable=protected-access
+        wrapper_host._original_op = orig
+        if get_qualname_orig(orig_op_info) in PATCHED_FN_REGISTRY:
+            old_wrapper_ref = PATCHED_FN_REGISTRY[get_qualname_orig(orig_op_info)]
+            old_wrapper_ref.__code__ = old_wrapper_ref.__code__.replace(co_code=wrapper_host.__code__.co_code)
+        else:
+            PATCHED_FN_REGISTRY[get_qualname_orig(orig_op_info)] = wrapper_host
+
+        setattr(namespace, op_name, wrapper_host)
     else:
         nncf_logger.debug(f"Not patching {op_name} since it is missing in this version of PyTorch")
 
@@ -404,6 +441,8 @@ def unpatch_torch_operators():
     _OPERATORS_ALREADY_WRAPPED = False
 
     for orig_op_info in ORIGINAL_OPERATORS:
+        fn = getattr(orig_op_info.namespace, orig_op_info.name)
+        fn.__code__ = fn.__code__.replace(co_code=orig_op_info.op.__code__.co_code)
         setattr(orig_op_info.namespace, orig_op_info.name, orig_op_info.op)
 
 

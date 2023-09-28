@@ -47,7 +47,7 @@ def ignore_scope(cls):
     return cls
 
 
-def wrap_operator(operator, operator_info: "PatchedOperatorInfo"):
+def get_wrapper(operator_info: "PatchedOperatorInfo"):
     """
     Wraps the input callable object (`operator`) with the functionality that allows the calls to this object
     to be tracked by the currently set global TracingContext. The wrapped functions can be then intercepted,
@@ -61,14 +61,10 @@ def wrap_operator(operator, operator_info: "PatchedOperatorInfo"):
     :return: The wrapped version of `operator` that, without a TracingContext, performs functionally the same as
              the unwrapped version, but within a TracingContext is able to be tracked and hooked.
     """
-    # do not wrap function twice
-    _orig_op = getattr(operator, "_original_op", None)
-    if _orig_op is not None:
-        nncf_logger.debug(f"Operator: {_orig_op.__name__} is already wrapped")
-        return operator
 
-    @functools.wraps(operator)
+    @functools.wraps(operator_info.operator)
     def wrapped(*args, **kwargs):
+        operator = operator_info.operator
         ctx = get_current_context()
         if not ctx or getattr(ctx, "in_operator", False) or not ctx.is_tracing:
             op1 = operator(*args, **kwargs)
@@ -111,9 +107,6 @@ def wrap_operator(operator, operator_info: "PatchedOperatorInfo"):
         ctx.in_operator = False
         return result
 
-    # pylint: disable=protected-access
-    wrapped._original_op = operator
-    wrapped._operator_namespace = operator_info.operator_namespace
     return wrapped
 
 
