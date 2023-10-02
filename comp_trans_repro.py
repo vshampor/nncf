@@ -4,13 +4,14 @@ import torch
 torch.set_num_threads(1)
 
 from torchvision.models.resnet import resnet18
-
-
+import logging
+import torch._dynamo.config
+#torch._dynamo.config.log_level = logging.DEBUG
 def profile(model, inputs):
-    model(inputs)  # to trigger compilation if needed
+    model(*inputs)  # to trigger compilation if needed
     start = time.time()
     for i in range(1000):
-        model(inputs)
+        model(*inputs)
     duration = time.time() - start
     print(f"Inference took {duration}s")
 
@@ -23,7 +24,8 @@ import transformers
 from transformers import AutoModelForSequenceClassification
 model = AutoModelForSequenceClassification.from_pretrained("textattack/bert-base-uncased-SST-2")
 input_size = [1, 128]
-inputs = torch.ones(input_size, dtype=torch.long)
+#inputs = torch.ones(input_size, dtype=torch.long)
+inputs = (torch.ones(input_size, dtype=torch.long), torch.ones(input_size, dtype=torch.long), torch.ones(input_size, dtype=torch.long))
 
 from copy import deepcopy
 another_model = deepcopy(model)
@@ -39,7 +41,20 @@ from nncf.torch import create_compressed_model
 from nncf import NNCFConfig
 
 ctrl, compressed_model = create_compressed_model(another_model, NNCFConfig.from_dict({
-    "input_info": {"sample_size": input_size, "type": "long"},
+    #"input_info": {"sample_size": input_size, "type": "long"},
+    "input_info":[
+          {
+              "sample_size": [1, 128],
+              "type": "long"
+          },
+          {
+              "sample_size": [1, 128],
+              "type": "long"
+          },
+          {
+             "sample_size": [1, 128],
+             "type": "long"
+          }],
     "compression": {"algorithm": "quantization"}
 }))
 
