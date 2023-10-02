@@ -244,10 +244,11 @@ def torch_jit_script_if_tracing(fn):
 
 
 class OriginalOpInfo:
-    def __init__(self, name: str, namespace, op):
+    def __init__(self, name: str, namespace, orig_op, wrapper_op):
         self.name = name
         self.namespace = namespace
-        self.op = op
+        self.orig_op = orig_op
+        self.wrapper_op = wrapper_op
 
 
 ORIGINAL_OPERATORS = []  # type: List[OriginalOpInfo]
@@ -305,7 +306,7 @@ def patch_namespace_opname(namespace, op_info: PatchedOperatorInfo):
             old_wrapper_ref.__code__ = old_wrapper_ref.__code__.replace(co_code=wrapper_host.__code__.co_code)
             return
         wrapper_stub = get_wrapper_stub(op_info)
-        orig_op_info = OriginalOpInfo(op_name, namespace, deepcopy(wrapper_stub))
+        orig_op_info = OriginalOpInfo(op_name, namespace, orig, deepcopy(wrapper_stub))
         ORIGINAL_OPERATORS.append(orig_op_info)
 
         # pylint: disable=protected-access
@@ -427,7 +428,7 @@ def patch_torch_operators():
     op_info = PatchedOperatorInfo("__repr__", NamespaceTarget.TORCH_TENSOR, skip_trace=True)
     patch_namespace_opname(TracedTensor, op_info)
 
-    ORIGINAL_OPERATORS.append(OriginalOpInfo("__call__", torch.nn.Module, torch.nn.Module.__call__))
+    ORIGINAL_OPERATORS.append(OriginalOpInfo("__call__", torch.nn.Module, torch.nn.Module.__call__, torch.nn.Module.__call__))
     torch.nn.Module.__call__ = wrap_module_call(torch.nn.Module.__call__)
     ignore_scope(DataParallel)
     ignore_scope(DistributedDataParallel)
@@ -441,8 +442,8 @@ def unpatch_torch_operators():
 
     for orig_op_info in ORIGINAL_OPERATORS:
         fn = getattr(orig_op_info.namespace, orig_op_info.name)
-        fn.__code__ = fn.__code__.replace(co_code=orig_op_info.op.__code__.co_code)
-        setattr(orig_op_info.namespace, orig_op_info.name, orig_op_info.op)
+        fn.__code__ = fn.__code__.replace(co_code=orig_op_info.wrapper_op.__code__.co_code)
+        setattr(orig_op_info.namespace, orig_op_info.name, orig_op_info.orig_op)
 
 
 @contextmanager
