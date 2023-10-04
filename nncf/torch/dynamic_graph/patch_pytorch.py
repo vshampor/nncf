@@ -244,6 +244,14 @@ _ORIG_JIT_TRACE_MAKE_MODULE = None
 _ORIG_JIT_SCRIPT_IF_TRACING = None
 _ORIG_COMPILE = None
 
+_IS_PATCHED = False
+
+def is_patched() -> bool:
+    return _IS_PATCHED
+
+def set_is_patched(value: bool):
+    global _IS_PATCHED
+    _IS_PATCHED = value
 
 def patch_torch_jit():
     # This import statement is required, otherwise we get a
@@ -420,6 +428,7 @@ def patch_torch_operators():
     torch.fx._symbolic_trace._orig_module_call = torch.nn.Module.__call__
     ignore_scope(DataParallel)
     ignore_scope(DistributedDataParallel)
+    set_is_patched(False)
 
 
 def unpatch_torch_operators():
@@ -436,6 +445,8 @@ def unpatch_torch_operators():
     setattr(torch.jit, "_script_if_tracing", _ORIG_JIT_SCRIPT_IF_TRACING)
     torch.nn.Module.__call__ = ORIGINAL_CALL
     torch.fx._symbolic_trace._orig_module_call = ORIGINAL_CALL
+    set_is_patched(False)
+
 
 @contextmanager
 def disable_patching():

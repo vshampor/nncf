@@ -17,6 +17,7 @@ from contextlib import contextmanager
 
 from nncf import nncf_logger
 from nncf.common.logging.logger import warn_bkc_version_mismatch
+from nncf.torch.dynamic_graph.patch_pytorch import set_is_patched
 
 from nncf.version import BKC_TORCH_VERSION
 
@@ -74,9 +75,13 @@ patch_torch_operators()
 @contextmanager
 def disable():
     from nncf.torch.dynamic_graph.patch_pytorch import unpatch_torch_operators
-    unpatch_torch_operators()
+    from nncf.torch.dynamic_graph.patch_pytorch import is_patched
+    was_patched = is_patched()
+    if was_patched:
+        unpatch_torch_operators()
     yield
-    patch_torch_operators()
+    if was_patched:
+        patch_torch_operators()
 
 
 @contextmanager
