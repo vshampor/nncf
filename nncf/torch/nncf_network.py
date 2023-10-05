@@ -844,12 +844,15 @@ class NNCFNetworkMeta(type):
         )
         # Make the signature of the forward on the resulting object same as for
         # the original forward.
-        new_class.forward = _get_nncf_forward_function_with_signature(inspect.signature(original_class.forward))
+        new_class_forward = _get_nncf_forward_function_with_signature(inspect.signature(original_class.forward))
+        new_class_forward.__wrapped__ = original_class.forward
+        new_class.forward = new_class_forward
 
         # In case of overriding forward by code like `model.forward = wrapper(model.forward)`
         forward_inst_attr_fn = original_model.__dict__.get("forward")
         if forward_inst_attr_fn is not None:
             new_inst_forward = _get_nncf_forward_function_with_signature(inspect.signature(forward_inst_attr_fn))
+            new_inst_forward.__wrapped__ = forward_inst_attr_fn
             original_model.__dict__["forward"] = functools.partial(new_inst_forward, original_model)
 
         # Make resulting class keep __module__ attributes of the original class,
@@ -905,7 +908,6 @@ def _get_nncf_forward_function_with_signature(signature: inspect.Signature):
     new_forward = types.FunctionType(fn.__code__, fn.__globals__, fn.__name__, fn.__defaults__, fn.__closure__)
     new_forward.__dict__.update(fn.__dict__)
     new_forward.__signature__ = signature
-    new_forward.__wrapped__ = original_class.forward
     if is_debug():
         new_forward = debuggable_forward(new_forward)
     return new_forward
