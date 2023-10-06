@@ -325,7 +325,8 @@ class NNCFNetworkInterface(torch.nn.Module):
     def input_infos(self) -> List[ModelInputInfo]:
         return deepcopy(self._input_infos)
 
-    def _strip_traced_tensors(self, args: Tuple, kwargs: Dict) -> Tuple[Tuple, Dict]:
+    @staticmethod
+    def _strip_traced_tensors(args: Tuple, kwargs: Dict) -> Tuple[Tuple, Dict]:
         """
         Required to guard against new forward calls on tensors that have already passed
         through NNCF's forward once and got turned into TracedTensors by reference access.

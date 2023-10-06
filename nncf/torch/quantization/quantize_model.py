@@ -238,6 +238,8 @@ def quantize_impl(
                 args = objwalk(args, is_tensor, send_to_device)
                 kwargs = objwalk(kwargs, is_tensor, send_to_device)
 
+            from nncf.torch.nncf_network import NNCFNetworkInterface
+            args, kwargs = NNCFNetworkInterface._strip_traced_tensors(args, kwargs)
             args, kwargs = wrap_inputs(args, kwargs)
             retval = model(*args, **kwargs)
             retval = replicate_same_tensors(retval)
