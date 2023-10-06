@@ -105,10 +105,9 @@ def get_call_fq_fn_node(fq_module: torch.ao.quantization.FakeQuantize,
 
 
 def get_scale_zp_nodes(fq_qualname: str, graph: torch.fx.Graph) -> Tuple[Node, Node]:
-    # Note: When called under .inserting_before or .inserting_after context, the order of node definitions in the graph
-    # may not necessarily correspond to the order of lines below.
     scale_node = graph.get_attr(f"{fq_qualname}.scale")
     zero_point_node = graph.get_attr(f"{fq_qualname}.zero_point")
+    scale_node.append(zero_point_node)  # to ensure the order of scale/zero_point nodes for future processing
     return scale_node, zero_point_node
 
 
@@ -143,7 +142,7 @@ def quantize_weight_for_basic_module(graph_module: torch.fx.GraphModule,
     with graph.inserting_after(next_node):
         scale_node, zp_node = get_scale_zp_nodes(fq_w_module_name, graph)
 
-    with graph.inserting_after(scale_node):
+    with graph.inserting_after(zp_node):
         call_fq_w_node = get_call_fq_fn_node(fq_module, weight_node, scale_node, zp_node, graph)
 
     with graph.inserting_after(call_fq_w_node):
@@ -188,7 +187,7 @@ def quantize_activation_after(graph_module: torch.fx.GraphModule, node_to_quanti
     with graph.inserting_after(node_to_quantize):
         scale_node, zp_node = get_scale_zp_nodes(fq_a_module_name, graph)
 
-    with graph.inserting_after(scale_node):
+    with graph.inserting_after(zp_node):
         call_fq_a_node = get_call_fq_fn_node(fq_module, node_to_quantize, scale_node, zp_node, graph)
         for node in graph.nodes:
             if node is call_fq_a_node:
@@ -202,14 +201,14 @@ def quantize_activation_before(graph_module: torch.fx.GraphModule, node_to_quant
                                uid: str,
                                fq_module: torch.nn.Module = None) -> torch.fx.Node:
     graph = graph_module.graph
-    fq_a_module_name = f'nncf_quantizers_fq_a_{uid}'
+    fq_a_module_name = f'nncf_quantizers_fq_a_{uid}_input_port{input_port_id}'
     if fq_module is None:
         fq_module = torch.ao.quantization.FakeQuantize(quant_min=0, quant_max=255)
     graph_module.add_submodule(fq_a_module_name, fq_module)
     with graph.inserting_before(node_to_quantize):
         scale_node, zp_node = get_scale_zp_nodes(fq_a_module_name, graph)
 
-    with graph.inserting_after(scale_node):  # when inserting_before as above, scale_node will follow the zp node
+    with graph.inserting_after(zp_node):  # when inserting_before as above, scale_node will follow the zp node
         input_for_port = node_to_quantize.all_input_nodes[input_port_id]
         call_fq_a_node = get_call_fq_fn_node(fq_module, input_for_port, scale_node, zp_node, graph)
         node_to_quantize.replace_input_with(input_for_port, call_fq_a_node)
@@ -233,6 +232,15 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
         nncf_node_name_vs_fx_target_name[nncf_node.node_name] = target_name
 
     target_node_name_vs_qp = defaultdict(list)
+
+    # Need to associate "placeholder" nodes, which denote inputs in fx.Graph and are identified by the
+    # argname, and the NNCF input nodes, which are identified by positions of tensor args.
+    # Looks like the "placeholder" nodes in the fx.Graph will have order equivalent to the arg order
+    # in the original forward function.
+    placeholder_node_names = []
+    for node in original_nodes:
+        if node.op == "placeholder" and torch.fx.node._type_repr(node.type) == "torch.Tensor":
+            placeholder_node_names.append(node.name)
 
     for qp in qsetup.quantization_points.values():
         assert isinstance(qp, PTQuantizationPoint)
@@ -261,7 +269,7 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
                 if op_address.call_order > 0:
                     target_node_name += f"_{op_address.call_order}"
             elif op_address.operator_name == MODEL_INPUT_OP_NAME:
-                target_node_name = 'x'  # TODO (vshampor): better input matching
+                target_node_name = placeholder_node_names[op_address.call_order]
             else:
                 # QP is for a free function
                 target_node_name = nncf_node_name_vs_fx_target_name[qp.target_point.target_node_name]
