@@ -12,7 +12,7 @@ import torch
 import nncf
 
 
-MODEL_TYPE = "decoder"  # set this to "decoder" to process decoder part of the whisper model
+MODEL_TYPE = "encoder"  # set this to "decoder" to process decoder part of the whisper model
 
 base_model = whisper.load_model("base").to("cpu").eval()
 

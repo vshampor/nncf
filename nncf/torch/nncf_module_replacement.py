@@ -108,9 +108,11 @@ def _can_extend(module: nn.Module) -> bool:
     :param module: Candidate module for replacement
     :return: Whether the module should be replaced.
     """
+
+    # FIXME(vshampor): restore original exact class match checks
     return (
-        module.__class__ in NNCF_MODULES_DICT.values()
-        or module.__class__ in UNWRAPPED_USER_MODULES.registry_dict.values()
+        any(issubclass(module.__class__, x) for x in NNCF_MODULES_DICT.values())
+        or any(issubclass(module.__class__, x) for x in UNWRAPPED_USER_MODULES.registry_dict.values())
     )
 
 
@@ -122,11 +124,12 @@ def nncf_module_from(module: nn.Module) -> nn.Module:
     :returns: The module extended with NNCF functionality.
     """
     assert _can_extend(module)
+    # FIXME(vshampor): restore original exact class match checks
     for nncf_module_class, original_module_class in NNCF_MODULES_DICT.items():
-        if module.__class__ == original_module_class:
+        if issubclass(module.__class__, original_module_class):
             return nncf_module_class.from_module(module)
     for user_module_class in UNWRAPPED_USER_MODULES.registry_dict.values():
-        if module.__class__ == user_module_class:
+        if issubclass(module.__class__, user_module_class):
             nncf_module = deepcopy(module)
             nncf_module = add_nncf_functionality_to_user_module(nncf_module)
             return nncf_module

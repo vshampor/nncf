@@ -22,6 +22,7 @@ from torch._dynamo import register_backend
 from torch.fx import GraphModule
 from torch.fx import Node
 from torch.nn import Conv2d
+from torch.nn import Conv1d
 from torch.nn import Linear
 from torch.nn import Embedding
 
@@ -148,7 +149,17 @@ def quantize_weight_for_basic_module(graph_module: torch.fx.GraphModule,
     with graph.inserting_after(call_fq_w_node):
         # Have to lower the original call_module[conv2d] node to the call_function ops,
         # because cannot setup a pre-op for FakeQuantizing the weight in the torch.fx.Graph domain
-        if isinstance(target_basic_module, Conv2d):
+        if isinstance(target_basic_module, Conv1d):
+            call_basic_module_op_node = graph.call_function(torch.nn.functional.conv1d, kwargs={
+                'input': module_input,
+                'weight': call_fq_w_node,
+                'bias': bias_node,
+                'stride': target_basic_module.stride,
+                'padding': target_basic_module.padding,
+                'dilation': target_basic_module.dilation,
+                'groups': target_basic_module.groups
+            })
+        elif isinstance(target_basic_module, Conv2d):
             call_basic_module_op_node = graph.call_function(torch.nn.functional.conv2d, kwargs={
                 'input': module_input,
                 'weight': call_fq_w_node,
@@ -308,7 +319,7 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
                     fq = convert_to_torch_fakequantizer(qinfo.quantizer_module_ref)
 
                     target_module = getattr(gm, node.target)
-                    assert isinstance(target_module, (Conv2d, Linear, Embedding))
+                    assert isinstance(target_module, (Conv1d, Conv2d, Linear, Embedding))
                     quantize_weight_for_basic_module(gm, node, node_name, fq)
                 elif qp.is_activation_quantization_point():
                     found = False
