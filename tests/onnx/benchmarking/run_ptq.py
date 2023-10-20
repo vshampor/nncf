@@ -20,6 +20,7 @@ from openvino.tools.accuracy_checker.config import ConfigReader
 from openvino.tools.accuracy_checker.evaluators import ModelEvaluator
 
 import nncf
+from examples.torch.common.utils import MockDataset
 from nncf.scopes import IgnoredScope
 from tests.onnx.opset_converter import convert_opset_version
 
@@ -30,14 +31,8 @@ from tests.onnx.quantization.common import find_ignored_scopes
 # pylint: disable=redefined-outer-name,protected-access
 
 
-def process_fn(data_item, model_evaluator: ModelEvaluator, has_batch_dim: Optional[bool] = False):
-    _, batch_annotation, batch_input, _ = data_item
-    filled_inputs, _, _ = model_evaluator._get_batch_input(batch_annotation, batch_input)
-
-    if len(filled_inputs) == 1:
-        return {k: np.squeeze(v, axis=0) if has_batch_dim else v for k, v in filled_inputs[0].items()}
-
-    raise Exception("len(filled_inputs) should be one.")
+def process_fn(data_item):
+    return {"data_0": np.expand_dims(np.array(data_item[0], dtype=np.float32), 0).transpose(0, 3, 1, 2)}
 
 
 def run(
@@ -83,22 +78,22 @@ if __name__ == "__main__":
 
     assert mode == "models"
     for config_entry in config[mode]:
-        model_evaluator = ModelEvaluator.from_configs(config_entry)
-        assert "datasets" in config_entry
-        assert len(config_entry["datasets"]) == 1, "Config should have one dataset."
-
-        if config_entry.get("no_ptq", False):
-            continue
-
+        # model_evaluator = ModelEvaluator.from_configs(config_entry)
+        # assert "datasets" in config_entry
+        # assert len(config_entry["datasets"]) == 1, "Config should have one dataset."
+        #
+        # if config_entry.get("no_ptq", False):
+        #     continue
+        #
         ignored_scopes = config_entry.get("ignored_scopes", None)
         disallowed_op_types = config_entry.get("disallowed_op_types", None)
         has_batch_dim = config_entry.get("has_batch_dim", False)
         convert_model_opset = config_entry.get("convert_opset_version", True)
-
-        dataset_config = config_entry["datasets"][0]
-        options = {"model_evaluator": model_evaluator, "has_batch_dim": has_batch_dim}
-        transform_fn = partial(process_fn, **options)
-        dataset = nncf.Dataset(model_evaluator.dataset, transform_fn)
+        #
+        # dataset_config = config_entry["datasets"][0]
+        # dataset = nncf.Dataset(model_evaluator.dataset, transform_fn)
+        orig_dataset = MockDataset(img_size=(224, 224))
+        dataset = nncf.Dataset(orig_dataset, process_fn)
 
         assert "launchers" in config_entry
         assert len(config_entry["launchers"]) == 1
@@ -110,7 +105,7 @@ if __name__ == "__main__":
 
         onnx_model_path = str(onnx_model_path)
 
-        num_init_samples = len(model_evaluator.dataset)
+        num_init_samples = len(orig_dataset)
 
         run(
             onnx_model_path,

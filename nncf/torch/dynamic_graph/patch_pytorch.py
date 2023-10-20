@@ -290,11 +290,10 @@ def patch_torch_compile():
                 state = model.nncf.compression_controller.get_compression_state()
                 state['graph'] = model.nncf.get_graph()
                 state['ctrl'] = model.nncf.compression_controller
-                set_compression_state(state)
                 model = model.nncf.unwrap_for_compile()
                 args = (model, )
                 if kwargs.get('backend') == "openvino":
-                    kwargs["options"] = state
+                    kwargs["options"] = {"nncf": state}
 
             return _ORIG_COMPILE(*args, **kwargs)
         return _ORIG_COMPILE(*args, **kwargs)

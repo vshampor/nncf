@@ -13,7 +13,9 @@ from collections import Counter
 from collections import defaultdict
 from pathlib import Path
 from typing import Callable
+from typing import Dict
 from typing import List
+from typing import Optional
 from typing import Tuple
 
 import networkx as nx
@@ -226,23 +228,72 @@ def quantize_activation_before(graph_module: torch.fx.GraphModule, node_to_quant
     return call_fq_a_node
 
 
+CleanedFXModuleAttrName = str
+FXModuleAttrName = str
+
+def _cleanup_fx_node_name(fx_node_name: FXModuleAttrName) -> CleanedFXModuleAttrName:
+    # There doesn't seem to be any guarantees or rules specified by the torchdynamo tracing backend:
+    # see comments in torch._guards.Guard
+    split = fx_node_name.split(sep='_')
+    split = [x for x in split if x]  # split returns empty strings for repeated separators
+    if len(split) > 1:
+        if split[0] == "getattr":
+            del split[0]
+    if len(split) > 2:
+        if split[0].lower() == "l" and split[1] == "self":
+            del split[1]
+            del split[0]
+    return '_'.join(split)
+
+
+def get_clean_module_name_map(gm: GraphModule) -> Dict[FXModuleAttrName, CleanedFXModuleAttrName]:
+    retval = {}
+    for name, module in gm.named_modules():
+        cleaned_name = _cleanup_fx_node_name(name)
+        retval[cleaned_name] = name
+    return retval
+
+
+def get_fx_module_path_for_scope(scope: Scope, clean_module_names_map: Dict[FXModuleAttrName, CleanedFXModuleAttrName]) -> Optional[FXModuleAttrName]:
+    if not scope.scope_elements:
+        return None
+
+    calling_field_elements = [se.calling_field_name for se in scope.scope_elements[1:]]
+    if any([x is None for x in calling_field_elements]):
+        return None  # TODO (vshampor): this means that the module was created ad-hoc, but how does compile represent this in graph?
+
+    # In the torch.compile code (v2.1), the actual name building happens in:
+    # torch._dynamo.output_graph.OutputGraph.register_attr_or_module for the attribute
+    # name by which the module will be put into the GraphModule.
+    # The attribute name is built based on how the module is accessed in the original model,
+    # see torch._dynamo.source.LocalSource.name or torch._dynamo.source.AttrSource.name
+    # On top of that, the node name will have an additional _snake_case(...) function applied, so that
+    # the 'LayerNorm' portion, for instance, gets turned into 'layer_norm' etc.
+    underscored_path = '_'.join(calling_field_elements)
+    if underscored_path not in clean_module_names_map:
+        return None
+    return clean_module_names_map[underscored_path]
+
+
 def translate_compression(gm: GraphModule, state) -> GraphModule:
     visualize_fx_graph(gm.graph, Path('before.dot'))
     original_nodes: List[Node] = list(gm.graph.nodes)
     qsetup = PTQuantizerSetup.from_state(state['builder_state']['quantization']['quantizer_setup'])
 
-    nncf_graph = state['graph']  # type: NNCFGraph
-    qctrl = state['ctrl']  # type: QuantizationController
-    nncf_node_name_vs_fx_target_name = {}  # type: Dict[OperationAddress, str]
+    nncf_graph: NNCFGraph = state['graph']
+    qctrl: QuantizationController = state['ctrl']
+    nncf_node_name_vs_fx_node_name: Dict[str, str] = {}
     op_counts = Counter()
     for nncf_node in nncf_graph.get_all_nodes():
         target_name = gm.graph._target_to_str(nncf_node.node_type)
         op_counts[target_name] += 1
         if op_counts[target_name] > 1:
             target_name += f'_{op_counts[target_name] - 1}'
-        nncf_node_name_vs_fx_target_name[nncf_node.node_name] = target_name
+        nncf_node_name_vs_fx_node_name[nncf_node.node_name] = target_name
 
-    target_node_name_vs_qp = defaultdict(list)
+    target_node_name_vs_qp: Dict[str, List[PTQuantizationPoint]] = defaultdict(list)
+    qp_to_target_node_name: Dict[PTQuantizationPoint, str] = {}
+    clean_module_attr_name_map = get_clean_module_name_map(gm)
 
     # Need to associate "placeholder" nodes, which denote inputs in fx.Graph and are identified by the
     # argname, and the NNCF input nodes, which are identified by positions of tensor args.
@@ -257,21 +308,11 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
         assert isinstance(qp, PTQuantizationPoint)
         op_address = OperationAddress.from_str(qp.target_point.target_node_name)
         scope = op_address.scope_in_model
-        if scope.scope_elements:
-            calling_field_elements = [se.calling_field_name for se in scope.scope_elements[1:]]
-            if any([x is None for x in calling_field_elements]):
-                fx_module_path = None
-            else:
-                # In the torch.compile code, the actual name building happens in:
-                # torch._dynamo.output_graph.OutputGraph.register_attr_or_module for the attribute
-                # name by which the module will be put into the GraphModule; on top of that,
-                # the node name will have an additional _snake_case(...) function applied, so that
-                # the 'LayerNorm' portion, for instance, gets turned into 'layer_norm' etc.
-                underscored_path = '_'.join(calling_field_elements)
-                fx_module_path = f'self_{underscored_path}'
-        else:
-            fx_module_path = None
+        fx_module_path = get_fx_module_path_for_scope(scope, clean_module_attr_name_map)
         if qp.is_weight_quantization_point():
+            if fx_module_path is None:
+                # could not find the module, the QP will be lost
+                continue
             target_node_name = _snake_case(fx_module_path)
         elif qp.is_activation_quantization_point():
             if fx_module_path is not None and hasattr(gm, fx_module_path):
@@ -283,8 +324,9 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
                 target_node_name = placeholder_node_names[op_address.call_order]
             else:
                 # QP is for a free function
-                target_node_name = nncf_node_name_vs_fx_target_name[qp.target_point.target_node_name]
+                target_node_name = nncf_node_name_vs_fx_node_name[qp.target_point.target_node_name]
         target_node_name_vs_qp[target_node_name].append(qp)
+        qp_to_target_node_name[qp] = target_node_name
 
     # fx_node_name_counter = defaultdict(int)
     # fx_node_vs_canonical_name = {}
@@ -342,11 +384,15 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
     missed_qps = set(qsetup.quantization_points.values()) - processed_qps
     print(f"Missed QPs: {len(missed_qps)}")
     linesep = '\n'
-    print(f"Missed QP locations: {linesep.join(str(q.target_point) for q in missed_qps)}")
+    missed_qp_str_list = []
+    for q in missed_qps:
+        missed_qp_str_list.append(f"{str(q.target_point)}")
+    print(f"Missed QP locations: {linesep.join(missed_qp_str_list)}")
 
     actual_fq_calls = 0
     for node in gm.graph.nodes:
-        if node.op == 'call_module' and isinstance(getattr(gm, node.target), torch.ao.quantization.FakeQuantize):
+        fq_fns = [torch.fake_quantize_per_channel_affine, torch.fake_quantize_per_tensor_affine]
+        if node.op == 'call_function' and node.target in fq_fns:
             actual_fq_calls += 1
     print(f"Actual FQ calls in graph: {actual_fq_calls}")
 
