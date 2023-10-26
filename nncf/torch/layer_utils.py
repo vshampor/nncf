@@ -81,7 +81,7 @@ class _NNCFModuleMixin:
         self.pre_ops.clear()
         self.post_ops.clear()
 
-    def forward(self, *args):
+    def forward(self, *args, **kwargs):
         proxy_module = ProxyModule(self)
         for op in self.pre_ops.values():
             op_args = op(proxy_module, args)
@@ -90,7 +90,7 @@ class _NNCFModuleMixin:
                     op_args = tuple([op_args])
                 args = op_args
         forward_fn = self._custom_forward_fn.__func__ if self._custom_forward_fn else super().forward.__func__
-        results = forward_fn(proxy_module, *args)
+        results = forward_fn(proxy_module, *args, **kwargs)
         for op in self.post_ops.values():
             op_results = op(proxy_module, results)
             if op_results is not None:

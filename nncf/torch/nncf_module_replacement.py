@@ -124,15 +124,17 @@ def nncf_module_from(module: nn.Module) -> nn.Module:
     :returns: The module extended with NNCF functionality.
     """
     assert _can_extend(module)
-    # FIXME(vshampor): restore original exact class match checks
-    for nncf_module_class, original_module_class in NNCF_MODULES_DICT.items():
-        if issubclass(module.__class__, original_module_class):
-            return nncf_module_class.from_module(module)
     for user_module_class in UNWRAPPED_USER_MODULES.registry_dict.values():
         if issubclass(module.__class__, user_module_class):
             nncf_module = deepcopy(module)
             nncf_module = add_nncf_functionality_to_user_module(nncf_module)
             return nncf_module
+
+    # FIXME(vshampor): restore original exact class match checks
+    for nncf_module_class, original_module_class in NNCF_MODULES_DICT.items():
+        if issubclass(module.__class__, original_module_class):
+            return nncf_module_class.from_module(module)
+
     raise RuntimeError(f"Could not extend module {module} with NNCF functionality!")
 
 

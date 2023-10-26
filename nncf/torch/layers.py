@@ -224,7 +224,7 @@ class NNCFLinear(_NNCFModuleMixin, nn.Linear):
 
     @staticmethod
     def from_module(module):
-        assert module.__class__.__name__ == nn.Linear.__name__
+        assert module.__class__.__name__ == nn.Linear.__name__, f"wrong class name: {module.__class__.__name__}"
 
         nncf_linear = NNCFLinear(module.in_features, module.out_features, hasattr(module, "bias"))
         nncf_linear = align_module_internals(module, nncf_linear)
@@ -395,6 +395,35 @@ class NNCFEmbedding(_NNCFModuleMixin, nn.Embedding):
         nncf_embedding = align_module_internals(module, nncf_embedding)
         return nncf_embedding
 
+        # orig_cls = module.__class__
+        # new_cls = type("MyCode", (orig_cls, _NNCFModuleMixin), {})
+        # module.__class__ = new_cls
+        # return module
+
+
+class NNCFSparseEmbedding(_NNCFModuleMixin, torch.nn.modules.sparse.Embedding):
+    op_func_name = "embedding"
+    target_weight_dim_for_compression = 0
+
+    # Note that this does not require activation quantization because it's basically a lookup.
+    @staticmethod
+    def from_module(module):
+        assert module.__class__.__name__ == torch.nn.modules.sparse.Embedding.__name__
+
+        args = [
+            module.num_embeddings,
+            module.embedding_dim,
+            module.padding_idx,
+            module.max_norm,
+            module.norm_type,
+            module.scale_grad_by_freq,
+            module.sparse,
+            module.weight,
+        ]
+        nncf_embedding = NNCFSparseEmbedding(*args)
+        nncf_embedding = align_module_internals(module, nncf_embedding)
+        return nncf_embedding
+
 
 class NNCFEmbeddingBag(_NNCFModuleMixin, nn.EmbeddingBag):
     op_func_name = "embedding_bag"
@@ -434,6 +463,7 @@ NNCF_MODULES_DICT = {
     NNCFConvTranspose3d: nn.ConvTranspose3d,
     NNCFEmbedding: nn.Embedding,
     NNCFEmbeddingBag: nn.EmbeddingBag,
+    # NNCFSparseEmbedding: torch.nn.modules.sparse.Embedding
 }
 
 NNCF_MODULES_MAP = {k.__name__: v.__name__ for k, v in NNCF_MODULES_DICT.items()}
