@@ -765,12 +765,26 @@ class NNCFNetworkInterface(torch.nn.Module):
           will return the currently associated model object "stripped" in-place.
         :return: The stripped model.
         """
-        if self.compression_controller is None:
-            # PTQ algorithm does not set compressed controller
-            from nncf.torch.quantization.strip import strip_quantized_model
+        from nncf.torch import disable
+        from torch._dynamo import export
+        from nncf.torch.quantization.compile import translate_compression
+        with disable():
+            state = self.compression_controller.get_compression_state()
+            state['graph'] = self.get_graph()
+            state['ctrl'] = self.compression_controller
+            model = self.unwrap_for_compile()
+            arg_list = []
+            kwargs = {}
+            for ii in self._input_infos:
+                tnsr = torch.ones(ii.shape, device=next(iter(self._model_ref.parameters())).device, dtype=ii.type)
+                if ii.keyword is None:
+                    arg_list.append(tnsr)
+                else:
+                    kwargs[ii.keyword] = tnsr
 
-            return strip_quantized_model(self._model_ref)
-        return self.compression_controller.strip(do_copy)
+            er = export(model)(*arg_list, **kwargs)
+            stripped = translate_compression(er.graph_module, state)
+            return stripped
 
 
 class NNCFNetworkMeta(type):

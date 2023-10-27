@@ -25,6 +25,7 @@ def _get_compiled_resnet18(with_openvino: bool = False, with_nncf: bool = False)
         from nncf.torch import create_compressed_model
         _, model = create_compressed_model(model, NNCFConfig.from_dict({"input_info": {"sample_size": [1, 3, 224, 224]},
                                                                         "compression": {"algorithm": "quantization"}}))
+        model = model.nncf.strip()
     if with_openvino:
         return torch.compile(model, backend="openvino")
     return torch.compile(model)

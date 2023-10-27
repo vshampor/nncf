@@ -301,7 +301,7 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
     # in the original forward function.
     placeholder_node_names = []
     for node in original_nodes:
-        if node.op == "placeholder" and torch.fx.node._type_repr(node.type) == "torch.Tensor":
+        if node.op == "placeholder": # and torch.fx.node._type_repr(node.type) == "torch.Tensor":
             placeholder_node_names.append(node.name)
 
     for qp in qsetup.quantization_points.values():
