@@ -16,6 +16,7 @@ from typing import Callable
 from typing import Dict
 from typing import List
 from typing import Optional
+from typing import Set
 from typing import Tuple
 
 import networkx as nx
@@ -189,24 +190,39 @@ def quantize_weight_for_basic_module(graph_module: torch.fx.GraphModule,
     return call_basic_module_op_node
 
 
+def quantize_weight_node_directly(graph_module: torch.fx.GraphModule, node_to_quantize: torch.fx.Node, uid: str,
+                                  fq_module: torch.nn.Module = None) -> torch.fx.Node:
+    fq_w_module_name = f'nncf_quantizers_fq_w_{uid}'
+
+    if fq_module is None:
+        fq_module = torch.ao.quantization.FakeQuantize(quant_min=0, quant_max=255)
+    return _quantize_after(graph_module, node_to_quantize, fq_w_module_name, fq_module)
+
+
 def quantize_activation_after(graph_module: torch.fx.GraphModule, node_to_quantize: torch.fx.Node, uid: str,
                               fq_module: torch.nn.Module = None) -> torch.fx.Node:
-    graph = graph_module.graph
     fq_a_module_name = f'nncf_quantizers_fq_a_{uid}'
     if fq_module is None:
         fq_module = torch.ao.quantization.FakeQuantize(quant_min=0, quant_max=255)
-    graph_module.add_submodule(fq_a_module_name, fq_module)
+    return _quantize_after(graph_module, node_to_quantize, fq_a_module_name, fq_module)
+
+
+def _quantize_after(graph_module: torch.fx.GraphModule,
+                    node_to_quantize: torch.fx.Node, fq_module_name: str,
+                    fq_module: torch.nn.Module) -> torch.fx.Node:
+    graph = graph_module.graph
+    graph_module.add_submodule(fq_module_name, fq_module)
 
     with graph.inserting_after(node_to_quantize):
-        scale_node, zp_node = get_scale_zp_nodes(fq_a_module_name, graph)
+        scale_node, zp_node = get_scale_zp_nodes(fq_module_name, graph)
 
     with graph.inserting_after(zp_node):
-        call_fq_a_node = get_call_fq_fn_node(fq_module, node_to_quantize, scale_node, zp_node, graph)
+        call_fq_node = get_call_fq_fn_node(fq_module, node_to_quantize, scale_node, zp_node, graph)
         for node in graph.nodes:
-            if node is call_fq_a_node:
+            if node is call_fq_node:
                 continue
-            node.replace_input_with(node_to_quantize, call_fq_a_node)
-    return call_fq_a_node
+            node.replace_input_with(node_to_quantize, call_fq_node)
+    return call_fq_node
 
 
 def quantize_activation_before(graph_module: torch.fx.GraphModule, node_to_quantize: torch.fx.Node,
@@ -229,12 +245,23 @@ def quantize_activation_before(graph_module: torch.fx.GraphModule, node_to_quant
 
 
 CleanedFXModuleAttrName = str
+FXNodeName = str
 FXModuleAttrName = str
 
-def _cleanup_fx_node_name(fx_node_name: FXModuleAttrName) -> CleanedFXModuleAttrName:
+
+def _cleanup_fx_node_name(fx_module_attr_name: FXModuleAttrName) -> CleanedFXModuleAttrName:
+    """
+    Brings the FX module attr name to a normalized representation to which the NNCF's `Scope` objects can be mapped.
+    This is done by removing non-informative parts of the `fx_module_attr_name`, leaving only the sequence of
+    calling field names in the module hierarchy, and replaces any dots from the state_dict-like hierarchy syntax by
+    underscores.
+    :param fx_module_attr_name:
+    :return:
+    """
+
     # There doesn't seem to be any guarantees or rules specified by the torchdynamo tracing backend:
     # see comments in torch._guards.Guard
-    split = fx_node_name.split(sep='_')
+    split = fx_module_attr_name.split(sep='_')
     split = [x for x in split if x]  # split returns empty strings for repeated separators
     if len(split) > 1:
         if split[0] == "getattr":
@@ -243,10 +270,10 @@ def _cleanup_fx_node_name(fx_node_name: FXModuleAttrName) -> CleanedFXModuleAttr
         if split[0].lower() == "l" and split[1] == "self":
             del split[1]
             del split[0]
-    return '_'.join(split)
+    return '_'.join(split).replace('.', '_')
 
 
-def get_clean_module_name_map(gm: GraphModule) -> Dict[FXModuleAttrName, CleanedFXModuleAttrName]:
+def get_normalized_module_name_map(gm: GraphModule) -> Dict[FXModuleAttrName, CleanedFXModuleAttrName]:
     retval = {}
     for name, module in gm.named_modules():
         cleaned_name = _cleanup_fx_node_name(name)
@@ -254,25 +281,47 @@ def get_clean_module_name_map(gm: GraphModule) -> Dict[FXModuleAttrName, Cleaned
     return retval
 
 
-def get_fx_module_path_for_scope(scope: Scope, clean_module_names_map: Dict[FXModuleAttrName, CleanedFXModuleAttrName]) -> Optional[FXModuleAttrName]:
+def _get_underscored_calling_field_sequence(scope: Scope) -> Optional[str]:
     if not scope.scope_elements:
         return None
 
     calling_field_elements = [se.calling_field_name for se in scope.scope_elements[1:]]
     if any([x is None for x in calling_field_elements]):
         return None  # TODO (vshampor): this means that the module was created ad-hoc, but how does compile represent this in graph?
-
-    # In the torch.compile code (v2.1), the actual name building happens in:
-    # torch._dynamo.output_graph.OutputGraph.register_attr_or_module for the attribute
-    # name by which the module will be put into the GraphModule.
-    # The attribute name is built based on how the module is accessed in the original model,
-    # see torch._dynamo.source.LocalSource.name or torch._dynamo.source.AttrSource.name
-    # On top of that, the node name will have an additional _snake_case(...) function applied, so that
-    # the 'LayerNorm' portion, for instance, gets turned into 'layer_norm' etc.
     underscored_path = '_'.join(calling_field_elements)
-    if underscored_path not in clean_module_names_map:
+    return underscored_path
+
+
+def get_fx_module_path_for_scope(scope: Scope, clean_module_names_map: Dict[FXModuleAttrName, CleanedFXModuleAttrName]) -> Optional[FXModuleAttrName]:
+    underscored_calling_field_sequence = _get_underscored_calling_field_sequence(scope)
+    if underscored_calling_field_sequence is None:
         return None
-    return clean_module_names_map[underscored_path]
+    if underscored_calling_field_sequence not in clean_module_names_map:
+        return None
+    return clean_module_names_map[underscored_calling_field_sequence]
+
+
+def get_possible_weight_node_name_for_weighted_module_scope(scope: Scope, possible_weight_node_names: Set[FXNodeName]) -> Optional[FXNodeName]:
+    underscored_calling_field_sequence = _get_underscored_calling_field_sequence(scope)
+
+    # TODO(vshampor) improve performance, don't search in this set each time
+    node_candidates = []
+
+    weight_suffix = "_weight"
+    for possible_node_name in possible_weight_node_names:
+        assert possible_node_name.endswith(weight_suffix)
+        consumer_node_name = possible_node_name[:-len(weight_suffix)]
+        if consumer_node_name.endswith(underscored_calling_field_sequence):
+            node_candidates.append(possible_node_name)
+
+    if len(node_candidates) > 1:
+        print(f"More than one weight node candidate for scope {str(scope)}, lost the weight quantizer.")
+        return None
+    if not node_candidates:
+        print(f"No weight node candidates for scope {str(scope)}, lost the weight quantizer.")
+        return None
+
+    return node_candidates[0]
 
 
 def translate_compression(gm: GraphModule, state) -> GraphModule:
@@ -293,7 +342,8 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
 
     target_node_name_vs_qp: Dict[str, List[PTQuantizationPoint]] = defaultdict(list)
     qp_to_target_node_name: Dict[PTQuantizationPoint, str] = {}
-    clean_module_attr_name_map = get_clean_module_name_map(gm)
+    clean_module_attr_name_map = get_normalized_module_name_map(gm)
+    possible_weight_node_names = {n.name for n in original_nodes if n.name.endswith("weight")}
 
     # Need to associate "placeholder" nodes, which denote inputs in fx.Graph and are identified by the
     # argname, and the NNCF input nodes, which are identified by positions of tensor args.
@@ -311,9 +361,16 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
         fx_module_path = get_fx_module_path_for_scope(scope, clean_module_attr_name_map)
         if qp.is_weight_quantization_point():
             if fx_module_path is None:
-                # could not find the module, the QP will be lost
-                continue
-            target_node_name = _snake_case(fx_module_path)
+                # The original module could have been lowered by dynamo into `call_function` nodes, but the
+                # weight-accessing node will still be named based on the original module's hierarchy
+                possible_node_name = get_possible_weight_node_name_for_weighted_module_scope(scope,
+                                                                                             possible_weight_node_names)
+                if possible_node_name is None:
+                    # could not find the module, the QP will be lost
+                    continue
+                target_node_name = possible_node_name
+            else:
+                target_node_name = _snake_case(fx_module_path)
         elif qp.is_activation_quantization_point():
             if fx_module_path is not None and hasattr(gm, fx_module_path):
                 # QP is for one of the standard modules
@@ -360,9 +417,12 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
                         raise RuntimeError("No fitting FQ found for a weight")
                     fq = convert_to_torch_fakequantizer(qinfo.quantizer_module_ref)
 
-                    target_module = getattr(gm, node.target)
-                    assert isinstance(target_module, (Conv1d, Conv2d, Linear, Embedding))
-                    quantize_weight_for_basic_module(gm, node, node_name, fq)
+                    target = getattr(gm, node.target)
+                    if isinstance(target, torch.nn.Module):
+                        assert isinstance(target, (Conv1d, Conv2d, Linear, Embedding))
+                        quantize_weight_for_basic_module(gm, node, node_name, fq)
+                    elif isinstance(target, str) and node.type == "get_attr":  # op was lowered already
+                        quantize_activation_after(gm, node, node_name, fq)
                 elif qp.is_activation_quantization_point():
                     found = False
                     for qinfo in qctrl.non_weight_quantizers.values():

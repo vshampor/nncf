@@ -20,6 +20,11 @@ import time
 
 from nncf import NNCFConfig
 from nncf.torch import create_compressed_model
+from nncf.torch import register_module
+
+from diffusers.models.lora import LoRACompatibleConv, LoRACompatibleLinear
+register_module()(LoRACompatibleConv)
+register_module()(LoRACompatibleLinear)
 
 model_id = "runwayml/stable-diffusion-v1-5"
 pipe = StableDiffusionPipeline.from_pretrained(model_id)
@@ -32,7 +37,8 @@ _, compressed_unet = create_compressed_model(pipe.unet, NNCFConfig.from_dict({
                    {"sample_size": [2, 77, 768]}],
     "compression": {"algorithm": "quantization"}
 }))
-pipe.unet = compressed_unet.nncf.strip()
+# pipe.unet = compressed_unet.nncf.strip()
+pipe.unet = compressed_unet
 
 pipe.unet = torch.compile(pipe.unet, backend="openvino")
 
