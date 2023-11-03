@@ -154,7 +154,7 @@ class NNCFConv2d(_NNCFModuleMixin, nn.Conv2d):
 
     @staticmethod
     def from_module(module):
-        assert module.__class__.__name__ == nn.Conv2d.__name__
+        assert module.__class__.__name__ == nn.Conv2d.__name__, f"wrong class name: {module.__class__.__name__}"
         nncf_conv = NNCFConv2d(
             module.in_channels,
             module.out_channels,
