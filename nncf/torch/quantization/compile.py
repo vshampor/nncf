@@ -9,6 +9,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import inspect
+import re
 from collections import Counter
 from collections import defaultdict
 from pathlib import Path
@@ -291,6 +292,9 @@ def _get_underscored_calling_field_sequence(scope: Scope) -> Optional[str]:
     underscored_path = '_'.join(calling_field_elements)
     return underscored_path
 
+def _slice_to_index(consumer_node_name: FXNodeName) -> str:
+    replaced = re.sub(r"slice_([0-9]*)__none__none___0", r"\1", consumer_node_name)
+    return replaced
 
 def get_fx_module_path_for_scope(scope: Scope, clean_module_names_map: Dict[FXModuleAttrName, CleanedFXModuleAttrName]) -> Optional[FXModuleAttrName]:
     underscored_calling_field_sequence = _get_underscored_calling_field_sequence(scope)
@@ -310,8 +314,9 @@ def get_possible_weight_node_name_for_weighted_module_scope(scope: Scope, possib
     weight_suffix = "_weight"
     for possible_node_name in possible_weight_node_names:
         assert possible_node_name.endswith(weight_suffix)
-        consumer_node_name = possible_node_name[:-len(weight_suffix)]
-        if consumer_node_name.endswith(underscored_calling_field_sequence):
+        normalized_consumer_node_name = possible_node_name[:-len(weight_suffix)]
+        normalized_consumer_node_name = _slice_to_index(normalized_consumer_node_name)
+        if normalized_consumer_node_name.endswith(underscored_calling_field_sequence):
             node_candidates.append(possible_node_name)
 
     if len(node_candidates) > 1:
@@ -370,6 +375,11 @@ def translate_compression(gm: GraphModule, state) -> GraphModule:
                     continue
                 target_node_name = possible_node_name
             else:
+                # Note: this will be incorrect if the module at `fx_module_path` is a submodule of a module that
+                # was decorated with torch._dynamo.allow_in_graph, because in this case the submodule is still registered
+                # in the module, but there is no explicit node for calling the submodule - the submodule calls are encapsulated
+                # in the atomic call of the module that was "allowed_in_graph". From NNCF standpoint it means that
+                # all compression on the level below the allowed-in-graph module will be lost.
                 target_node_name = _snake_case(fx_module_path)
         elif qp.is_activation_quantization_point():
             if fx_module_path is not None and hasattr(gm, fx_module_path):
