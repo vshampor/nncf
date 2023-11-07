@@ -271,7 +271,8 @@ def _cleanup_fx_node_name(fx_module_attr_name: FXModuleAttrName) -> CleanedFXMod
         if split[0].lower() == "l" and split[1] == "self":
             del split[1]
             del split[0]
-    return '_'.join(split).replace('.', '_')
+    underscored = '_'.join(split).replace('.', '_')
+    return _slice_to_index(underscored)
 
 
 def get_normalized_module_name_map(gm: GraphModule) -> Dict[FXModuleAttrName, CleanedFXModuleAttrName]:
