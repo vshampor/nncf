@@ -41,12 +41,12 @@ if task == "inpainting":
         "masterful/gligen-1-4-inpainting-text-box",  # variant="fp16", torch_dtype=torch.float16
     )
 
-    _, compressed_unet = create_compressed_model(pipe.unet, NNCFConfig.from_dict({
-        "input_info": [{"sample_size": [2, 9, 64, 64]},
-                       {"sample_size": [2], "filler": "zeros"},
-                       {"sample_size": [2, 77, 768]}],
-        "compression": {"algorithm": "quantization"}
-    }))
+    # _, compressed_unet = create_compressed_model(pipe.unet, NNCFConfig.from_dict({
+    #     "input_info": [{"sample_size": [2, 9, 64, 64]},
+    #                    {"sample_size": [2], "filler": "zeros"},
+    #                    {"sample_size": [2, 77, 768]}],
+    #     "compression": {"algorithm": "quantization"}
+    # }))
     #
     # _, compressed_te = create_compressed_model(pipe.text_encoder, NNCFConfig.from_dict({
     #     "input_info": [{"sample_size": [1, 5], "keyword": "input_ids", "type": "long"},
@@ -54,20 +54,20 @@ if task == "inpainting":
     #     "compression": {"algorithm": "quantization"}
     # }))
     #
-    # _, compressed_vae_enc = create_compressed_model(pipe.vae.encoder, NNCFConfig.from_dict({
-    #     "input_info": {"sample_size": [1, 3, 512, 512]},
-    #     "compression": {"algorithm": "quantization"}
-    # }))
+    _, compressed_vae_enc = create_compressed_model(pipe.vae.encoder, NNCFConfig.from_dict({
+        "input_info": {"sample_size": [1, 3, 512, 512]},
+        "compression": {"algorithm": "quantization"}
+    }))
+
+    _, compressed_vae_dec = create_compressed_model(pipe.vae.decoder, NNCFConfig.from_dict({
+        "input_info": {"sample_size": [1, 4, 64, 64]},
+        "compression": {"algorithm": "quantization"}
+    }))
     #
-    # _, compressed_vae_dec = create_compressed_model(pipe.vae.decoder, NNCFConfig.from_dict({
-    #     "input_info": {"sample_size": [1, 4, 64, 64]},
-    #     "compression": {"algorithm": "quantization"}
-    # }))
-    #
-    pipe.unet = compressed_unet.nncf.strip()
+    # pipe.unet = compressed_unet.nncf.strip()
     # pipe.text_encoder = compressed_te.nncf.strip()
-    # pipe.vae.encoder = compressed_vae_enc.nncf.strip()
-    # pipe.vae.decoder = compressed_vae_dec.nncf.strip()
+    pipe.vae.encoder = compressed_vae_enc.nncf.strip()
+    pipe.vae.decoder = compressed_vae_dec.nncf.strip()
 
     if USE_OPENVINO:
         pipe.unet = torch.compile(pipe.unet, backend="openvino")
@@ -80,7 +80,6 @@ if task == "inpainting":
     prompts = ["a birthday cake", "a candle"]
     boxes = [[0.2676, 0.6088, 0.4773, 0.7183]]
     phrases = ["a birthday cake", "a candle"]
-
 
     for i in range(2):
         start = time.perf_counter()
@@ -96,6 +95,20 @@ if task == "inpainting":
         end = time.perf_counter()
         print(f"Inpainting duration {i}: {end-start:.2f} seconds")
         images[0].save(f"./gligen-1-4-inpainting-text-box-{i}.jpg")
+    print("Trying to save_pretrained:")
+    try:
+        pipe.save_pretrained("/tmp/gligen_saved")
+    except Exception as e:
+        print(f"Failed - {e}")
+
+
+    print("Trying to torch.onnx.export the VAE encoder:")
+    try:
+        torch.onnx.export(pipe.vae.encoder, (torch.ones([1, 3, 512, 512]), ), "/tmp/gligen_exported.onnx")
+    except Exception as e:
+        print(f"Failed - {e}")
+
+
 
 elif task == "generation":
     pipe = StableDiffusionGLIGENPipeline.from_pretrained(
