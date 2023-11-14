@@ -14,6 +14,8 @@ from typing import Callable, List, Optional, TypeVar
 
 from nncf import Dataset
 from nncf.common.graph.graph import NNCFGraph
+from nncf.common.nncf_model import NNCFModel
+from nncf.common.nncf_model import wrap_model
 from nncf.common.quantization.structs import QuantizationPreset
 from nncf.common.tensor_statistics.statistic_point import StatisticPointsContainer
 from nncf.common.utils.backend import BackendType
@@ -85,7 +87,6 @@ class PostTrainingQuantization(Algorithm):
     def apply(
         self,
         model: TModel,
-        graph: NNCFGraph,
         statistic_points: Optional[StatisticPointsContainer] = None,
         dataset: Optional[Dataset] = None,
     ) -> TModel:
@@ -95,8 +96,10 @@ class PostTrainingQuantization(Algorithm):
                 "algorithm to collect statistics for intermediate models."
             )
 
+        model = wrap_model(model, dataset)
         step_index_to_statistics = None
         if statistic_points:
             step_index_to_statistics = {0: statistic_points}
 
-        return self._pipeline.run_from_step(model, dataset, graph, 0, step_index_to_statistics)
+        ret_val = self._pipeline.run_from_step(model, dataset, 0, step_index_to_statistics)
+        return ret_val.nncf.release()

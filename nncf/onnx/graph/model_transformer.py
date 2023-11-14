@@ -18,6 +18,7 @@ import onnx
 from nncf.common.graph.model_transformer import ModelTransformer
 from nncf.common.graph.transformations.commands import TargetType
 from nncf.common.graph.transformations.layout import TransformationLayout
+from nncf.common.nncf_model import NNCFModel
 from nncf.onnx.graph.node_utils import get_input_edge
 from nncf.onnx.graph.onnx_helper import get_children
 from nncf.onnx.graph.onnx_helper import get_children_node_mapping
@@ -31,6 +32,7 @@ from nncf.onnx.graph.transformations.commands import ONNXModelExtractionCommand
 from nncf.onnx.graph.transformations.commands import ONNXOutputInsertionCommand
 from nncf.onnx.graph.transformations.commands import ONNXQDQNodeRemovingCommand
 from nncf.onnx.graph.transformations.commands import ONNXQuantizerInsertionCommand
+from nncf.onnx.nncf_model_wrapper import ONNXNNCFModelWrapper
 
 
 class ONNXModelTransformer(ModelTransformer):
@@ -45,8 +47,9 @@ class ONNXModelTransformer(ModelTransformer):
     SCALE_TENSOR_NAME_PREFIX = "scale_"
     ZERO_POINT_NAME_PREFIX = "zero_point_"
 
-    def __init__(self, model: onnx.ModelProto):
-        infered_model = onnx.shape_inference.infer_shapes(model)
+    def __init__(self, model: Union[onnx.ModelProto, NNCFModel]):
+        model_proto = model.nncf.release()
+        infered_model = onnx.shape_inference.infer_shapes(model_proto)
         super().__init__(infered_model)
         self.onnx_model_extractor = onnx.utils.Extractor(self._model)
 
@@ -75,7 +78,7 @@ class ONNXModelTransformer(ModelTransformer):
             return get_input_edge(node_name, input_edges_mapping, node_mapping)
         return node_mapping[node_name].output[port_id]
 
-    def transform(self, transformation_layout: TransformationLayout) -> onnx.ModelProto:
+    def transform(self, transformation_layout: TransformationLayout) -> Union[onnx.ModelProto, NNCFModel]:
         """
         Applies transformations to the model using an out-of-place approach.
         The transformations do not affect the original model, and a new model
@@ -119,7 +122,7 @@ class ONNXModelTransformer(ModelTransformer):
             model = self._apply_output_insertion_transformations(output_insert_transformations)
         if model_extraction_transformation:
             model = self._apply_model_extraction_transformation(model_extraction_transformation)
-        return model
+        return ONNXNNCFModelWrapper(model)
 
     def _apply_output_insertion_transformations(
         self, transformations: List[ONNXOutputInsertionCommand]

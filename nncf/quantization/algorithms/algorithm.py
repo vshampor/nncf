@@ -15,6 +15,7 @@ from typing import List, Optional, TypeVar
 
 from nncf import Dataset
 from nncf.common.graph.graph import NNCFGraph
+from nncf.common.nncf_model import NNCFModel
 from nncf.common.tensor_statistics.statistic_point import StatisticPointsContainer
 from nncf.common.utils.backend import BackendType
 
@@ -39,10 +40,9 @@ class Algorithm(ABC):
     def apply(
         self,
         model: TModel,
-        graph: NNCFGraph,
         statistic_points: Optional[StatisticPointsContainer] = None,
         dataset: Optional[Dataset] = None,
-    ) -> TModel:
+    ) -> NNCFModel:
         """
         Applies the algorithm to the model.
 
@@ -54,7 +54,7 @@ class Algorithm(ABC):
         """
 
     @abstractmethod
-    def get_statistic_points(self, model: TModel, graph: NNCFGraph) -> StatisticPointsContainer:
+    def get_statistic_points(self, model: NNCFModel) -> StatisticPointsContainer:
         """
         Returns statistic points, for which StatisticsCollector should collect statistics.
 

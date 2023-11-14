@@ -24,6 +24,7 @@ from torch import nn
 
 from nncf import nncf_logger
 from nncf.api.compression import CompressionAlgorithmController
+from nncf.common.graph import NNCFGraph
 from nncf.common.graph import NNCFNode
 from nncf.common.graph import NNCFNodeName
 from nncf.common.graph.definitions import MODEL_INPUT_OP_NAME
@@ -33,6 +34,8 @@ from nncf.common.graph.transformations.commands import TransformationPriority
 from nncf.common.insertion_point_graph import InsertionPointGraph
 from nncf.common.insertion_point_graph import PostHookInsertionPoint
 from nncf.common.insertion_point_graph import PreHookInsertionPoint
+from nncf.common.nncf_model import ModelType
+from nncf.common.nncf_model import NNCFModelInterface
 from nncf.common.utils.debug import is_debug
 from nncf.torch.debug import CombinedDebugInterface
 from nncf.torch.debug import debuggable_forward
@@ -121,7 +124,7 @@ class ExtraCompressionModuleType(Enum):
     EXTERNAL_QUANTIZER = 0
 
 
-class NNCFNetworkInterface(torch.nn.Module):
+class NNCFNetworkInterface(torch.nn.Module, NNCFModelInterface):
     """
     The single object that is added to the original model object as an attribute to provide a namespace for
     NNCF-specific method calls and a torch.nn.Module-like storage for compression parameters. Since this is a
@@ -129,6 +132,13 @@ class NNCFNetworkInterface(torch.nn.Module):
     in the same manner as the original model parameters, and will also be eligible for state_dict-powered persistence
     when saving/loading checkpoints
     """
+
+    @property
+    def graph(self) -> NNCFGraph:
+        return self._compressed_graph
+
+    def release(self) -> ModelType:
+        return self._model_ref
 
     MODEL_STATE_VERSION_ATTR = "_nncf_model_state_version"
     MODEL_STATE_VERSION = 1

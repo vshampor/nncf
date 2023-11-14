@@ -27,10 +27,10 @@ from nncf.torch.tensor_statistics.algo import create_register_input_hook
 
 
 class PTStatisticsAggregator(StatisticsAggregator):
-    def collect_statistics(self, model: NNCFNetwork, graph: NNCFGraph) -> None:
+    def collect_statistics(self, model: NNCFNetwork) -> None:
         with torch.no_grad():
             with model.nncf.temporary_clean_view() as intermediate_model:
-                super().collect_statistics(intermediate_model, graph)
+                super().collect_statistics(intermediate_model)
 
     def _register_statistics(
         self, outputs: Dict[str, PTNNCFTensor], statistic_points: StatisticPointsContainer
@@ -62,7 +62,7 @@ class PTStatisticsAggregator(StatisticsAggregator):
 
     @staticmethod
     def _get_merged_statistic_points(
-        statistic_points: StatisticPointsContainer, model: TModel, graph: NNCFGraph
+        statistic_points: StatisticPointsContainer, model: NNCFNetwork
     ) -> StatisticPointsContainer:
         # TODO: mirgate to experimental statistic collector and use common merging algorithm
         return statistic_points

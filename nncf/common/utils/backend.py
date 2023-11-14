@@ -13,6 +13,7 @@ from copy import deepcopy
 from enum import Enum
 from typing import List, TypeVar
 
+
 TModel = TypeVar("TModel")
 
 
@@ -80,7 +81,8 @@ def is_onnx_model(model: TModel) -> bool:
     """
     import onnx
 
-    return isinstance(model, onnx.ModelProto)
+    from nncf.onnx.nncf_model_wrapper import ONNXNNCFModelWrapper
+    return isinstance(model, onnx.ModelProto) or isinstance(model, ONNXNNCFModelWrapper)
 
 
 def is_openvino_model(model: TModel) -> bool:

@@ -15,6 +15,7 @@ from nncf.common.factory import NNCFGraphFactory
 from nncf.common.factory import StatisticsAggregatorFactory
 from nncf.common.graph.graph import NNCFGraph
 from nncf.common.logging import nncf_logger
+from nncf.common.nncf_model import NNCFModel
 from nncf.common.tensor_statistics.statistic_point import StatisticPointsContainer
 from nncf.common.utils.backend import BackendType
 from nncf.common.utils.backend import get_backend
@@ -27,8 +28,7 @@ PipelineStep = List[Algorithm]
 
 def collect_statistics(
     containers: Union[StatisticPointsContainer, List[StatisticPointsContainer]],
-    model: TModel,
-    graph: NNCFGraph,
+    model: NNCFModel,
     dataset: Dataset,
 ) -> StatisticPointsContainer:
     """
@@ -46,7 +46,7 @@ def collect_statistics(
     statistics_aggregator = StatisticsAggregatorFactory.create(model, dataset)
     for container in containers:
         statistics_aggregator.register_statistic_points(container)
-    statistics_aggregator.collect_statistics(model, graph)
+    statistics_aggregator.collect_statistics(model)
 
     return statistics_aggregator.statistic_points
 
@@ -96,8 +96,7 @@ class Pipeline:
         self,
         step_index: int,
         step_statistics: StatisticPointsContainer,
-        model: TModel,
-        graph: NNCFGraph,
+        model: NNCFModel
     ) -> TModel:
         """
         Executes a provided pipeline step on the provided model.
@@ -109,25 +108,23 @@ class Pipeline:
         :return: The updated model after executing the pipeline step.
         """
         current_model = model
-        current_graph = graph
 
         pipeline_steps = self._remove_unsupported_algorithms(get_backend(model))
         pipeline_step = pipeline_steps[step_index]
         for algorithm in pipeline_step[:-1]:
-            current_model = algorithm.apply(current_model, current_graph, step_statistics)
-            current_graph = NNCFGraphFactory.create(current_model)
-        current_model = pipeline_step[-1].apply(current_model, current_graph, step_statistics)
+            current_model = algorithm.apply(current_model, step_statistics)
+            current_model.nncf.rebuild_graph()
+        current_model = pipeline_step[-1].apply(current_model, step_statistics)
 
         return current_model
 
     def run_from_step(
         self,
-        model: TModel,
+        model: NNCFModel,
         dataset: Dataset,
-        graph: Optional[NNCFGraph] = None,
         start_step_index: int = 0,
         step_index_to_statistics: Optional[Dict[int, StatisticPointsContainer]] = None,
-    ) -> TModel:
+    ) -> NNCFModel:
         """
         Executes the pipeline from the specified pipeline step to the end.
 
@@ -148,7 +145,7 @@ class Pipeline:
 
         # The `step_model` and `step_graph` entities are required to execute `step_index`-th pipeline step
         step_model = model
-        step_graph = graph
+        step_graph = model.nncf.graph
         for step_index in range(start_step_index, len(pipeline_steps)):
             # Create graph required to run current pipeline step
             if step_graph is None:
@@ -157,32 +154,32 @@ class Pipeline:
             # Collect statistics required to run current pipeline step
             step_statistics = step_index_to_statistics.get(step_index)
             if step_statistics is None:
-                statistic_points = self.get_statistic_points_for_step(step_index, step_model, step_graph)
-                step_statistics = collect_statistics(statistic_points, step_model, step_graph, dataset)
+                statistic_points = self.get_statistic_points_for_step(step_index, step_model)
+                step_statistics = collect_statistics(statistic_points, step_model, dataset)
 
             # Run current pipeline step
-            step_model = self.run_step(step_index, step_statistics, step_model, step_graph)
+            step_model = self.run_step(step_index, step_statistics, step_model)
 
             step_graph = None  # We should rebuild the graph for the next pipeline step
 
         return step_model
 
     def get_statistic_points_for_step(
-        self, step_index: int, model: TModel, graph: NNCFGraph
+        self, step_index: int, model: NNCFModel
     ) -> StatisticPointsContainer:
         """
         Returns statistics that should be collected to execute `step_index`-th pipeline step.
 
         :param step_index: Zero-based index of the pipeline step.
         :param model: A model.
-        :param graph: A graph assosiated with a model.
+
         :return: Statistics that should be collected to execute `step_index`-th pipeline step.
         """
         container = StatisticPointsContainer()
         pipeline_steps = self._remove_unsupported_algorithms(get_backend(model))
         pipeline_step = pipeline_steps[step_index]
         for algorithm in pipeline_step:
-            for statistic_points in algorithm.get_statistic_points(model, graph).values():
+            for statistic_points in algorithm.get_statistic_points(model).values():
                 for statistic_point in statistic_points:
                     container.add_statistic_point(statistic_point)
 

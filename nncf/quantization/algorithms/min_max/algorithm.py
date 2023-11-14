@@ -29,6 +29,7 @@ from nncf.common.graph.transformations.layout import TransformationLayout
 from nncf.common.hardware.config import get_hw_config_type
 from nncf.common.insertion_point_graph import InsertionPointGraph
 from nncf.common.logging import nncf_logger
+from nncf.common.nncf_model import NNCFModel
 from nncf.common.quantization.config_assignment import assign_qconfig_lists_to_modules
 from nncf.common.quantization.quantizer_propagation.solver import QuantizerPropagationSolver
 from nncf.common.quantization.quantizer_propagation.structs import IgnoreReason
@@ -512,7 +513,7 @@ class MinMaxQuantization(Algorithm):
         return activation_quantization_target_point
 
     def _get_quantization_target_points(
-        self, model: TModel, nncf_graph: NNCFGraph
+        self, model: NNCFModel
     ) -> OrderedDict[TargetPoint, QuantizerConfig]:
         """
         Returns Quantization Target Points.
@@ -525,6 +526,7 @@ class MinMaxQuantization(Algorithm):
         :param nncf_graph: NNCFGraph instance.
         :return: Set of Quantization Target Points.
         """
+        nncf_graph = model.nncf.graph
         if self._quantization_target_points_to_qconfig:
             return self._quantization_target_points_to_qconfig, self._unified_scale_groups
         backend = get_backend(model)
@@ -663,16 +665,15 @@ class MinMaxQuantization(Algorithm):
 
     def apply(
         self,
-        model: TModel,
-        graph: NNCFGraph,
+        model: NNCFModel,
         statistic_points: Optional[StatisticPointsContainer] = None,
         dataset: Optional[Dataset] = None,
     ) -> TModel:
         transformation_layout = TransformationLayout()
         model_transformer = ModelTransformerFactory.create(model)
-        quantization_target_points, unified_scale_groups = self._get_quantization_target_points(model, graph)
+        quantization_target_points, unified_scale_groups = self._get_quantization_target_points(model)
         quantization_points_overflow_fix = self._get_quantization_points_overflow_fix(
-            self._overflow_fix, quantization_target_points, graph
+            self._overflow_fix, quantization_target_points, model.nncf.graph
         )
         weight_layer_names = set()
 
@@ -702,7 +703,7 @@ class MinMaxQuantization(Algorithm):
                 narrow_range = get_quantizer_narrow_range(qconfig, q_group)
                 parameters = calculate_quantizer_parameters(unified_values, qconfig, q_group, narrow_range)
                 command = self._backend_entity.create_quantizer_insertion_command(
-                    graph, quantization_target_point, qconfig, parameters
+                    model.nncf.graph, quantization_target_point, qconfig, parameters
                 )
                 transformation_layout.register(command)
                 unified_ops_list.add(quantization_target_point)
@@ -715,7 +716,7 @@ class MinMaxQuantization(Algorithm):
                 target_node_name, filter_func, self._algorithm_key
             ):
                 if quantization_target_point.is_weight_target_point():
-                    weights_name = self._backend_entity.get_weight_name(graph, quantization_target_point)
+                    weights_name = self._backend_entity.get_weight_name(model.nncf.graph, quantization_target_point)
                     if not self._backend_entity.should_quantize_weight(weights_name, weight_layer_names):
                         continue
                     weight_layer_names.add(weights_name)
@@ -730,7 +731,7 @@ class MinMaxQuantization(Algorithm):
                     raise RuntimeError(f"Statistics were not collected for the node {target_node_name}")
                 parameters = calculate_quantizer_parameters(statistics, qconfig, quant_group, narrow_range, half_range)
                 command = self._backend_entity.create_quantizer_insertion_command(
-                    graph, quantization_target_point, qconfig, parameters
+                    model.nncf.graph, quantization_target_point, qconfig, parameters
                 )
                 transformation_layout.register(command)
         if not transformation_layout.transformations:
@@ -738,10 +739,10 @@ class MinMaxQuantization(Algorithm):
         quantized_model = model_transformer.transform(transformation_layout)
         return quantized_model
 
-    def get_statistic_points(self, model: TModel, graph: NNCFGraph) -> StatisticPointsContainer:
+    def get_statistic_points(self, model: NNCFModel) -> StatisticPointsContainer:
         self._set_backend_entity(model)
         self._reset_cache()
-        quantization_target_points, _ = self._get_quantization_target_points(model, graph)
+        quantization_target_points, _ = self._get_quantization_target_points(model)
         output = StatisticPointsContainer()
         for quantization_target_point, qconfig in quantization_target_points.items():
             nncf_logger.debug(
@@ -752,7 +753,7 @@ class MinMaxQuantization(Algorithm):
             if quantization_target_point.is_weight_target_point():
                 # Weight statistics is constant, so only one collection is enough.
                 num_samples = 1
-            stat_collector = self._get_stat_collector(graph, quantization_target_point, qconfig, num_samples)
+            stat_collector = self._get_stat_collector(model.nncf.graph, quantization_target_point, qconfig, num_samples)
             output.add_statistic_point(
                 StatisticPoint(
                     target_point=quantization_target_point,

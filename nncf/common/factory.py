@@ -45,6 +45,9 @@ class NNCFGraphFactory:
             return GraphConverter.create_nncf_graph(model)
         if model_backend == BackendType.TORCH:
             return model.nncf.get_graph()
+        if model_backend == BackendType.TENSORFLOW:
+            # TODO (vshampor): restore to original failure, this is only for provisional TF testing
+            return NNCFGraph()
         raise RuntimeError(
             "Cannot create backend-specific graph because {} is not supported!".format(model_backend.value)
         )

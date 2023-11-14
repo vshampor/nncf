@@ -10,6 +10,7 @@
 # limitations under the License.
 
 from typing import Dict
+from typing import Union
 
 import numpy as np
 import onnx
@@ -18,21 +19,23 @@ from nncf.common.factory import TModel
 from nncf.common.graph.graph import NNCFGraph
 from nncf.common.graph.transformations.commands import TargetType
 from nncf.common.graph.transformations.layout import TransformationLayout
+from nncf.common.nncf_model import NNCFModel
 from nncf.common.tensor_statistics.aggregator import StatisticsAggregator
 from nncf.common.tensor_statistics.statistic_point import StatisticPointsContainer
 from nncf.onnx.graph.node_utils import get_input_edge
 from nncf.onnx.graph.node_utils import get_input_edges_mapping
 from nncf.onnx.graph.onnx_helper import get_name_to_node_map
 from nncf.onnx.graph.transformations.commands import ONNXOutputInsertionCommand
+from nncf.onnx.nncf_model_wrapper import ONNXNNCFModelWrapper
 from nncf.onnx.tensor import ONNXNNCFTensor
 
 
 class ONNXStatisticsAggregator(StatisticsAggregator):
-    def collect_statistics(self, model: onnx.ModelProto, graph: NNCFGraph) -> None:
-        self.input_edges_mapping = get_input_edges_mapping(graph)
+    def collect_statistics(self, model: Union[onnx.ModelProto, NNCFModel]) -> None:
+        self.input_edges_mapping = get_input_edges_mapping(model.nncf.graph)
         self.node_mapping = get_name_to_node_map(model)
         self._registered_weights = set()
-        super().collect_statistics(model, graph)
+        super().collect_statistics(model)
 
     def _register_statistics(
         self, outputs: Dict[str, ONNXNNCFTensor], statistic_points: StatisticPointsContainer
@@ -72,7 +75,7 @@ class ONNXStatisticsAggregator(StatisticsAggregator):
 
     @staticmethod
     def _get_merged_statistic_points(
-        statistic_points: StatisticPointsContainer, model: TModel, graph: NNCFGraph
+        statistic_points: StatisticPointsContainer, model: NNCFModel
     ) -> StatisticPointsContainer:
         # TODO: mirgate to experimental statistic collector and use common merging algorithm
         return statistic_points

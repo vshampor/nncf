@@ -22,6 +22,7 @@ from nncf.common.graph.transformations.commands import TargetType
 from nncf.common.graph.transformations.layout import TransformationLayout
 from nncf.common.logging import nncf_logger
 from nncf.common.logging.track_progress import track
+from nncf.common.nncf_model import NNCFModel
 from nncf.common.tensor_statistics.statistic_point import StatisticPoint
 from nncf.common.tensor_statistics.statistic_point import StatisticPointsContainer
 from nncf.common.utils.backend import BackendType
@@ -122,11 +123,11 @@ class FastBiasCorrection(Algorithm):
 
     def apply(
         self,
-        model: TModel,
-        graph: NNCFGraph,
+        model: NNCFModel,
         statistic_points: Optional[StatisticPointsContainer] = None,
         dataset: Optional[Dataset] = None,
-    ) -> TModel:
+    ) -> NNCFModel:
+        graph = model.nncf.graph
         self._set_backend_entity(model)
 
         model_transformer = ModelTransformerFactory.create(model)
@@ -321,7 +322,8 @@ class FastBiasCorrection(Algorithm):
         bias_shift = fns.stack(output_fp) - q_outputs
         return bias_shift
 
-    def get_statistic_points(self, model: TModel, graph: NNCFGraph) -> StatisticPointsContainer:
+    def get_statistic_points(self, model: NNCFModel) -> StatisticPointsContainer:
+        graph = model.nncf.graph
         self._set_backend_entity(model)
         nodes_with_bias = [
             node for node in graph.get_all_nodes() if self._backend_entity.is_node_with_bias(node, graph)

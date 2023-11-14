@@ -12,6 +12,7 @@
 from collections import defaultdict
 from collections import deque
 from typing import Callable, Dict, List, Tuple
+from typing import Union
 
 import numpy as np
 import openvino.runtime as ov
@@ -22,6 +23,9 @@ from nncf.common.graph.model_transformer import ModelTransformer
 from nncf.common.graph.model_transformer import TModel
 from nncf.common.graph.transformations.commands import TargetType
 from nncf.common.graph.transformations.layout import TransformationLayout
+from nncf.common.nncf_model import BasicNNCFModelInterface
+from nncf.common.nncf_model import NNCFModel
+from nncf.common.nncf_model import NNCFModelInterface
 from nncf.openvino.graph.node_utils import get_result_node_name
 from nncf.openvino.graph.transformations.commands import OVBiasCorrectionCommand
 from nncf.openvino.graph.transformations.commands import OVBiasInsertionCommand
@@ -42,7 +46,7 @@ class OVModelTransformer(ModelTransformer):
     Applies transformations to an OpenVINO model.
     """
 
-    def __init__(self, model: TModel):
+    def __init__(self, model: Union[ov.Model, NNCFModel]):
         super().__init__(model)
         self._command_transformation_ordered_pairs = [
             (OVFQNodeRemovingCommand, self._apply_fq_nodes_removing_transformation),
@@ -100,7 +104,7 @@ class OVModelTransformer(ModelTransformer):
             current_names.add(name)
             tensor.set_names(current_names)
 
-    def transform(self, transformation_layout: TransformationLayout) -> ov.Model:
+    def transform(self, transformation_layout: TransformationLayout) -> Union[NNCFModel, ov.Model]:
         """
         Applies transformations to the model using an out-of-place approach.
         The transformations do not affect the original model, and a new model
@@ -123,6 +127,7 @@ class OVModelTransformer(ModelTransformer):
             if transformations:
                 model = transformation_fn(model, transformations)
 
+        model.nncf = BasicNNCFModelInterface(model)
         return model
 
     @staticmethod

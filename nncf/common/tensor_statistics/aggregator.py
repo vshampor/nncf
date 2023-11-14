@@ -17,6 +17,7 @@ from nncf.common import factory
 from nncf.common.graph.graph import NNCFGraph
 from nncf.common.graph.transformations.layout import TransformationLayout
 from nncf.common.logging.track_progress import track
+from nncf.common.nncf_model import NNCFModel
 from nncf.common.tensor import NNCFTensor
 from nncf.common.tensor_statistics.statistic_point import StatisticPointsContainer
 from nncf.data.dataset import Dataset
@@ -35,7 +36,7 @@ class StatisticsAggregator(ABC):
         self.stat_subset_size = None
         self.statistic_points = StatisticPointsContainer()
 
-    def collect_statistics(self, model: TModel, graph: NNCFGraph) -> None:
+    def collect_statistics(self, model: NNCFModel) -> None:
         """
         Collects statistics for registered StatisticPoints.
         The statistics are stored in self.statistic_points.
@@ -48,7 +49,7 @@ class StatisticsAggregator(ABC):
 
         model_transformer = factory.ModelTransformerFactory.create(model)
 
-        merged_statistics = self._get_merged_statistic_points(self.statistic_points, model, graph)
+        merged_statistics = self._get_merged_statistic_points(self.statistic_points, model)
         transformation_layout = self._get_transformation_layout_extra_outputs(merged_statistics)
         model_with_outputs = model_transformer.transform(transformation_layout)
         engine = factory.EngineFactory.create(model_with_outputs)
@@ -117,7 +118,7 @@ class StatisticsAggregator(ABC):
     @staticmethod
     @abstractmethod
     def _get_merged_statistic_points(
-        statistic_points: StatisticPointsContainer, model: TModel, graph: NNCFGraph
+        statistic_points: StatisticPointsContainer, model: NNCFModel
     ) -> StatisticPointsContainer:
         """
         Creates a new StatisticPointContainer that has no duplicated tensor collectors for one
