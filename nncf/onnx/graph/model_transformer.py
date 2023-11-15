@@ -15,6 +15,7 @@ from typing import Dict, List, Set, Tuple, Union
 import numpy as np
 import onnx
 
+from nncf.common.factory import NNCFGraphFactory
 from nncf.common.graph.model_transformer import ModelTransformer
 from nncf.common.graph.transformations.commands import TargetType
 from nncf.common.graph.transformations.layout import TransformationLayout
@@ -119,6 +120,7 @@ class ONNXModelTransformer(ModelTransformer):
             model = self._apply_output_insertion_transformations(output_insert_transformations)
         if model_extraction_transformation:
             model = self._apply_model_extraction_transformation(model_extraction_transformation)
+        graph = NNCFGraphFactory.create(model)
         return model
 
     def _apply_output_insertion_transformations(
