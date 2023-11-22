@@ -11,8 +11,7 @@
 
 from collections import defaultdict
 from collections import deque
-from typing import Callable, Dict, List, Tuple
-from typing import Union
+from typing import Callable, Dict, List, Tuple, Union
 
 import numpy as np
 import openvino.runtime as ov
@@ -20,12 +19,10 @@ from openvino._pyopenvino import DescriptorTensor
 from openvino.runtime import opset9 as opset
 
 from nncf.common.graph.model_transformer import ModelTransformer
-from nncf.common.graph.model_transformer import TModel
 from nncf.common.graph.transformations.commands import TargetType
 from nncf.common.graph.transformations.layout import TransformationLayout
 from nncf.common.nncf_model import BasicNNCFModelInterface
 from nncf.common.nncf_model import NNCFModel
-from nncf.common.nncf_model import NNCFModelInterface
 from nncf.openvino.graph.node_utils import get_result_node_name
 from nncf.openvino.graph.transformations.commands import OVBiasCorrectionCommand
 from nncf.openvino.graph.transformations.commands import OVBiasInsertionCommand

@@ -10,13 +10,11 @@
 # limitations under the License.
 
 from collections import defaultdict
-from typing import Dict
-from typing import Union
+from typing import Dict, Union
 
 import numpy as np
 import openvino.runtime as ov
 
-from nncf.common.graph.graph import NNCFGraph
 from nncf.common.graph.transformations.commands import TargetType
 from nncf.common.graph.transformations.layout import TransformationLayout
 from nncf.common.nncf_model import NNCFModel

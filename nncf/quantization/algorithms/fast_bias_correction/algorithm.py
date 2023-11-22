@@ -15,7 +15,6 @@ from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 from nncf import Dataset
 from nncf.common.factory import EngineFactory
 from nncf.common.factory import ModelTransformerFactory
-from nncf.common.graph.graph import NNCFGraph
 from nncf.common.graph.model_transformer import ModelTransformer
 from nncf.common.graph.transformations.commands import TargetPoint
 from nncf.common.graph.transformations.commands import TargetType

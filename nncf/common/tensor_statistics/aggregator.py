@@ -14,7 +14,6 @@ from itertools import islice
 from typing import Any, Dict, TypeVar
 
 from nncf.common import factory
-from nncf.common.graph.graph import NNCFGraph
 from nncf.common.graph.transformations.layout import TransformationLayout
 from nncf.common.logging.track_progress import track
 from nncf.common.nncf_model import NNCFModel

@@ -14,7 +14,6 @@ from typing import Callable, List, Optional, TypeVar
 
 from nncf import Dataset
 from nncf.common.graph.graph import NNCFGraph
-from nncf.common.nncf_model import NNCFModel
 from nncf.common.nncf_model import wrap_model
 from nncf.common.quantization.structs import QuantizationPreset
 from nncf.common.tensor_statistics.statistic_point import StatisticPointsContainer

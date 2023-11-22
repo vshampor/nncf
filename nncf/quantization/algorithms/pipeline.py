@@ -13,7 +13,6 @@ from typing import Dict, List, Optional, TypeVar, Union
 
 from nncf.common.factory import NNCFGraphFactory
 from nncf.common.factory import StatisticsAggregatorFactory
-from nncf.common.graph.graph import NNCFGraph
 from nncf.common.logging import nncf_logger
 from nncf.common.nncf_model import NNCFModel
 from nncf.common.tensor_statistics.statistic_point import StatisticPointsContainer
@@ -92,12 +91,7 @@ class Pipeline:
         """
         return self.run_from_step(model, dataset)
 
-    def run_step(
-        self,
-        step_index: int,
-        step_statistics: StatisticPointsContainer,
-        model: NNCFModel
-    ) -> TModel:
+    def run_step(self, step_index: int, step_statistics: StatisticPointsContainer, model: NNCFModel) -> TModel:
         """
         Executes a provided pipeline step on the provided model.
 
@@ -164,9 +158,7 @@ class Pipeline:
 
         return step_model
 
-    def get_statistic_points_for_step(
-        self, step_index: int, model: NNCFModel
-    ) -> StatisticPointsContainer:
+    def get_statistic_points_for_step(self, step_index: int, model: NNCFModel) -> StatisticPointsContainer:
         """
         Returns statistics that should be collected to execute `step_index`-th pipeline step.
 

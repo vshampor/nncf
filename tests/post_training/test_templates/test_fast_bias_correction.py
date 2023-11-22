@@ -14,10 +14,6 @@ from typing import List, TypeVar
 
 import pytest
 
-from nncf.common.factory import NNCFGraphFactory
-from nncf.common.nncf_model import NNCFModel
-from nncf.common.nncf_model import NNCFModelInterface
-from nncf.common.nncf_model import wrap_model
 from nncf.quantization.advanced_parameters import AdvancedQuantizationParameters
 from nncf.quantization.advanced_parameters import OverflowFix
 from nncf.quantization.algorithms.fast_bias_correction.algorithm import FastBiasCorrection

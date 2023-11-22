@@ -512,9 +512,7 @@ class MinMaxQuantization(Algorithm):
             )
         return activation_quantization_target_point
 
-    def _get_quantization_target_points(
-        self, model: NNCFModel
-    ) -> OrderedDict[TargetPoint, QuantizerConfig]:
+    def _get_quantization_target_points(self, model: NNCFModel) -> OrderedDict[TargetPoint, QuantizerConfig]:
         """
         Returns Quantization Target Points.
         In the Compression Pipeline logic NNCF assumes that the compression pipeline works only on the single model.

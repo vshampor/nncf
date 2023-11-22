@@ -14,7 +14,6 @@ from abc import abstractmethod
 from typing import List, Optional, TypeVar
 
 from nncf import Dataset
-from nncf.common.graph.graph import NNCFGraph
 from nncf.common.nncf_model import NNCFModel
 from nncf.common.tensor_statistics.statistic_point import StatisticPointsContainer
 from nncf.common.utils.backend import BackendType
