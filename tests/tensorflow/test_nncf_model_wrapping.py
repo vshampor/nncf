@@ -13,7 +13,7 @@ from nncf.common.nncf_model import wrap_model
 from tests.tensorflow.helpers import get_basic_two_conv_test_model
 import tensorflow as tf
 
-def test_deleteme():
+def test_nncf_model_wrapping():
     orig_model = get_basic_two_conv_test_model()
     nncf_model = wrap_model(orig_model)
     assert isinstance(nncf_model.nncf.graph, NNCFGraph)

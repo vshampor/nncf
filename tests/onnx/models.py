@@ -31,7 +31,7 @@ def create_initializer_tensor(
 
 
 class ONNXReferenceModel:
-    def __init__(self, onnx_model, input_shape: List[List[int]], graph_path):
+    def __init__(self, onnx_model: onnx.ModelProto, input_shape: List[List[int]], graph_path):
         self.onnx_model = onnx_model
         self.input_shape = input_shape
         self.path_ref_graph = graph_path
