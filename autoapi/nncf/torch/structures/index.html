@@ -397,7 +397,7 @@ will fail.</p>
 </div>
 </p></li>
 <li><p><strong>eval_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.nn.Module</em><em>, </em><em>torch.utils.data.DataLoader</em><em>]</em><em>, </em><em>float</em><em>]</em>) – </p></li>
-<li><p><strong>nncf_config</strong> (<a class="reference internal" href="../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>NNCFConfig</em></a>) – </p></li>
+<li><p><strong>nncf_config</strong> (<a class="reference internal" href="../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>nncf.NNCFConfig</em></a>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -412,12 +412,12 @@ will fail.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>train_loader</strong> (<em>torch.utils.data.DataLoader</em>) – provides an iterable over the given training (or initialising) dataset.</p></li>
-<li><p><strong>train_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.utils.data.DataLoader</em><em>, </em><em>torch.nn.Module</em><em>, </em><em>torch.optim.Optimizer</em><em>, </em><a class="reference internal" href="../../api/compression/index.html#nncf.api.compression.CompressionAlgorithmController" title="nncf.api.compression.CompressionAlgorithmController"><em>CompressionAlgorithmController</em></a><em>, </em><em>Optional</em><em>[</em><em>int</em><em>]</em><em>]</em><em>, </em><em>type</em><em>(</em><em>None</em><em>)</em><em>]</em>) – callable for training compressed model. Train model for one epoch or train_steps (if specified) by
+<li><p><strong>train_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.utils.data.DataLoader</em><em>, </em><em>torch.nn.Module</em><em>, </em><em>torch.optim.Optimizer</em><em>, </em><a class="reference internal" href="../../api/compression/index.html#nncf.api.compression.CompressionAlgorithmController" title="nncf.api.compression.CompressionAlgorithmController"><em>nncf.api.compression.CompressionAlgorithmController</em></a><em>, </em><em>Optional</em><em>[</em><em>int</em><em>]</em><em>]</em><em>, </em><em>type</em><em>(</em><em>None</em><em>)</em><em>]</em>) – callable for training compressed model. Train model for one epoch or train_steps (if specified) by
 given args: [dataloader, model, optimizer, compression algorithm controller, train_steps number].</p></li>
 <li><p><strong>val_loader</strong> (<em>torch.utils.data.DataLoader</em>) – provides an iterable over the given validation dataset.</p></li>
 <li><p><strong>val_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.nn.Module</em><em>, </em><em>torch.utils.data.DataLoader</em><em>]</em><em>, </em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – callable to validate model, calculates pair of validation [acc, loss] by given model and dataloader.</p></li>
 <li><p><strong>train_optimizer</strong> (<em>Optional</em><em>[</em><em>torch.optim.Optimizer</em><em>]</em>) – optional, optimizer for model training.</p></li>
-<li><p><strong>nncf_config</strong> (<a class="reference internal" href="../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>NNCFConfig</em></a>) – NNCF config for compression.</p></li>
+<li><p><strong>nncf_config</strong> (<a class="reference internal" href="../../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>nncf.NNCFConfig</em></a>) – NNCF config for compression.</p></li>
 </ul>
 </dd>
 </dl>
@@ -479,7 +479,7 @@ example, torch.nn.DataParallel or any custom class), returns wrapped model ready
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Intel Corporation
+                Copyright &#169; 
             </div>
             Made with 
             <a href="https://github.com/pradyunsg/furo">Furo</a>

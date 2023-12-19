@@ -16,8 +16,11 @@ Classes
 .. autoapisummary::
 
    nncf.quantization.advanced_parameters.OverflowFix
+   nncf.quantization.advanced_parameters.FP8Type
    nncf.quantization.advanced_parameters.QuantizationParameters
+   nncf.quantization.advanced_parameters.FP8QuantizationParameters
    nncf.quantization.advanced_parameters.AdvancedBiasCorrectionParameters
+   nncf.quantization.advanced_parameters.AdvancedSmoothQuantParameters
    nncf.quantization.advanced_parameters.AdvancedQuantizationParameters
    nncf.quantization.advanced_parameters.AdvancedAccuracyRestorerParameters
 
@@ -50,6 +53,17 @@ Classes
    :param DISABLE: All weights are quantized using the full 8-bit quantization range.
 
 
+.. py:class:: FP8Type
+
+   Bases: :py:obj:`enum.Enum`
+
+   Defines FP8 special types (https://arxiv.org/pdf/2209.05433.pdf).
+
+   :param E4M3: Mode with 4-bit exponent and 3-bit mantissa.
+   :param E5M2: Mode with 5-bit exponent and 2-bit mantissa.
+
+
+
 .. py:class:: QuantizationParameters
 
    Contains quantization parameters for weights or activations.
@@ -78,6 +92,14 @@ Classes
    :type narrow_range: Optional[bool]
 
 
+.. py:class:: FP8QuantizationParameters
+
+   Contains convert parameters for weights or activations.
+
+   :param destination_type: Currently contains E4M3 or E5M2 for FP8 precision.
+   :type destination_type: FP8Type
+
+
 .. py:class:: AdvancedBiasCorrectionParameters
 
    Contains advanced parameters for fine-tuning bias correction algorithm.
@@ -90,9 +112,22 @@ Classes
    :type threshold: Optional[float]
 
 
+.. py:class:: AdvancedSmoothQuantParameters
+
+   Contains advanced alpha parameters for SmoothQuant algorithm.
+   It regulates the calculation of the smooth scale for different node types.
+   A negative value switches off the algorithm for current node type. In case of inaccurate results,
+   this parameter may be adjusted in the range from 0 to 1 or set -1 to disable SmoothQuant algorithm.
+
+   :param convolution: Whether to apply smoothing for Convolution layers.
+   :type convolution: float
+   :param matmul: Whether to apply smoothing for MatMul layers.
+   :type matmul: float
+
+
 .. py:class:: AdvancedQuantizationParameters
 
-   Contains advanced parameters for fine-tuning qunatization algorithm.
+   Contains advanced parameters for fine-tuning quantization algorithm.
 
    :param overflow_fix: This option controls whether to apply the overflow issue fix
        for the 8-bit quantization, defaults to OverflowFix.FIRST_LAYER.
@@ -103,6 +138,8 @@ Classes
    :param inplace_statistics: Defines whether to calculate quantizers statistics by
        backend graph operations or by default Python implementation, defaults to True.
    :type inplace_statistics: bool
+   :param disable_channel_alignment: Whether to disable the channel alignment.
+   :type disable_channel_alignment: bool
    :param disable_bias_correction: Whether to disable the bias correction.
    :type disable_bias_correction: bool
    :param activations_quantization_params: Quantization parameters for activations.
@@ -115,6 +152,13 @@ Classes
    :type weights_range_estimator_params: nncf.quantization.range_estimator.RangeEstimatorParameters
    :param bias_correction_params: Advanced bias correction parameters.
    :type bias_correction_params: nncf.quantization.advanced_parameters.AdvancedBiasCorrectionParameters
+   :param smooth_quant_alphas: SmoothQuant-related parameters mapping.
+       It regulates the calculation of the smooth scale. The default value stored in AdvancedSmoothQuantParameters.
+       A negative value for each field switches off type smoothing. In case of inaccurate results,
+       fields may be adjusted in the range from 0 to 1 or set -1 to disable smoothing for type.
+   :type smooth_quant_alpha: AdvancedSmoothQuantParameters
+   :param smooth_quant_alpha: Deprecated SmoothQuant-related parameter.
+   :type smooth_quant_alpha: float
    :param backend_params: Backend-specific parameters.
    :type backend_params: Dict[str, Any]
 
@@ -133,12 +177,14 @@ Classes
        It can bring an additional boost in performance and accuracy, at the cost of
        increased overall quantization time. The default value is `False`.
    :type tune_hyperparams: int
-   :param convert_to_mixed_preset: Whether to convert the model to mixed mode if
-       the accuracy criteria of the symmetrically quantized model are not satisfied.
-       The default value is `False`.
-   :type convert_to_mixed_preset: bool
    :param ranking_subset_size: Size of a subset that is used to rank layers by their
        contribution to the accuracy drop.
    :type ranking_subset_size: Optional[int]
+   :param num_ranking_workers: The number of parallel workers that are used to rank
+       quantization operations.
+   :type num_ranking_workers: Optional[int]
+   :param intermediate_model_dir: Path to the folder where the model, which was fully
+       quantized with initial parameters, should be saved.
+   :type intermediate_model_dir: Optional[str]
 
 

@@ -395,15 +395,12 @@
 <dt class="sig sig-object py" id="nncf.torch.create_compressed_model">
 <span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">create_compressed_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dummy_forward_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wrap_inputs_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wrap_outputs_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_graphs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/openvinotoolkit/nncf/blob/develop/nncf/torch/model_creation.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nncf.torch.create_compressed_model" title="Permalink to this definition">#</a></dt>
 <dd><p>The main function used to produce a model ready for compression fine-tuning from an original PyTorch
-model and a configuration object.
-dummy_forward_fn
-:param model: The original model. Should have its parameters already loaded from a checkpoint or another</p>
-<blockquote>
-<div><p>source.</p>
-</div></blockquote>
+model and a configuration object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>torch.nn.Module</em>) – The original model. Should have its parameters already loaded from a checkpoint or another
+source.</p></li>
 <li><p><strong>config</strong> (<a class="reference internal" href="../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>nncf.NNCFConfig</em></a>) – A configuration object used to determine the exact compression modifications to be applied
 to the model</p></li>
 <li><p><strong>compression_state</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – representation of the entire compression state to unambiguously restore
@@ -426,10 +423,9 @@ tensor among nncf.nncf_model_input function, which is a no-operation function an
 to be traced by NNCF in the internal graph representation. Output is the tuple of (args, kwargs), where args
 and kwargs are the same as were supplied in input, but each tensor in the original input. Must be specified
 if dummy_forward_fn is specified.</p></li>
-<li><p><strong>wrap_outputs_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>Tuple</em><em>, </em><em>Dict</em><em>]</em><em>, </em><em>Tuple</em><em>[</em><em>Tuple</em><em>, </em><em>Dict</em><em>]</em><em>]</em>) – same as <cite>wrap_inputs_fn</cite>, but applies to model outputs</p></li>
+<li><p><strong>wrap_outputs_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Any</em><em>]</em>) – same as <cite>wrap_inputs_fn</cite>, but applies to model outputs</p></li>
 <li><p><strong>dump_graphs</strong> – Whether to dump the internal graph representation of the
 original and compressed models in the .dot format into the log directory.</p></li>
-<li><p><strong>model</strong> (<em>torch.nn.Module</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -484,35 +480,36 @@ with compression algorithms applied to evaluate the model.
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nncf_config</strong> (<a class="reference internal" href="../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>NNCFConfig</em></a>) – </p></li>
+<li><p><strong>nncf_config</strong> (<a class="reference internal" href="../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig"><em>nncf.NNCFConfig</em></a>) – </p></li>
 <li><p><strong>train_loader</strong> (<em>torch.utils.data.DataLoader</em>) – </p></li>
 <li><p><strong>criterion</strong> (<em>torch.nn.modules.loss._Loss</em>) – </p></li>
 <li><p><strong>criterion_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>Any</em><em>, </em><em>Any</em><em>, </em><em>torch.nn.modules.loss._Loss</em><em>]</em><em>, </em><em>torch.Tensor</em><em>]</em>) – </p></li>
-<li><p><strong>train_steps_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.utils.data.DataLoader</em><em>, </em><em>torch.nn.Module</em><em>, </em><em>torch.optim.Optimizer</em><em>, </em><a class="reference internal" href="../api/compression/index.html#nncf.api.compression.CompressionAlgorithmController" title="nncf.api.compression.CompressionAlgorithmController"><em>CompressionAlgorithmController</em></a><em>, </em><em>Optional</em><em>[</em><em>int</em><em>]</em><em>]</em><em>, </em><em>type</em><em>(</em><em>None</em><em>)</em><em>]</em>) – </p></li>
+<li><p><strong>train_steps_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.utils.data.DataLoader</em><em>, </em><em>torch.nn.Module</em><em>, </em><em>torch.optim.Optimizer</em><em>, </em><a class="reference internal" href="../api/compression/index.html#nncf.api.compression.CompressionAlgorithmController" title="nncf.api.compression.CompressionAlgorithmController"><em>nncf.api.compression.CompressionAlgorithmController</em></a><em>, </em><em>Optional</em><em>[</em><em>int</em><em>]</em><em>]</em><em>, </em><em>type</em><em>(</em><em>None</em><em>)</em><em>]</em>) – </p></li>
 <li><p><strong>validate_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.nn.Module</em><em>, </em><em>torch.utils.data.DataLoader</em><em>]</em><em>, </em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – </p></li>
 <li><p><strong>val_loader</strong> (<em>torch.utils.data.DataLoader</em>) – </p></li>
 <li><p><strong>autoq_eval_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.nn.Module</em><em>, </em><em>torch.utils.data.DataLoader</em><em>]</em><em>, </em><em>float</em><em>]</em>) – </p></li>
 <li><p><strong>model_eval_fn</strong> (<em>Callable</em><em>[</em><em>[</em><em>torch.nn.Module</em><em>, </em><em>torch.utils.data.DataLoader</em><em>]</em><em>, </em><em>float</em><em>]</em>) – </p></li>
 <li><p><strong>distributed_callbacks</strong> (<em>Tuple</em><em>[</em><em>Callable</em><em>, </em><em>Callable</em><em>]</em>) – </p></li>
-<li><p><strong>execution_parameters</strong> (<a class="reference internal" href="structures/index.html#nncf.torch.structures.ExecutionParameters" title="nncf.torch.structures.ExecutionParameters"><em>ExecutionParameters</em></a>) – </p></li>
+<li><p><strong>execution_parameters</strong> (<a class="reference internal" href="structures/index.html#nncf.torch.structures.ExecutionParameters" title="nncf.torch.structures.ExecutionParameters"><em>nncf.torch.structures.ExecutionParameters</em></a>) – </p></li>
 <li><p><strong>legr_train_optimizer</strong> (<em>torch.optim.Optimizer</em>) – </p></li>
 <li><p><strong>device</strong> (<em>str</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig">NNCFConfig</a></p>
+<dd class="field-even"><p><a class="reference internal" href="../index.html#nncf.NNCFConfig" title="nncf.NNCFConfig">nncf.NNCFConfig</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="nncf.torch.register_module">
-<span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">register_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">quantizable_field_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignored_algorithms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/openvinotoolkit/nncf/blob/develop/nncf/torch/layers.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nncf.torch.register_module" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">nncf.torch.</span></span><span class="sig-name descname"><span class="pre">register_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">quantizable_field_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignored_algorithms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_weight_dim_for_compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/openvinotoolkit/nncf/blob/develop/nncf/torch/layers.py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nncf.torch.register_module" title="Permalink to this definition">#</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>quantizable_field_names</strong> (<em>str</em>) – </p></li>
 <li><p><strong>ignored_algorithms</strong> (<em>list</em>) – </p></li>
+<li><p><strong>target_weight_dim_for_compression</strong> (<em>int</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -603,7 +600,7 @@ with compression algorithms applied to evaluate the model.
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Intel Corporation
+                Copyright &#169; 
             </div>
             Made with 
             <a href="https://github.com/pradyunsg/furo">Furo</a>
