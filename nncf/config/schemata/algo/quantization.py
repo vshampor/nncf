@@ -223,8 +223,8 @@ PRECISION_INITIALIZER_SCHEMA = {
     "description": "This initializer performs advanced selection of bitwidth per each quantizer "
     "location, trying to achieve the best tradeoff between performance and "
     "quality of the resulting model.",
+    "required": ["type"],
     "properties": {
-        "required": ["type"],
         "type": with_attributes(
             annotated_enum(PRECISION_INIT_TYPES_VS_DESCRIPTION), description="Type of precision initialization."
         ),
