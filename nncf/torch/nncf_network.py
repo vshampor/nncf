@@ -781,7 +781,6 @@ class NNCFNetworkInterface(torch.nn.Module):
                     arg_list.append(tnsr)
                 else:
                     kwargs[ii.keyword] = tnsr
-
             er = export(model)(*arg_list, **kwargs)
             stripped = translate_compression(er.graph_module, state)
             return stripped
